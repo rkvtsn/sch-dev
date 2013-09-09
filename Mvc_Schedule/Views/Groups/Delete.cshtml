@@ -1,0 +1,14 @@
+﻿@model Mvc_Schedule.Models.DataModels.Entities.StudGroup
+
+
+<div id="page-title">Вы уверены, что хотите удалить группу @Model.Name?</div>
+
+<div id="selector-block">
+	<p>Факультет: @Model.Facult.Name</p>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+	<p>
+        <input type="submit" value="Удалить" />
+    </p>
+}
+</div>

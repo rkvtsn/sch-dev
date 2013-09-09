@@ -1,0 +1,38 @@
+﻿@using Mvc_Schedule.Models.DataModels
+@{
+	if (!Model) { return; }
+	ViewBag.Action = ViewContext.RouteData.Values["action"].ToString();
+	ViewBag.Controller = ViewContext.RouteData.Values["controller"].ToString();
+}
+@helper ActionLinkActive(string name, string action, string controller)
+	{
+	@Html.ActionLink(name, action, controller, null, (ViewBag.Action == action && ViewBag.Controller == controller) ? new { @class = "active" } : null)
+}
+@helper  ActionLinkActive(string name, string action, string controller, bool isControlled)
+	{
+		if (isControlled)
+		{
+	@Html.ActionLink(name, action, controller, null, (ViewBag.Controller == controller) ? new { @class = "active" } : null)
+		}
+		else
+		{
+	@ActionLinkActive(name, action, controller)
+		}
+}
+<style>
+	.admin-menu {
+		display: block;
+		background: #fff;
+	}
+	.admin-menu a {
+		color: #333;
+		display: inline-block;
+		padding: 6px;
+		margin: 0px 0;
+	}
+	.admin-menu a.active, .admin-menu a:hover {
+		background: #666666;
+		color: #fff;
+	}
+</style>
+<div class="admin-menu">@if (User.IsInRole(StaticData.AdminRoleName)){@ActionLinkActive("Пользователи", "Index", "Admin", true)@ActionLinkActive("Добавить факультет", "Create", "Facult")@ActionLinkActive("Редактор звонков", "Index", "Lessons", true)}@ActionLinkActive("Расписание", "Index", "Facult")@ActionLinkActive("Добавить группу", "Create", "Groups")@Html.ActionLink("Выйти", "LogOff", "Auth")</div>

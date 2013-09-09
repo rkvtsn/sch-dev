@@ -1,0 +1,4 @@
+<Modules>
+  <Module PersistentId="F6C8F2A0-B236-4686-B874-035C3AA7644D" ModuleId="Mvc_Schedule" />
+  <Module PersistentId="59B6ADDA-2CC8-4C9E-9361-0D1411A80A4E" ModuleId="Mvc_Schedule.Models" />
+</Modules>

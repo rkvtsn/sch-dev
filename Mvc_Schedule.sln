@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mvc_Schedule", "Mvc_Schedule\Mvc_Schedule.csproj", "{F6C8F2A0-B236-4686-B874-035C3AA7644D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mvc_Schedule.Models", "Mvc_Schedule.Models\Mvc_Schedule.Models.csproj", "{59B6ADDA-2CC8-4C9E-9361-0D1411A80A4E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F6C8F2A0-B236-4686-B874-035C3AA7644D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6C8F2A0-B236-4686-B874-035C3AA7644D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6C8F2A0-B236-4686-B874-035C3AA7644D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6C8F2A0-B236-4686-B874-035C3AA7644D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59B6ADDA-2CC8-4C9E-9361-0D1411A80A4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59B6ADDA-2CC8-4C9E-9361-0D1411A80A4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59B6ADDA-2CC8-4C9E-9361-0D1411A80A4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59B6ADDA-2CC8-4C9E-9361-0D1411A80A4E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

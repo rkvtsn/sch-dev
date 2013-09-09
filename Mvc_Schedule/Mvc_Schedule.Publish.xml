@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="C:\inetpub\wwwroot" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Профиль1" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="Content/images/color_or.png" publishTime="08/25/2012 19:21:15" />
+    <file relUrl="Views/Groups/Edit.cshtml" publishTime="10/14/2012 21:48:45" />
+    <file relUrl="Scripts/scheduleCreate.js" publishTime="01/12/2013 16:46:45" />
+    <file relUrl="bin/EntityFramework.dll" publishTime="07/28/2012 15:12:47" />
+    <file relUrl="Content/validation.css" publishTime="01/12/2013 16:35:49" />
+    <file relUrl="Global.asax" publishTime="07/28/2012 15:12:36" />
+    <file relUrl="bin/EntityFramework.xml" publishTime="07/28/2012 15:12:47" />
+    <file relUrl="Content/images/panel_list.png" publishTime="08/15/2012 22:45:06" />
+    <file relUrl="Content/images/glow_bg.png" publishTime="08/15/2012 22:45:06" />
+    <file relUrl="Views/Facult/Delete.cshtml" publishTime="08/26/2012 20:25:40" />
+    <file relUrl="bin/Mvc_Schedule.Models.dll" publishTime="01/14/2013 21:49:11" />
+    <file relUrl="Views/Schedule/Index.cshtml" publishTime="01/12/2013 16:49:21" />
+    <file relUrl="Views/Subjects/Delete.cshtml" publishTime="08/26/2012 20:30:12" />
+    <file relUrl="Views/Subjects/Edit.cshtml" publishTime="10/14/2012 21:48:45" />
+    <file relUrl="Scripts/modernizr-2.5.3.js" publishTime="07/28/2012 19:13:41" />
+    <file relUrl="Content/images/body_bg.png" publishTime="08/15/2012 22:45:06" />
+    <file relUrl="Views/Subjects/Index.cshtml" publishTime="10/14/2012 21:48:45" />
+    <file relUrl="Scripts/DefaultIndex.js" publishTime="01/05/2013 20:47:41" />
+    <file relUrl="Views/Schedule/Create.cshtml" publishTime="01/12/2013 16:46:51" />
+    <file relUrl="Scripts/jquery.validate.min.js" publishTime="07/28/2012 19:13:59" />
+    <file relUrl="Views/Facult/Index.cshtml" publishTime="01/12/2013 16:27:50" />
+    <file relUrl="Views/Facult/Edit.cshtml" publishTime="01/04/2013 13:57:58" />
+    <file relUrl="Views/Admin/Index.cshtml" publishTime="01/10/2013 19:52:43" />
+    <file relUrl="Views/Groups/Create.cshtml" publishTime="01/13/2013 13:58:30" />
+    <file relUrl="Views/Lessons/Index.cshtml" publishTime="01/11/2013 23:26:59" />
+    <file relUrl="Views/Lessons/Create.cshtml" publishTime="01/11/2013 23:49:36" />
+    <file relUrl="Content/images/logo.png" publishTime="08/15/2012 22:45:06" />
+    <file relUrl="bin/Mvc_Schedule.dll" publishTime="01/14/2013 21:49:12" />
+    <file relUrl="Views/Shared/Error.cshtml" publishTime="01/05/2013 00:23:41" />
+    <file relUrl="Content/images/groups.png" publishTime="08/15/2012 22:45:06" />
+    <file relUrl="Scripts/changetheme.js" publishTime="12/19/2012 19:05:32" />
+    <file relUrl="Views/Lessons/Edit.cshtml" publishTime="01/11/2013 23:57:39" />
+    <file relUrl="Views/Admin/ChangePassword.cshtml" publishTime="01/12/2013 00:42:36" />
+    <file relUrl="Content/style_schedule.css" publishTime="12/22/2012 13:23:52" />
+    <file relUrl="Views/Facult/Create.cshtml" publishTime="01/04/2013 13:58:19" />
+    <file relUrl="Views/Groups/Delete.cshtml" publishTime="08/26/2012 20:26:42" />
+    <file relUrl="bin/Mvc_Schedule.pdb" publishTime="01/14/2013 21:49:12" />
+    <file relUrl="Views/Default/Index.cshtml" publishTime="01/12/2013 02:41:03" />
+    <file relUrl="Views/Shared/_Layout.cshtml" publishTime="01/12/2013 00:36:39" />
+    <file relUrl="Views/Admin/Register.cshtml" publishTime="01/12/2013 00:43:03" />
+    <file relUrl="Content/style.css" publishTime="01/12/2013 02:56:07" />
+    <file relUrl="Content/images/panel_wrap.png" publishTime="08/15/2012 22:45:06" />
+    <file relUrl="Content/images/week1.png" publishTime="08/15/2012 22:45:06" />
+    <file relUrl="Scripts/lessons.js" publishTime="01/12/2013 00:18:58" />
+    <file relUrl="Content/style_logon.css" publishTime="12/09/2012 22:57:25" />
+    <file relUrl="Content/images/facults.png" publishTime="08/15/2012 22:45:06" />
+    <file relUrl="bin/Mvc_Schedule.Models.pdb" publishTime="01/14/2013 21:49:11" />
+    <file relUrl="Content/jquery.ui.autocomplete.css" publishTime="08/26/2012 20:12:49" />
+    <file relUrl="Views/Shared/_AdminMenu.cshtml" publishTime="01/13/2013 13:59:50" />
+    <file relUrl="Scripts/jquery-1.8.0.min.js" publishTime="08/17/2012 18:35:20" />
+    <file relUrl="Views/_ViewStart.cshtml" publishTime="07/28/2012 15:12:36" />
+    <file relUrl="Views/Lessons/Delete.cshtml" publishTime="08/26/2012 20:28:01" />
+    <file relUrl="Content/images/color_bw.png" publishTime="08/25/2012 19:20:01" />
+    <file relUrl="Content/images/favicon.png" publishTime="08/25/2012 19:32:44" />
+    <file relUrl="Scripts/jquery-ui-1.8.23.custom.min.js" publishTime="08/17/2012 18:35:20" />
+    <file relUrl="Content/images/week2.png" publishTime="08/15/2012 22:45:06" />
+    <file relUrl="Views/Auth/LogOn.cshtml" publishTime="12/10/2012 00:02:32" />
+    <file relUrl="Scripts/jquery.validate.unobtrusive.min.js" publishTime="07/28/2012 15:12:36" />
+    <file relUrl="Views/Web.config" publishTime="07/28/2012 15:12:36" />
+    <file relUrl="Web.config" publishTime="01/14/2013 22:02:11" />
+  </publishProfile>
+</publishData>

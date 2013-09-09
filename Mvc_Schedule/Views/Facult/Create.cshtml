@@ -1,0 +1,64 @@
+﻿@model Mvc_Schedule.Models.DataModels.ModelViews.FacultCreate
+<div id="page-title">Новый факультет</div>
+<link href="@Url.Content("/Content/validation.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<style>#element-additor { margin: 10px 0;	} #element-additor a { display: inline-block; padding: 3px 9px; text-decoration: none; font-size: 16px;background: #333;color: #fff;margin: 3px 5px;} #element-additor a:hover { background: #ccc; color: #333; }</style>
+<div id="selector-block">
+@using (Html.BeginForm()) {
+	@Html.AntiForgeryToken()
+    <div class="editor-label">@Html.Label("FacultInstance_Name", "Название факультета")</div>
+	<div class="editor-field">
+		@Html.EditorFor(model => model.FacultInstance.Name)
+		@if (Html.ValidationMessageFor(x => x.FacultInstance.Name) != null)
+		{ @Html.ValidationMessage("FacultInstance_Name", "Неверно заполнено название факультета") }
+	</div>
+	<div id="element-fields">
+	@if (Model != null && Model.StudGroupsNames.Any())
+	{
+	for (var i = 0; i < Model.StudGroupsNames.Count(); i++)
+	{
+	<div class="element" id="element_@(i)">
+	<div class="editor-label">@Html.Label("StudGroupsNames_" + i + "__Name", "Название группы "+ i)</div>
+	<div class="editor-field">
+		@Html.EditorFor(model => model.StudGroupsNames[i].Name)
+		@if (Html.ValidationMessageFor(model => model.StudGroupsNames[i].Name) != null)
+		{ @Html.ValidationMessage("StudGroupsNames_" + i + "__Name", "Неверно заполнено название группы " + i) }
+	</div>
+	</div>
+	}
+	}
+	</div>
+	<p id="element-additor"><a href="javascript: void(0)" id="add_element">+Группа</a><a href="javascript: void(0)" id="remove_element">-Группа</a></p>
+	<script>
+		var countOfelements = 0;
+		var last_element = $(".element").last().attr("id");
+		if (last_element != null) {
+			countOfelements = last_element.substring(8);
+			countOfelements++;
+		}
+		$("#remove_element").hide();
+		$("#add_element").click(function () {
+			if (countOfelements == 0) $("#remove_element").show();
+			var html = '<div class="element" id="element_' + countOfelements + '" ><div class="editor-label"> \
+				<label for="StudGroupsNames_' + countOfelements + '__Name">Название группы ' + (countOfelements + 1) + '</label> \
+				</div>\
+				<div class="editor-field"> \
+				<input class="text-box single-line" data-val="true" data-val-required="Требуется поле Название группы." id="StudGroupsNames_' + countOfelements + '__Name" name="StudGroupsNames[' + countOfelements + '].Name" type="text" value="" /> \
+				<span class="field-validation-valid" data-valmsg-for="StudGroupsNames[' + countOfelements + '].Name" data-valmsg-replace="true"></span> \
+				</div> \
+				</div>';
+			countOfelements++;
+			$("#element-fields").append(html);
+		});
+		$("#remove_element").click(function () {
+			if (countOfelements > 0) {
+				countOfelements--;
+				$("#element_" + countOfelements).remove();
+				if (countOfelements == 0) $(this).hide();
+			}
+		});
+	</script>
+	<p><input type="submit" value="Готово" /></p>
+}
+</div>

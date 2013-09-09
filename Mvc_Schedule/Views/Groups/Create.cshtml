@@ -1,0 +1,39 @@
+﻿@model Mvc_Schedule.Models.DataModels.Entities.StudGroup
+@if (!((SelectList)ViewBag.FacultId).Any())
+{
+	if ((bool)ViewData["IsAdmin"])
+	{
+		<div id="page-title">@Html.ActionLink("Нужно добавить факультет", "Create", "Facult")</div>
+	}
+	else
+	{
+		<div id="page-title">У вас нет доступных факультетов</div>
+		return;
+	}
+}
+<link href="@Url.Content("/Content/validation.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<div id="page-title">Добавление групп</div>
+<div id="selector-block">
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="editor-label">
+        @Html.LabelFor(model => model.FacultId, "Факультет")
+    </div>
+    <div class="editor-field">
+        @Html.DropDownList("FacultId")
+    </div>
+
+    <div class="editor-label">
+        @Html.Label("Name", "Название группы")
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Name)
+        @if (Html.ValidationMessageFor(x => x.Name) != null)
+		{ @Html.ValidationMessage("Name", "Неверно введено Название группы") }
+    </div>
+    <p><input type="submit" value="Добавить" /></p>
+}
+</div>

@@ -1,0 +1,218 @@
+﻿@*@model MembershipUserCollection*@
+@{ ViewBag.Title = "Пользователи"; }
+<!-- Тестовая страница -->
+<style type="text/css">
+	#selector-block label { padding: 5px; }
+	#saveChanges {
+		display: block;
+		background: #fff;
+		color: #000;
+		padding: 3px;
+	}
+	.controls { display: none; }
+</style>
+
+<div id="page-title">@ViewBag.Title</div>
+<div id="selector-block">
+	<div>
+		@Html.ActionLink("добавить пользователя","Register", "Admin")
+		<span class="controls">| 
+			@Html.ActionLink("изменить пароль", "ChangePassword", "Admin", null, new { id = "changepsw" }) | 
+			<a href="javascript:void(0);" id="deleteusr">удалить</a>
+		</span> 
+	</div>
+	<div id="facults" style="display: none">
+		<p class="title">Пользователи:</p>
+		<ul></ul>
+	</div>
+	<div id="groups" style="display: none">
+		<p class="title">Доступ:</p>
+		@using (Html.BeginForm("Index", "Admin", FormMethod.Post, new { id = "formRoles" })) {
+			<input id="_0" value="0" name="_0" type="hidden" />
+			<input id="usr" value="usr" name="usr" type="hidden" />
+			<span id="hiddens"></span>
+			<ul></ul>
+			<input id="#saveChanges" value="Сохранить" type="submit" />
+			@Html.AntiForgeryToken()
+		}
+	</div>
+</div>
+<style>#warning_bg { background: #333; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=90)"; filter: alpha(opacity=90); opacity: 0.9; -moz-opacity: 0.9; -khtml-opacity: 0.9; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; }#warning, #dialog { background: #fff; position: absolute; width: 400px; padding: 20px; }#close_dialog { color: #666666; text-decoration: underline; font-size: 12px; float: right;} #warning *, #dialog * {color: #333;} #warning a:hover, #usrname { text-decoration: underline; } .warning, #dialog { display: none; } </style><div class="warning" id="warning_bg"></div><div id="dialog"><p></p><a href="javascript:void(0);" id="close_dialog">закрыть</a></div><div class="warning" id="warning"><p>Вы уверены, что желаете удалить <span id="usrname"></span> ?</p><div><a href="javascript:void(0);" id="warning_y">Да</a></div><div><a href="javascript:void(0);" id="warning_n">Нет</a></div></div>
+<script type="text/javascript">
+	// А далее идёт избыточный, зависимый и не рациональный код на самом лучшем в мире JS
+	var lastId = NaN, countdown, counter, chgRoot = $("#changepsw").attr("href"); 
+	function IsChk(obj) { return obj.attr('checked') ? true : false; }
+	function ShowDialog_display(msg) {
+		$("#dialog p").html(msg);
+		$("#dialog").show();
+	}
+	function ShowDialog_iter(msg) {
+		if (counter > 0) {
+			counter--;
+			if (counter > 0) {
+				countdown = setTimeout('ShowDialog_iter("' + msg + '")', 1000);
+			} else {
+				ShowDialog_display(msg);
+			}
+		}
+	}
+	function ShowDialog(msg, isdebug) {
+		isdebug = true;
+		if (isdebug == true) {
+			ShowDialog_display(msg);
+		} else {
+			counter = 4;
+			HideDialog();
+			ShowDialog_iter(msg);
+		}
+	}
+	function ShowDialogError(msg) {
+		ShowDialog_display(msg);
+	}
+	function HideDialog() {
+		clearTimeout(countdown);
+		$("#dialog").hide();
+		$("#dialog p").html('');
+	}
+	function loadRoles(data) {
+		var result = "Отметьте доступные разделы";
+		var groupsDiv = $("#groups ul");
+		var hiddens = $("#hiddens");
+		groupsDiv.html("");
+		hiddens.html("");
+		var i = 0;
+		if (data != null && data.RoleChecks.length > 0) {
+			var hidInput = '';
+			$.each(data.RoleChecks, function (index, d) {
+				var group = '<li><a href="javascript:void(0)"><input name="_' + d.RoleCheckId + '" id="_' + d.RoleCheckId + '" type="checkbox" ' + ((d.IsChecked) ? 'checked' : '') + '/>' + '<label for="_' + d.RoleCheckId + '">' + d.Name + '</label></a></li>';
+				hidInput += '<input type="hidden" name="' + d.RoleCheckId + '" value="' + d.IsChecked + '" />';
+				groupsDiv.append(group);
+				i++;
+			});
+			hiddens.append(hidInput);
+			$("#_0").val(i);
+			$("#saveChanges").show();
+			$("#changepsw").attr("href", chgRoot + "/" + lastId);
+			$(".controls").fadeIn();
+		} else {
+			$("#saveChanges").hide();
+			$(".controls").hide();
+			result = "Извините, данных нет";
+			$("#groups ul").append('<li><a href="javascript:void(0)">Роли не были добавлены</a></li>');
+		}
+		$("input[type=checkbox]").click(function () {
+			var chk = IsChk($(this));
+			var valName = $(this).attr("name").substr(1);
+			$("input[name=" + valName + "]").attr("value", chk);
+
+			if ($(this).attr("name") == "_Admin") {
+				$.each($("input[type=checkbox]"), function (index, x) {
+					x.checked = false;
+					$("input[name=" + x.getAttribute("name").substr(1) + "]").attr("value", false);
+				});
+				$(this).attr('checked', chk);
+				$("input[name=" + valName + "]").attr("value", chk);
+			} else {
+				$("input[name=_Admin]").attr('checked', false);
+				$("input[name=Admin]").attr("value", false);
+			}
+		});
+		$("#page-title").html(result);
+	}
+	function saveRoles(data) {
+		if (data)
+			ShowDialog("Сохранено", true);
+		else {
+			ShowDialog("Увы, у нас ошибка", true);
+		}
+		$("#groups").hide();
+		lastId = NaN;
+		$.each($("#facults ul li a"), function (index, f) { if (f.className == "selected") f.className = ""; });
+	}
+	function getRoles() {
+		$.each($("#facults ul li a"), function (index, f) { if (f.className == "selected") f.className = ""; });
+		$(this).addClass("selected");
+		var usrId = $(this).text();
+		if (lastId == usrId) return false;
+		ShowDialog("Ищу доступные роли");
+		lastId = usrId;
+		$("#groups").fadeOut(function () {
+			$.ajax({
+				type: "POST",
+				contentType: "application/json;charset=utf-8",
+				url: "/Admin/GetRoles",
+				data: '{"id":"' + usrId + '"}',
+				dataType: "json",
+				success: function (data) {
+					loadRoles(data);
+					$("#groups").fadeIn();
+					HideDialog();
+				}
+			});
+		});
+		return false;
+	}
+	$(document).ready(function () {
+		$("#groups").hide();
+		$("#saveChanges").hide();
+		function refreshUsrs() {
+			ShowDialog("Минуточку... готовлю список пользователей");
+			$.ajax({
+				type: "POST",
+				contentType: "application/json;charset=utf-8",
+				url: "/Admin/RefreshUsrs",
+				data: '{"id":"admin"}',
+				dataType: "json",
+				success: function (data) {
+					var ul = $("#facults ul");
+					ul.html('');
+					if (data != null && data.length > 0) {
+						$.each(data, function (index, d) {
+							var li = document.createElement("LI");
+							var a = document.createElement("A");
+							var txt = document.createTextNode(d);
+							a.appendChild(txt);
+							a.setAttribute("HREF", "javascript:void(0);");
+							a.onmousedown = getRoles;
+							li.appendChild(a);
+							ul.append(li);
+						});
+					}
+					HideDialog();
+				}
+			});
+		}
+		$("#warning_n").click(function () { $(".warning").hide(); });
+		$("#deleteusr").click(function () { $("#usrname").html(lastId); $(".warning").show(); });
+		$("#warning_y").click(function () {
+			$(".warning").hide();
+			ShowDialog("Удаляю пользователя: " + lastId);
+			$("#usr").attr("value", lastId);
+			var form = $("#formRoles").serialize();
+			$.ajax({
+				type: 'POST',
+				contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+				url: '/Admin/Remove',
+				data: form,
+				success: refreshUsrs
+			});
+		});
+
+		$("#formRoles").submit(function (e) {
+			e.preventDefault();
+			ShowDialog("Сохраняю роли пользователя " + lastId);
+			$("#usr").attr("value", lastId);
+			var form = $("#formRoles").serialize();
+			$.ajax({
+				type: 'POST',
+				contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+				url: '/Admin/SaveRoles',
+				data: form,
+				success: saveRoles
+			});
+		});
+		refreshUsrs();
+		$("#facults").fadeIn();
+		$("#close_dialog").click(function () { HideDialog(); });
+	});
+</script>

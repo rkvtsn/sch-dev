@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Mvc_Schedule.Models.DataModels.Entities.Lesson>
+
+<style>
+	#selector-block a {
+		font-size: 18px;
+	}
+		#selector-block a:hover {
+			color: #333;
+		}
+		.title {
+			margin-top: 20px;
+		}
+</style>
+
+<div id="page-title">@ViewBag.Title</div>
+
+<div id="selector-block">
+	@Html.ActionLink("Добавить", "Create")
+	@foreach (var item in Model) {
+		<p class="title">@Html.DisplayFor(modelItem => item.TimeString)
+			@Html.ActionLink("Изменить", "Edit", new { id = item.LessonId }) @Html.ActionLink("Удалить", "Delete", new { id = item.LessonId })
+		</p>
+	}
+</div>

@@ -1,0 +1,18 @@
+﻿@model Mvc_Schedule.Models.DataModels.Entities.Facult
+<link href="@Url.Content("/Content/validation.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<div id="page-title">Факультет @Model.Name</div>
+<div id="selector-block">
+@using (Html.BeginForm()) {
+	@Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.FacultId)
+	<div class="editor-label">@Html.Label("Name", "Название факультета")</div>
+	<div class="editor-field">
+		@Html.EditorFor(model => model.Name)
+		@Html.ValidationMessage("Name", "Неверно введено название факультета")
+	</div>
+	<p><input type="submit" value="Сохранить" /></p>
+}
+
+</div>

@@ -1,0 +1,98 @@
+﻿@model IEnumerable<Mvc_Schedule.Models.DataModels.ModelViews.FacultName>
+@if(!Model.Any())
+{
+	if ((bool)ViewData["isAccessable"])
+	{
+		<div id="page-title">@Html.ActionLink("Нужно добавить факультет", "Create")</div>
+	}
+	else
+	{
+		<div id="page-title">Список доступных факультетов пуст, обратитесь к администратору</div>
+	}
+	return;
+}
+<script type="text/javascript">
+	var lastFocus = null;
+	$(document).ready(function () {
+		SlidePanel($("#list .title").first());
+		$(".title").click(function () {
+			SlidePanel($(this));
+		});
+	});
+	function UpdateGroupList(data, div) {
+		div.html('');
+		if (data != null && data.length != 0) {
+			$.each(data, function (index, d) {
+				div.append('<div class="group_title">Расписание группы: ' + d.Name + ' <a href="/Groups/Edit/' + d.Id + '">Править группу</a> <a href="/Groups/Delete/'+ d.Id +'">Удалить группу</a></div>');
+				div.append('<a href="/Schedule/Create/' + d.Id + '/2">На чётную неделю</a>');
+				div.append('<a href="/Schedule/Create/' + d.Id + '/">На нечётную неделю</a>');
+			});
+		} else {
+			div.append('<div class="group_title">Групп нет</div>');
+		}
+	}
+	function SlidePanel(element) {
+		var facultId = element.attr("id");
+		if (element.parents('li').hasClass("focus") || element == null) return;
+		element.parents('li').addClass("focus");
+		element.find('span').css('visibility', 'visible');
+		var gmenu = element.parents("li").children(".group_menu");
+		$.ajax({
+			type: "POST",
+			contentType: "application/json;charset=utf-8",
+			url: '@Url.Action("GetGroups", "Default")',
+			data: '{"id":"' + facultId + '"}',
+			dataType: "json",
+			success: function (data) {
+				UpdateGroupList(data, gmenu);
+				gmenu.slideDown();
+			}
+		});
+		if (lastFocus != null) {
+			lastFocus.parents("li").removeClass();
+			lastFocus.parents("li").children(".group_menu").slideUp();
+			lastFocus.find('span').css('visibility', 'hidden');
+		}
+		lastFocus = element;
+	}
+</script>
+<style>
+	.title { cursor: pointer; display: block; }
+	.focus .title, .title:hover { color: #fff; background: #cc3300; }
+	.bw .focus .title, .bw .title:hover { background: #333; }
+	.title span { visibility: hidden; }
+	.title span a {
+	 	text-decoration: underline;
+	 	font-size: 14px;
+	 	padding: 0 4px;
+	 }.title span a:hover { text-decoration: none; color: #fff; }
+	.group_title { margin: 10px; font-size: 16px; }
+	
+	.group_menu { display: none; }
+	.group_menu a:hover { text-decoration: underline; }
+	.group_menu a {
+		padding: 4px;
+		margin-left: 20px;
+		font-size: 14px;
+		display: inline;
+	} .bw .group_menu a {
+		background: #fff;
+		color: #333;
+	}
+</style>
+<div id="selector-block">
+@if (Model.Any())
+{
+	<div id="list">
+		<ul>
+		@foreach (var facult in Model)
+		{
+		<li>
+			<div class="title" id="@facult.FacultId">Факультет: @facult.Name <span>@if ((bool)ViewData["isAccessable"]){@Html.ActionLink("правка", "Edit", "Facult", new { id = facult.FacultId }, null)@Html.ActionLink("удалить", "Delete", "Facult", new { id = facult.FacultId }, null)}</span></div>
+			<div class="group_menu">
+			</div>
+		</li>
+		}
+		</ul>
+	</div>
+}</div>

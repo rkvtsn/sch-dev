@@ -1,0 +1,73 @@
+#switchers {
+	margin-top: 10px;
+	display: inline-block;
+}
+	#switchers a {
+		display: inline-block;
+		width: 30px;
+		height: 30px;
+	}
+	#weekSwitcher.select {
+		background: url('../Content/images/week2.png') no-repeat;
+	}
+	#weekSwitcher {
+		background: url('../Content/images/week1.png') no-repeat;
+	}
+	#wrapSwitcher {
+		background: url('../Content/images/panel_wrap.png') no-repeat;
+	}
+	#wrapSwitcher.select {
+		background: url('../Content/images/panel_list.png') no-repeat;
+	}
+	
+.name {
+	font-size: 28px;
+	padding: 5px 10px 10px 0px;
+	color: #fff;
+	width: 170px;
+}
+.time {
+	font-size: 24px;
+	width: 40px;
+	/*border-bottom: 1px solid #cc3300;*/
+	border-bottom: 1px solid #fff;
+}
+.auditory {
+	width: 25px;
+	margin: 0 20px;
+}
+.lectors {
+	width: 240px;
+}
+.sublesson p {
+	font-size: 100%;
+	padding: 6px 5px;
+	display: inline-block;
+}
+.lesson {margin: 6px 0;}
+.weekday ul {list-style: none;}
+.list .time {float: left;}
+.list  .sublesson {
+	float: left;
+	margin-left: 20px;
+}
+.list .weekday {
+	margin-bottom: 20px;
+	padding: 10px;
+	color: #fff;
+}
+.wrap .weekday {
+	display: inline-block;
+	padding: 10px;
+	margin: 10px;
+}
+.wrap .sublesson {
+	margin-left: 20px;
+}
+.ending {
+	clear: both;
+}
+
+
+
+
