@@ -11,10 +11,11 @@ namespace Mvc_Schedule
 		public static void RegisterGlobalFilters(GlobalFilterCollection filters) { filters.Add(new HandleErrorAttribute()); }
 		public static void RegisterRoutes(RouteCollection routes)
 		{
-			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+		
+            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-			routes.MapRoute("Theme", "ChangeTheme",
-				new { controller = "Default" }, new { action = "ChangeTheme" });
+            //routes.MapRoute("Theme", "ChangeTheme",
+            //    new { controller = "Default" }, new { action = "ChangeTheme" });
 
 			routes.MapRoute("Errors", "{action}/{id}",
 				new { controller = "Default", id = UrlParameter.Optional }, new { action = "Error" });
@@ -27,15 +28,16 @@ namespace Mvc_Schedule
 
 			routes.MapRoute("Default", "{controller}/{action}/{id}",
 				new { controller = "Default", action = "Index", id = UrlParameter.Optional });
-		}
+		
+        }
 
 		protected void Application_Start()
 		{
 			AreaRegistration.RegisterAllAreas();
 			RegisterGlobalFilters(GlobalFilters.Filters);
 			RegisterRoutes(RouteTable.Routes);
-			//Database.SetInitializer(new DbMigrate(DbMigrate.MigrateStrategy.ClearDb)); // Миграция БД
-            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<ConnectionContext, Models.Migrations.Configuration>());
+            //Database.SetInitializer(new DbMigrate(DbMigrate.MigrateStrategy.ClearDb)); // не использовать
+            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<ConnectionContext, Models.Migrations.Configuration>()); // Только при первом запуске
 		}
 	}
 }

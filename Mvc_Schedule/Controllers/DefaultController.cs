@@ -7,7 +7,7 @@ namespace Mvc_Schedule.Controllers
 {
 	public class DefaultController : Controller
 	{
-		public DefaultController()
+        public DefaultController()
 		{
 			ViewBag.Title = "Главная";
 		}

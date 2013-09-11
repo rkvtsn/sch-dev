@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Transactions;
+using System.Web.Security;
 using Mvc_Schedule.Models.DataModels.Entities;
 
 
@@ -45,16 +46,16 @@ namespace Mvc_Schedule.Models.DataModels
 	//        base.Seed(context);
 	//    }
 	//}
-	//public class DbSetup : CreateDatabaseIfNotExists<ConnectionContext>
-	//{
-	//    protected override void Seed(ConnectionContext context)
-	//    {
-	//        new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
-	//            .ForEach(x => context.Weekdays.Add(new Weekday { Name = x }));
+    //public class DbSetup : CreateDatabaseIfNotExists<ConnectionContext>
+    //{
+    //    protected override void Seed(ConnectionContext context)
+    //    {
+    //        new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
+    //            .ForEach(x => context.Weekdays.Add(new Weekday { Name = x }));
 
-	//        base.Seed(context);
-	//    }
-	//}
+    //        base.Seed(context);
+    //    }
+    //}
 
 
 	///// ver 2.2 TODO Нужно тестиро
@@ -87,6 +88,15 @@ namespace Mvc_Schedule.Models.DataModels
         {
             new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
                 .ForEach(x => context.Weekdays.Add(new Weekday { Name = x }));
+            
+            if (Membership.GetUser("admin") == null)
+            {
+                var admin = Membership.CreateUser("admin", "password", email: "email@email.ru");
+                if (!Roles.RoleExists(StaticData.AdminRoleName))
+                    Roles.CreateRole(StaticData.AdminRoleName);
+                if (!Roles.IsUserInRole(admin.UserName, StaticData.AdminRoleName))
+                    Roles.AddUserToRole(admin.UserName, StaticData.AdminRoleName);
+            }
         }
         public void InitializeDatabase(ConnectionContext context)
         {
@@ -126,7 +136,7 @@ namespace Mvc_Schedule.Models.DataModels
                             }
                             else
                             {
-                                #region Команды на удаление всех сущностей БД (табл, проц, функ, ключи)
+                                #region Команды на удаление всех сущностей БД (табл, проц, функ)
                                 /*sqldropallprocs*/
                                 context.Database.ExecuteSqlCommand(
                                     "DECLARE @name VARCHAR(128) DECLARE @SQL VARCHAR(254) SELECT @name = (SELECT TOP 1 [name] FROM sysobjects WHERE [type] = 'P' AND category = 0 ORDER BY [name]) WHILE @name is not null BEGIN SELECT @SQL = 'DROP PROCEDURE [dbo].[' + RTRIM(@name) +']' EXEC (@SQL) PRINT 'Dropped Procedure: ' + @name SELECT @name = (SELECT TOP 1 [name] FROM sysobjects WHERE [type] = 'P' AND category = 0 AND [name] > @name ORDER BY [name]) END");
@@ -150,6 +160,7 @@ namespace Mvc_Schedule.Models.DataModels
                             scope.Complete();
                         }
                     }
+                    
                     context.Database.ExecuteSqlCommand(((IObjectContextAdapter)context).ObjectContext.CreateDatabaseScript());
 
                     Seed(context);

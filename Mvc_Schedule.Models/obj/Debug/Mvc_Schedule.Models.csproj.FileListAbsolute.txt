@@ -13,3 +13,11 @@ C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule.Mod
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule.Models\obj\Debug\Mvc_Schedule.Models.csprojResolveAssemblyReference.cache
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule.Models\obj\Debug\Mvc_Schedule.Models.dll
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule.Models\obj\Debug\Mvc_Schedule.Models.pdb
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule.Models\bin\Debug\Mvc_Schedule.Models.dll.config
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule.Models\bin\Debug\Mvc_Schedule.Models.dll
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule.Models\bin\Debug\Mvc_Schedule.Models.pdb
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule.Models\bin\Debug\EntityFramework.dll
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule.Models\bin\Debug\EntityFramework.xml
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule.Models\obj\Debug\Mvc_Schedule.Models.csprojResolveAssemblyReference.cache
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule.Models\obj\Debug\Mvc_Schedule.Models.dll
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule.Models\obj\Debug\Mvc_Schedule.Models.pdb
