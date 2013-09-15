@@ -23,8 +23,7 @@ namespace Mvc_Schedule.Controllers
 			var model = _db.Facults.ListNames();
 			return View(model);
 		}
-
-		[Authorize(Roles = StaticData.AdminRoleName)]
+        [Authorize(Roles = StaticData.AdminRoleName)]
 		public ActionResult Create()
 		{
 			return View();

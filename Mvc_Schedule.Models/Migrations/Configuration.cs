@@ -17,8 +17,8 @@ namespace Mvc_Schedule.Models.Migrations
 
         protected override void Seed(Mvc_Schedule.Models.DataModels.ConnectionContext context)
         {
-            new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
-                .ForEach(x => context.Weekdays.AddOrUpdate(new Weekday { Name = x }));
+            //new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
+            //    .ForEach(x => context.Weekdays.AddOrUpdate(new Weekday { Name = x }));
 
             if (Membership.GetUser("admin") != null) return;
 

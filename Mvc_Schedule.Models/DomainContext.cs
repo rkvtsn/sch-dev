@@ -4,63 +4,77 @@ using Mvc_Schedule.Models.DataModels.Repositories;
 
 namespace Mvc_Schedule.Models
 {
-	public class DomainContext : IDisposable
-	{
-		private readonly ConnectionContext _ctx;
-		
-		public int SaveChanges() { return _ctx.SaveChanges(); }
-		public DomainContext() { _ctx = new ConnectionContext(); }
+    public class DomainContext : IDisposable
+    {
+        private readonly ConnectionContext _ctx;
 
-		#region @Repositories
+        public int SaveChanges() { return _ctx.SaveChanges(); }
+        public DomainContext() { _ctx = new ConnectionContext(); }
 
-		private RepositoryLessons _lessons;
-		public RepositoryLessons Lessons
-		{
-			get { return _lessons ?? (_lessons = new RepositoryLessons(_ctx)); }
-			set { _lessons = value; }
-		}
+        #region @Repositories
 
-		private RepositoryScheduleTable _schedule;
-		public RepositoryScheduleTable Schedule
-		{
-			get { return _schedule ?? (_schedule = new RepositoryScheduleTable(_ctx)); }
-			set { _schedule = value; }
-		}
 
-		private RepositoryFacults _facults;
-		public RepositoryFacults Facults
-		{
-			get { return _facults ?? (_facults = new RepositoryFacults(_ctx)); }
-			set { _facults = value; }
-		}
 
-		private RepositoryGroups _groups;
-		public RepositoryGroups Groups
-		{
-			get { return _groups ?? (_groups = new RepositoryGroups(_ctx)); }
-			set { _groups = value; }
-		}
+        private RepositoryLessons _lessons;
+        public RepositoryLessons Lessons
+        {
+            get { return _lessons ?? (_lessons = new RepositoryLessons(_ctx)); }
+            set { _lessons = value; }
+        }
 
-		private RepositoryWeekdays _weekdays;
-		public RepositoryWeekdays Weekdays
-		{
-			get { return _weekdays ?? (_weekdays = new RepositoryWeekdays(_ctx)); }
-			set { _weekdays = value; }
-		}
+        private RepositoryScheduleTable _schedule;
+        public RepositoryScheduleTable Schedule
+        {
+            get { return _schedule ?? (_schedule = new RepositoryScheduleTable(_ctx)); }
+            set { _schedule = value; }
+        }
 
-		#endregion
-		#region @Implementation of IDisposable
+        private RepositoryFacults _facults;
+        public RepositoryFacults Facults
+        {
+            get { return _facults ?? (_facults = new RepositoryFacults(_ctx)); }
+            set { _facults = value; }
+        }
 
-		private bool _disposed = false;
-		public void Dispose()
-		{
-			if (!_disposed)
-			{
-				_ctx.Dispose();
-				_disposed = true;
-			}
-		}
+        private RepositoryGroups _groups;
+        public RepositoryGroups Groups
+        {
+            get { return _groups ?? (_groups = new RepositoryGroups(_ctx)); }
+            set { _groups = value; }
+        }
 
-		#endregion
-	}
+        private RepositoryWeekdays _weekdays;
+        public RepositoryWeekdays Weekdays
+        {
+            get { return _weekdays ?? (_weekdays = new RepositoryWeekdays(_ctx)); }
+            set { _weekdays = value; }
+        }
+
+        private RepositoryLectors _lectors;
+        public RepositoryLectors Lectors
+        {
+            get { return _lectors ?? (_lectors = new RepositoryLectors(_ctx)); }
+            set { _lectors = value; }
+        }
+
+        private RepositorySubjects _subjects;
+        public RepositorySubjects Subjects
+        {
+            get { return _subjects ?? (_subjects = new RepositorySubjects(_ctx)); }
+            set { _subjects = value; }
+        }
+
+        #endregion
+        #region @Implementation of IDisposable
+
+        private bool _disposed = false;
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _ctx.Dispose();
+            _disposed = true;
+        }
+
+        #endregion
+    }
 }

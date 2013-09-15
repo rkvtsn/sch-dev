@@ -1,9 +1,11 @@
 ﻿function autocompleteHandler(element, str) {
-    var updateAvailability = function(isAvailable) {
+    var div = element.parent().parent().find(".is-available");
+    var updateAvailability = function (isAvailable) {
         if (isAvailable) {
-            
+            div.fadeOut();
         } else {
-            
+            div.innerHTML("Увы, уже занято!");
+            div.fadeIn();
         }
     };
     element.autocomplete({

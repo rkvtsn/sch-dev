@@ -53,6 +53,7 @@
     <Compile Include="DataModels\Entities\Lesson.cs" />
     <Compile Include="DataModels\Entities\StudGroup.cs" />
     <Compile Include="DataModels\Entities\Weekday.cs" />
+    <Compile Include="DataModels\Entities\Lector.cs" />
     <Compile Include="DataModels\ModelViews\Account.cs" />
     <Compile Include="DataModels\ModelViews\FacultCreate.cs" />
     <Compile Include="DataModels\ModelViews\FacultName.cs" />
@@ -64,10 +65,13 @@
     <Compile Include="DataModels\ModelViews\ScheduleTableSearch.cs" />
     <Compile Include="DataModels\Repositories\RepositoryBase.cs" />
     <Compile Include="DataModels\Repositories\RepositoryGroups.cs" />
+    <Compile Include="DataModels\Repositories\RepositoryLectors.cs" />
     <Compile Include="DataModels\Repositories\RepositoryLessons.cs" />
     <Compile Include="DataModels\Entities\ScheduleTable.cs" />
     <Compile Include="DataModels\Repositories\RepositoryScheduleTable.cs" />
+    <Compile Include="DataModels\Repositories\RepositorySubjects.cs" />
     <Compile Include="DataModels\StaticData.cs" />
+    <Compile Include="DataModels\Entities\Subject.cs" />
     <Compile Include="DomainContext.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

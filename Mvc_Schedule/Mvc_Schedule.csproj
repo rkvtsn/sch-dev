@@ -73,8 +73,10 @@
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\FacultController.cs" />
     <Compile Include="Controllers\GroupsController.cs" />
+    <Compile Include="Controllers\LectorsController.cs" />
     <Compile Include="Controllers\LessonsController.cs" />
     <Compile Include="Controllers\ScheduleController.cs" />
+    <Compile Include="Controllers\SubjectsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -94,12 +96,9 @@
     <Content Include="Content\images\week1.png" />
     <Content Include="Content\images\week2.png" />
     <Content Include="Content\style.css" />
-    <Content Include="Content\style_logon_.css" />
-    <Content Include="Content\style_schedule_.css" />
     <Content Include="Content\jquery.ui.autocomplete.css" />
     <Content Include="Content\validation.css" />
     <Content Include="Global.asax" />
-    <Content Include="Content\style_.css" />
     <Content Include="Scripts\lessons.js" />
     <Content Include="Scripts\DefaultIndex.js" />
     <Content Include="Scripts\jquery-1.8.0.min.js" />
@@ -182,6 +181,39 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Schedule\Search.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Lectors\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Lectors\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Lectors\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Lectors\Delete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Subjects\Create.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Subjects\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Subjects\Delete.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Subjects\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_CancelAgree.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Cancel.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_ValidationStyles.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

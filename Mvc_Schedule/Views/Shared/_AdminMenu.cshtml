@@ -35,4 +35,4 @@
 		color: #fff;
 	}
 </style>
-<div class="admin-menu">@if (User.IsInRole(StaticData.AdminRoleName)){@ActionLinkActive("Пользователи", "Index", "Admin", true)@ActionLinkActive("Добавить факультет", "Create", "Facult")@ActionLinkActive("Редактор звонков", "Index", "Lessons", true)}@ActionLinkActive("Расписание", "Index", "Facult")@ActionLinkActive("Добавить группу", "Create", "Groups")@Html.ActionLink("Выйти", "LogOff", "Auth")</div>
+<div class="admin-menu">@if (User.IsInRole(StaticData.AdminRoleName)){@ActionLinkActive("Пользователи", "Index", "Admin", true)@ActionLinkActive("Добавить факультет", "Create", "Facult")@ActionLinkActive("Редактор звонков", "Index", "Lessons", true)}@ActionLinkActive("Расписание", "Index", "Facult")@ActionLinkActive("Добавить группу", "Create", "Groups")@ActionLinkActive("Дисциплины", "Index", "Subjects", true)@ActionLinkActive("Преподаватели", "Index", "Lectors", true)@Html.ActionLink("Выйти", "LogOff", "Auth")</div>

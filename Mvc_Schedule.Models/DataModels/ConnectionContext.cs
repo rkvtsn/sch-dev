@@ -9,43 +9,47 @@ using Mvc_Schedule.Models.DataModels.Entities;
 
 namespace Mvc_Schedule.Models.DataModels
 {
-	public sealed class ConnectionContext : DbContext
-	{
-		public DbSet<ScheduleTable> ScheduleTables { get; set; }
+    public sealed class ConnectionContext : DbContext
+    {
+        public DbSet<ScheduleTable> ScheduleTables { get; set; }
 
-		public DbSet<Lesson> Lessons { get; set; }
+        public DbSet<Lesson> Lessons { get; set; }
 
-		public DbSet<StudGroup> StudGroups { get; set; }
+        public DbSet<StudGroup> StudGroups { get; set; }
 
-		public DbSet<Facult> Facults { get; set; }
+        public DbSet<Facult> Facults { get; set; }
 
-		public DbSet<Weekday> Weekdays { get; set; }
-	}
+        public DbSet<Weekday> Weekdays { get; set; }
+
+        public DbSet<Lector> Lectors { get; set; }
+
+        public DbSet<Subject> Subjects { get; set; }
+    }
 
     // TODO Замена на миграцию EF
-	#region DbIni:
+    #region DbIni:
 
-	//public class DbInitializer : DropCreateDatabaseIfModelChanges<ConnectionContext>
-	//{
-	//    protected override void Seed(ConnectionContext context)
-	//    {
-	//        new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
-	//            .ForEach(x => context.Weekdays.Add(new Weekday { Name = x }));
+    //public class DbInitializer : DropCreateDatabaseIfModelChanges<ConnectionContext>
+    //{
+    //    protected override void Seed(ConnectionContext context)
+    //    {
+    //        new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
+    //            .ForEach(x => context.Weekdays.Add(new Weekday { Name = x }));
 
-	//        base.Seed(context);
-	//    }
-	//}
+    //        base.Seed(context);
+    //    }
+    //}
 
-	//public class DbReCreate : DropCreateDatabaseAlways<ConnectionContext>
-	//{
-	//    protected override void Seed(ConnectionContext context)
-	//    {
-	//        new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
-	//            .ForEach(x => context.Weekdays.Add(new Weekday { Name = x }));
+    //public class DbReCreate : DropCreateDatabaseAlways<ConnectionContext>
+    //{
+    //    protected override void Seed(ConnectionContext context)
+    //    {
+    //        new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
+    //            .ForEach(x => context.Weekdays.Add(new Weekday { Name = x }));
 
-	//        base.Seed(context);
-	//    }
-	//}
+    //        base.Seed(context);
+    //    }
+    //}
     //public class DbSetup : CreateDatabaseIfNotExists<ConnectionContext>
     //{
     //    protected override void Seed(ConnectionContext context)
@@ -58,10 +62,10 @@ namespace Mvc_Schedule.Models.DataModels
     //}
 
 
-	///// ver 2.2 TODO Нужно тестиро
-	///// <summary>
-	///// Миграция БД без ASP.NET Membership
-	///// </summary>
+    ///// ver 2.2 TODO Нужно тестиро
+    ///// <summary>
+    ///// Миграция БД без ASP.NET Membership
+    ///// </summary>
     public class DbMigrate : IDatabaseInitializer<ConnectionContext>
     {
         /// <summary>
@@ -88,7 +92,7 @@ namespace Mvc_Schedule.Models.DataModels
         {
             new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
                 .ForEach(x => context.Weekdays.Add(new Weekday { Name = x }));
-            
+
             if (Membership.GetUser("admin") == null)
             {
                 var admin = Membership.CreateUser("admin", "password", email: "email@email.ru");
@@ -160,7 +164,7 @@ namespace Mvc_Schedule.Models.DataModels
                             scope.Complete();
                         }
                     }
-                    
+
                     context.Database.ExecuteSqlCommand(((IObjectContextAdapter)context).ObjectContext.CreateDatabaseScript());
 
                     Seed(context);
@@ -181,5 +185,5 @@ namespace Mvc_Schedule.Models.DataModels
 
 
 
-	#endregion
+    #endregion
 }

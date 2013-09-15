@@ -34,8 +34,8 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
 
             //var result = _ctx.Weekdays.GroupBy(x => x.Name, x => x.ScheduleTables, (key, g) => new Schedule { Name = key, Lessons = g });
             //        //join s in _ctx.ScheduleTables on x.WeekdayId equals s.WeekdayId
-                    //where s.GroupId == groupid
-                    //select x;
+            //where s.GroupId == groupid
+            //select x;
 
             var result = _ctx.Weekdays.GroupBy(w => w, w => w.ScheduleTables.Where(x => x.GroupId == groupid)
                 .GroupBy(x => x.Lesson, x => x, (k, g) => new Sc { Key = k, Group = g.OrderBy(x => x.IsWeekOdd) }), //.Where(x => x.GroupId == groupid)
@@ -269,30 +269,52 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                 _ctx.ScheduleTables.Remove(t);
         }
 
+        public AutoCompleteMsg ListByLetter(string firstLetters, string method)
+        {
+            var result = new AutoCompleteMsg();
+            if (method == "Lectors")
+            {
+
+            }
+            else if (method == "Auditory")
+            {
+
+            }
+            else
+            {
+
+            }
+            return result;
+        }
+
         public AutoCompleteMsg ListSubjects(string firstLetters)
         {
             return new AutoCompleteMsg
                 {
-                    arr = (from x in _ctx.ScheduleTables
-                           orderby x.SubjectName
-                           where x.SubjectName.ToLower().StartsWith(firstLetters.ToLower())
-                           select x.SubjectName).Distinct().ToArray(),
-                    isAvailable = true
+                    arr = (from x in _ctx.Subjects
+                           orderby x.Title
+                           where x.Title.ToLower().StartsWith(firstLetters.ToLower())
+                           select x.Title).Distinct().ToArray(),
+                    isAvailable = false
                 };
         }
 
         public AutoCompleteMsg ListLectors(string firstLetters)
         {
+            var list = (from x in _ctx.Lectors
+                        orderby x.SecondName
+                        where
+                            (x.SecondName.ToLower().StartsWith(firstLetters.ToLower())) ||
+                            (x.Name.ToLower().StartsWith(firstLetters.ToLower()))
+                        select x).Distinct().ToList();
+
             return new AutoCompleteMsg
             {
-                arr = (from x in _ctx.ScheduleTables
-                       orderby x.LectorName
-                       where x.LectorName.ToLower().StartsWith(firstLetters.ToLower())
-                       select x.LectorName).Distinct().ToArray(),
-                isAvailable = true
+                arr = list.Select(x => x.FullName).ToArray(),
+                isAvailable = false
             };
         }
-        
+
         public AutoCompleteMsg ListAuditory(string firstLetters)
         {
             return new AutoCompleteMsg
