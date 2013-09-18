@@ -21,9 +21,8 @@
 		font-weight: normal;
 	}
     .is-available {
-        display: none;
+        display: block;
         width: 100%;
-        height: 20px;
         background: #ccc;
     }
 	#selector-block a {
@@ -57,7 +56,7 @@
                 @foreach (var lesson in Model.Lessons)
                 {
                     <div class="lesson" id="@lesson.LessonId">
-                        <p>@lesson.TimeString</p>
+                        <p class="time">@lesson.TimeString</p>
                         <ul class="lesson-form">
                             @if (Model.ScheduleTableRows != null && Model.ScheduleTableRows.Any(x => x.LessonId == lesson.LessonId && x.WeekdayId == weekday.WeekdayId))
                             {

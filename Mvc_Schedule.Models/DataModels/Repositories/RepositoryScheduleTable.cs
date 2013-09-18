@@ -269,37 +269,15 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                 _ctx.ScheduleTables.Remove(t);
         }
 
-        public AutoCompleteMsg ListByLetter(string firstLetters, string method)
+        public string[] ListSubjects(string firstLetters)
         {
-            var result = new AutoCompleteMsg();
-            if (method == "Lectors")
-            {
-
-            }
-            else if (method == "Auditory")
-            {
-
-            }
-            else
-            {
-
-            }
-            return result;
+            return (from x in _ctx.Subjects
+                    orderby x.Title
+                    where x.Title.ToLower().StartsWith(firstLetters.ToLower())
+                    select x.Title).Distinct().ToArray();
         }
 
-        public AutoCompleteMsg ListSubjects(string firstLetters)
-        {
-            return new AutoCompleteMsg
-                {
-                    arr = (from x in _ctx.Subjects
-                           orderby x.Title
-                           where x.Title.ToLower().StartsWith(firstLetters.ToLower())
-                           select x.Title).Distinct().ToArray(),
-                    isAvailable = false
-                };
-        }
-
-        public AutoCompleteMsg ListLectors(string firstLetters)
+        public string[] ListLectors(string firstLetters)
         {
             var list = (from x in _ctx.Lectors
                         orderby x.SecondName
@@ -308,30 +286,56 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                             (x.Name.ToLower().StartsWith(firstLetters.ToLower()))
                         select x).Distinct().ToList();
 
-            return new AutoCompleteMsg
-            {
-                arr = list.Select(x => x.FullName).ToArray(),
-                isAvailable = false
-            };
+            return list.Select(x => x.FullName).ToArray();
         }
 
-        public AutoCompleteMsg ListAuditory(string firstLetters)
+        public string[] ListAuditory(string firstLetters)
         {
-            return new AutoCompleteMsg
-            {
-                arr = (from x in _ctx.ScheduleTables
-                       orderby x.Auditory
-                       where x.Auditory.ToLower().StartsWith(firstLetters.ToLower())
-                       select x.Auditory).Distinct().ToArray(),
-                isAvailable = true
-            };
+            return (from x in _ctx.ScheduleTables
+                    orderby x.Auditory
+                    where x.Auditory.ToLower().StartsWith(firstLetters.ToLower())
+                    select x.Auditory).Distinct().ToArray();
+        }
+
+        public Availability IsAvailableLector(int timeId, string value)
+        {
+
+            var result = new Availability();
+
+            var query = _ctx.ScheduleTables
+                        .Where(x => x.LessonId == timeId && x.LectorName == value)
+                        .Select(x => x.GroupId);
+
+            result.IsAvailable = query.Any();
+            result.Url = "";
+
+            return result;
+        }
+
+        public Availability IsAvailableAuditory(int timeId, string value)
+        {
+
+            var result = new Availability();
+
+            var query = _ctx.ScheduleTables
+                        .Where(x => x.LessonId == timeId && x.Auditory == value)
+                        .Select(x => x.GroupId);
+
+            result.IsAvailable = query.Any();
+            result.Url = "";
+
+            return result;
         }
     }
-    [Serializable]
-    public class AutoCompleteMsg
-    {
-        public string[] arr { get; set; }
-        public bool isAvailable { get; set; }
-    }
 
+    [Serializable]
+    public class Availability
+    {
+        public Availability()
+        {
+
+        }
+        public string Url { get; set; }
+        public bool IsAvailable { get; set; }
+    }
 }
