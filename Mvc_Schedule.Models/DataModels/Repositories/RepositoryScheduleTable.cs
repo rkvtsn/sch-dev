@@ -297,45 +297,23 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                     select x.Auditory).Distinct().ToArray();
         }
 
-        public Availability IsAvailableLector(int timeId, string value)
+        public string IsAvailableLector(int timeId, string value, bool week)
         {
 
-            var result = new Availability();
+            return _ctx.ScheduleTables
+                    .Where(x => x.LessonId == timeId && x.LectorName == value && x.IsWeekOdd == week)
+                    .Select(x => x.GroupId)
+                    .FirstOrDefault()
+                    .ToString(CultureInfo.InvariantCulture);
 
-            var query = _ctx.ScheduleTables
-                        .Where(x => x.LessonId == timeId && x.LectorName == value)
-                        .Select(x => x.GroupId);
-
-            result.IsAvailable = query.Any();
-            result.Url = "";
-
-            return result;
         }
 
-        public Availability IsAvailableAuditory(int timeId, string value)
+        public string IsAvailableAuditory(int timeId, string value, bool week)
         {
 
-            var result = new Availability();
-
-            var query = _ctx.ScheduleTables
-                        .Where(x => x.LessonId == timeId && x.Auditory == value)
-                        .Select(x => x.GroupId);
-
-            result.IsAvailable = query.Any();
-            result.Url = "";
-
-            return result;
+            return _ctx.ScheduleTables
+                    .Where(x => x.LessonId == timeId && x.Auditory == value && x.IsWeekOdd == week)
+                    .Select(x => x.GroupId).FirstOrDefault().ToString(CultureInfo.InvariantCulture);
         }
-    }
-
-    [Serializable]
-    public class Availability
-    {
-        public Availability()
-        {
-
-        }
-        public string Url { get; set; }
-        public bool IsAvailable { get; set; }
     }
 }

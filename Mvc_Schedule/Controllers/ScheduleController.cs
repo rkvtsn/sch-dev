@@ -18,15 +18,15 @@ namespace Mvc_Schedule.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetAvailableLectors(int timeId, string value)
+        public JsonResult GetAvailableLectors(int timeId, string value, bool week)
         {
-            return Json(_db.Schedule.IsAvailableLector(timeId, value));
+            return Json(_db.Schedule.IsAvailableLector(timeId, value, week));
         }
 
         [HttpPost]
-        public JsonResult GetAvailableAuditory(int timeId, string value)
+        public JsonResult GetAvailableAuditory(int timeId, string value, bool week)
         {
-            return Json(_db.Schedule.IsAvailableAuditory(timeId, value));
+            return Json(_db.Schedule.IsAvailableAuditory(timeId, value, week));
         }
 
         [HttpGet]

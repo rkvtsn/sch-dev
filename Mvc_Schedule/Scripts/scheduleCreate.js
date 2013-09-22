@@ -1,10 +1,11 @@
-﻿var timer;
+﻿var isOddWeek = false;
+var timer;
     
 function popupAvail(data, div, dt) {
 
     var p = div.children("p[data-type='" + dt + "']");
-    alert(data);
-    if (data.IsAvailable) {
+    
+    if (data == "0") {
         
         if (p.length != 0) {
             p.remove();
@@ -37,12 +38,12 @@ function autocompleteHandler(element, str) {
                 var val = jq.val();
                 var lesson = jq.closest('.lesson');
                 var lessonId = lesson.attr("id");
-
+                
                 $.ajax({
                     url: '/Schedule/GetAvailable' + str,
                     type: "POST",
                     dataType: "json",
-                    data: { timeId: lessonId, value: val },
+                    data: { timeId: lessonId, value: val, week: isOddWeek },
                     success: function (data) {
                         var div = jq.parent("DIV").parent("LI").children(".is-available");
                         popupAvail(data, div, str);
@@ -70,6 +71,7 @@ function autocompleteHandler(element, str) {
 }
 
 $(document).ready(function () {
+    isOddWeek = $("#IsOddWeek").attr("value");
     var index = $("#indexer").val(); // баластовый счётчик, но без него совсем скучно
     var groupId = $("#GroupId").val(); //
     $(".add_element").click(function () {
