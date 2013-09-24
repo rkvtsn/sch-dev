@@ -35,3 +35,5 @@ C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\E
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\obj\Debug\Mvc_Schedule.csprojResolveAssemblyReference.cache
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\obj\Debug\Mvc_Schedule.dll
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\obj\Debug\Mvc_Schedule.pdb
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\EPPlus.dll
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\EPPlus.xml

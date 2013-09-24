@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Mvc_Schedule.Models.DataModels.Entities;
 using Mvc_Schedule.Models.DataModels.ModelViews;
+using OfficeOpenXml;
 
 namespace Mvc_Schedule.Models.DataModels.Repositories
 {
@@ -315,5 +318,38 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                     .Where(x => x.LessonId == timeId && x.Auditory == value && x.IsWeekOdd == week)
                     .Select(x => x.GroupId).FirstOrDefault().ToString(CultureInfo.InvariantCulture);
         }
+
+        public object ToExcel(int groupId, int week)
+        {
+            var path = HttpContext.Current.Server.MapPath("~/Content/xls/" + "filename" + ".xls");
+            
+            using (var resultXls = new MemoryStream())
+            using (var templateXls = File.OpenRead(path))
+            using (var package = new ExcelPackage(resultXls, templateXls))
+            {
+                var sheet = package.Workbook.Worksheets[1];
+
+                var map = (from x in sheet.Cells["a:x"]
+                           group x by x.Value.ToString() into g
+                           where g.Key != null &&
+                                (g.Key == "%aud%" || g.Key == "%lec%")
+                           select new
+                               {
+                                   Key = g.Key,
+                                   Value = g.FirstOrDefault()
+                               }).ToDictionary(x => x.Key, x => x.Value);
+            }
+            throw new NotImplementedException();
+        }
+    }
+    public static class ScheduleExcel
+    {
+        internal static class Tags
+        {
+            public const string Lesson = "%les%";
+            public const string Time = "%time%";
+        }
+
+
     }
 }

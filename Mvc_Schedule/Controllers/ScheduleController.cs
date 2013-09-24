@@ -9,6 +9,39 @@ namespace Mvc_Schedule.Controllers
 
         public ScheduleController() { ViewBag.Title = "Редактор расписания"; }
 
+        [HttpGet]
+        public ActionResult Excel(int id = -1, int week = 1)
+        {
+            var group = _db.Groups.Get(id);
+            
+            if (group == null)
+                return RedirectToRoute(new { controller = "Default", action = "Error", id = 404 });
+            
+            var model = _db.Schedule.ToExcel(id, week);
+
+            return View();
+
+
+            /*var document = ...
+    var cd = new System.Net.Mime.ContentDisposition
+    {
+        // for example foo.bak
+        FileName = document.FileName, 
+
+        // always prompt the user for downloading, set to true if you want 
+        // the browser to try to show the file inline
+        Inline = false, 
+    };
+    Response.AppendHeader("Content-Disposition", cd.ToString());
+    return File(document.Data, document.ContentType);
+             * 
+            Response.BinaryWrite(pck.GetAsByteArray());
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", "attachment;  filename=Sample3.xlsx");
+*/
+        }
+
+
         [HttpPost]
         public JsonResult GetList(string letter, string method)
         {
@@ -30,7 +63,7 @@ namespace Mvc_Schedule.Controllers
         }
 
         [HttpGet]
-        public ActionResult Index(int id = -1, int week = 1)
+        public ActionResult Index(int id = -1)
         {
             var group = _db.Groups.Get(id);
             if (group == null)
