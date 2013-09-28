@@ -12,33 +12,29 @@ namespace Mvc_Schedule.Controllers
         [HttpGet]
         public ActionResult Excel(int id = -1, int week = 1)
         {
-            var group = _db.Groups.Get(id);
-            
-            if (group == null)
-                return RedirectToRoute(new { controller = "Default", action = "Error", id = 404 });
-            
-            var model = _db.Schedule.ToExcel(id, week);
-
+            //var fac = _db.Facults.Get(id);
+            //if (fac == null)
+            //    return RedirectToRoute(new { controller = "Default", action = "Error", id = 404 });
+            ////_db.Schedule.CreateExcel(id, week);
+            ////_db.Schedule.RenderToExcel(id, week);
+            _db.Schedule.UpdateExcel(id, week);
+            //_db.Schedule.GetWeekdaysWithScheduleByFacult(id, week);
             return View();
 
+            /*
+            var document = ...
+            var cd = new System.Net.Mime.ContentDisposition
+            {
+                FileName = document.FileName, 
 
-            /*var document = ...
-    var cd = new System.Net.Mime.ContentDisposition
-    {
-        // for example foo.bak
-        FileName = document.FileName, 
-
-        // always prompt the user for downloading, set to true if you want 
-        // the browser to try to show the file inline
-        Inline = false, 
-    };
-    Response.AppendHeader("Content-Disposition", cd.ToString());
-    return File(document.Data, document.ContentType);
-             * 
+                Inline = false, 
+            };
+            Response.AppendHeader("Content-Disposition", cd.ToString());
+            return File(document.Data, document.ContentType);
             Response.BinaryWrite(pck.GetAsByteArray());
             Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             Response.AddHeader("content-disposition", "attachment;  filename=Sample3.xlsx");
-*/
+            */
         }
 
 
@@ -49,6 +45,7 @@ namespace Mvc_Schedule.Controllers
             else if (method == "Auditory") { return Json(_db.Schedule.ListAuditory(letter)); }
             else return Json(_db.Schedule.ListSubjects(letter));
         }
+        
 
         [HttpPost]
         public JsonResult GetAvailableLectors(int timeId, string value, bool week)
@@ -63,6 +60,7 @@ namespace Mvc_Schedule.Controllers
         }
 
         [HttpGet]
+        //[OutputCache(Duration = 3600, VaryByParam = "id")]
         public ActionResult Index(int id = -1)
         {
             var group = _db.Groups.Get(id);
@@ -73,7 +71,7 @@ namespace Mvc_Schedule.Controllers
             return View(model);
         }
 
-        // Немного поиска
+        // Поиска
         [HttpGet]
         public ActionResult Search(string keyword, int searchType, int week = 1)
         {

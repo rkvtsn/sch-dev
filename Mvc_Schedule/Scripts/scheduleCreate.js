@@ -1,12 +1,13 @@
 ﻿var isOddWeek = false;
 var timer;
-    
+var groupId;
+
 function popupAvail(data, div, dt) {
 
     var p = div.children("p[data-type='" + dt + "']");
     
-    if (data == "0") {
-        
+    if (data == "0" || data == groupId) {
+
         if (p.length != 0) {
             p.remove();
         }
@@ -73,7 +74,7 @@ function autocompleteHandler(element, str) {
 $(document).ready(function () {
     isOddWeek = $("#IsOddWeek").attr("value");
     var index = $("#indexer").val(); // баластовый счётчик, но без него совсем скучно
-    var groupId = $("#GroupId").val(); //
+    groupId = $("#GroupId").val(); //
     $(".add_element").click(function () {
         var counter = $(this).parent("P").prev(".lesson-form").children("LI").length;
         if (counter >= 2) { return; }

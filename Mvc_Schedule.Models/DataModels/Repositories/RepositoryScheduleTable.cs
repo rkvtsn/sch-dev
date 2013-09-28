@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Mvc_Schedule.Models.DataModels.Entities;
+using System.Data.Entity;
 using Mvc_Schedule.Models.DataModels.ModelViews;
 using OfficeOpenXml;
 
@@ -33,14 +34,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
 
         public List<Ws> GetWeekdaysWithSchedule(int groupid)
         {
-            //var result = _ctx.Weekdays.Include(x => x.ScheduleTables);
-
-            //var result = _ctx.Weekdays.GroupBy(x => x.Name, x => x.ScheduleTables, (key, g) => new Schedule { Name = key, Lessons = g });
-            //        //join s in _ctx.ScheduleTables on x.WeekdayId equals s.WeekdayId
-            //where s.GroupId == groupid
-            //select x;
-
-            var result = _ctx.Weekdays.GroupBy(w => w, w => w.ScheduleTables.Where(x => x.GroupId == groupid)
+            var result = _ctx.Weekdays.Include(x => x.ScheduleTables).GroupBy(w => w, w => w.ScheduleTables.Where(x => x.GroupId == groupid)
                 .GroupBy(x => x.Lesson, x => x, (k, g) => new Sc { Key = k, Group = g.OrderBy(x => x.IsWeekOdd) }), //.Where(x => x.GroupId == groupid)
                 (k, g) => new Ws { Key = k, Group = g }).OrderBy(x => x.Key.WeekdayId);
 
@@ -231,16 +225,6 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
         //
         public void ListAdd(ScheduleTableCreate table)
         {
-            /*
-            var group = _ctx.StudGroups.Find(table.GroupId);
-            if (group == null || (!Roles.IsUserInRole(group.FacultId.ToString(CultureInfo.InvariantCulture)) && !Roles.IsUserInRole("Admin")))
-                return;
-            foreach (var row in List(table.GroupId, table.IsWeekOdd)) _ctx.ScheduleTables.Remove(row);
-            if (table.ScheduleTableRows != null)
-                foreach (var row in table.ScheduleTableRows)
-                    _ctx.ScheduleTables.Add(row);
-            */
-
             // Валидация
             var group = _ctx.StudGroups.Find(table.GroupId);
             if (group == null || (!Roles.IsUserInRole(group.FacultId.ToString(CultureInfo.InvariantCulture)) && !Roles.IsUserInRole("Admin")))
@@ -313,43 +297,137 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
 
         public string IsAvailableAuditory(int timeId, string value, bool week)
         {
-
             return _ctx.ScheduleTables
                     .Where(x => x.LessonId == timeId && x.Auditory == value && x.IsWeekOdd == week)
                     .Select(x => x.GroupId).FirstOrDefault().ToString(CultureInfo.InvariantCulture);
         }
 
-        public object ToExcel(int groupId, int week)
+        public void UpdateExcel(int facultid, int week)
         {
-            var path = HttpContext.Current.Server.MapPath("~/Content/xls/" + "filename" + ".xls");
-            
-            using (var resultXls = new MemoryStream())
-            using (var templateXls = File.OpenRead(path))
-            using (var package = new ExcelPackage(resultXls, templateXls))
+            var newpath = HttpContext.Current.Server.MapPath("~/Content/xls/new.xlsx");
+            var templatename = "template.xlsx";
+            var path = HttpContext.Current.Server.MapPath("~/Content/xls/" + templatename);
+
+            var source = new FileInfo(path);
+            using (var package = new ExcelPackage(source))
             {
+                var result = new FileInfo(newpath);
+
+                if (result.Exists)
+                    result.Delete();
+
                 var sheet = package.Workbook.Worksheets[1];
 
-                var map = (from x in sheet.Cells["a:x"]
-                           group x by x.Value.ToString() into g
-                           where g.Key != null &&
-                                (g.Key == "%aud%" || g.Key == "%lec%")
-                           select new
-                               {
-                                   Key = g.Key,
-                                   Value = g.FirstOrDefault()
-                               }).ToDictionary(x => x.Key, x => x.Value);
+                var schTab = this.GetWeekdaysWithScheduleByFacult(facultid, week);
+
+                foreach (var weekday in schTab)
+                {
+                    // поиск день недели
+                    var weekdayCell = (from x in sheet.Cells["A:X"]
+                                       where x.Value != null && x.Value.ToString().Trim().ToLower() == weekday.Key.Name.Trim().ToLower()
+                                       select x).FirstOrDefault();
+                    if (weekdayCell == null) continue;
+                    foreach (var lesson in weekday.Group)
+                    {
+                        foreach (var sc in lesson.ToArray())
+                        {
+                            // поиск время урока
+                            var timeCell = (from x in sheet.Cells[weekdayCell.Start.Row, weekdayCell.Start.Column + 1, weekdayCell.End.Row + 10, weekdayCell.Start.Column + 10] // TODO
+                                            where x.Value != null
+                                                && x.Value.ToString().Trim().StartsWith(sc.Key.TimeString.Remove(2))
+                                            select x).FirstOrDefault();
+                            foreach (var ws in sc.Group)
+                            {
+                                var counter = sc.Group.Count(x => x.GroupId == ws.GroupId);
+                                // поиск группы
+                                var groupCell = (from x in sheet.Cells
+                                                 where x.Value != null
+                                                       && x.Value.ToString() == ws.StudGroup.Name
+                                                 select x).FirstOrDefault();
+
+                                if (timeCell == null || groupCell == null) continue;
+
+                                var startColumn = groupCell.Start.Column;
+                                if (sheet.Cells[timeCell.Start.Row, groupCell.Start.Column].Value != null)
+                                {
+                                    startColumn++;
+                                }
+                                sheet.Cells[timeCell.Start.Row, startColumn].Value = ws.SubjectName + "    " + ws.Auditory;
+                                sheet.Cells[timeCell.Start.Row + 1, startColumn].Value = ws.LectorName;
+                                
+                                if (counter == 1)
+                                {
+                                    sheet.Cells[
+                                        timeCell.Start.Row, groupCell.Start.Column,
+                                        timeCell.Start.Row, groupCell.Start.Column + 1].Merge = true;
+                                    sheet.Cells[
+                                        timeCell.Start.Row + 1, groupCell.Start.Column,
+                                        timeCell.Start.Row + 1, groupCell.Start.Column + 1].Merge = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                package.SaveAs(result);
             }
-            throw new NotImplementedException();
+        }
+
+        public List<Ws> GetWeekdaysWithScheduleByFacult(int facultid, int week)
+        {
+            var result = _ctx.Weekdays
+                        .Include(x => x.ScheduleTables) // псевдо JOIN
+                        .GroupBy(w => w, w => (from x in w.ScheduleTables // подзапрос.выборка SELECT
+                                               join studGroup in _ctx.StudGroups on x.GroupId equals studGroup.GroupId
+                                               join facult in _ctx.Facults on studGroup.FacultId equals facult.FacultId
+                                               where x.StudGroup.FacultId == facultid && x.IsWeekOdd == (week == 1) // УСЛОВИЕ
+                                               select x)
+                                              .GroupBy(l => l.Lesson, l => l, (k, g) => new Sc() { Key = k, Group = g }),
+                                              (k, g) => new Ws { Key = k, Group = g }); // .OrderBy(x => x.Key.WeekdayId);
+            return result.ToList();
+        }
+
+        public void RenderToExcel(int id, int week)
+        {
+            var path = HttpContext.Current.Server.MapPath("~/Content/xls/render.xlsx");
+            using (var package = new ExcelPackage())
+            {
+                package.Workbook.Worksheets.Add("Чётная");
+                var sheet = package.Workbook.Worksheets[1];
+
+                sheet.Cells[1, 1].Value = "Привет Мир";
+
+                Byte[] bin = package.GetAsByteArray();
+
+                File.WriteAllBytes(path, bin);
+            }
         }
     }
-    public static class ScheduleExcel
+
+    public class ScheduleExcel
     {
-        internal static class Tags
+        public Dictionary<string, ExcelRangeBase> Map { get; set; }
+
+        public ScheduleExcel(ExcelWorksheet sheet)
         {
-            public const string Lesson = "%les%";
-            public const string Time = "%time%";
+            Map = (from x in sheet.Cells["a:x"]
+                   where x.Value != null
+                   group x by x.Value.ToString() into g
+                   where Tags.All.Contains(g.Key)
+                   select new
+                   {
+                       Key = g.Key,
+                       Value = g.FirstOrDefault()
+                   }).ToDictionary(x => x.Key, x => x.Value);
         }
 
-
+        internal static class Tags
+        {
+            public const string Week = "%week%";
+            public const string Weekday = "%wd%";
+            public const string Lesson = "%les%";
+            public const string Time = "%time%";
+            readonly static public string[] All = new[] { Lesson, Time, Week, Weekday };
+        }
     }
 }

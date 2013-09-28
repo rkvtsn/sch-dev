@@ -4,16 +4,16 @@
 <div id="page-title">Расписание группы @ViewBag.Title</div>
 
 <style>
-    .lesson * { color: #fff; }
+    .lesson * { color: #ffffff; }
     .bg1 {background: #ff5db1;}
     .bg2 {background: #4169e1;}
     .bg3 {background: #9acd32;}
     .bg4 {background: #dc143c;}
-
 </style>
 
 
 <div id="selector-block">
+    
     <div class="column1 cell">&nbsp;</div>
     <div class="column2 cell">&nbsp;</div>
     <div class="subrow1 cell header1">Чётная</div>
@@ -22,99 +22,56 @@
     @foreach (var week in Model)
     {
         <div class="weekday">
-        <div class="cell column1">@week.Key.Name</div>
-        @foreach (var lessons in week.Group)
-        {
-            <div class="row">
-            
-                @{
-                    var lessonsArray = lessons as Sc[] ?? lessons.ToArray();
-                }
-                @foreach (var lesson in lessonsArray.ToList())
+            <div class="cell column1">@week.Key.Name</div>
+            @foreach (var lessons in week.Group)
             {
-                <div class="cell column2">@lesson.Key.TimeString</div>
-                var countOdd = lesson.Group.Count(x => x.IsWeekOdd);
-                var countEven = lesson.Group.Count(x => !x.IsWeekOdd);
-                foreach (var sc in lesson.Group)
-                {
-                    <div class="cell lesson bg4">
-                        @{ var subrow = !sc.IsWeekOdd ? countEven : countOdd; }
-                        <div class="subrow@(subrow)">
-                            <span class="subject-name">@sc.SubjectName</span>
-                            <span class="subject-auditory">@sc.Auditory</span>
-                        </div>        
-                        <div class="subrow@(subrow) subject-lector">
-                            @sc.LectorName
-                        </div>
-                    </div>
-                }
-                <div class="ending"></div>
-                <div class="cell column1">&nbsp;</div>
-            }@if (!lessonsArray.Any())
-            {
-                <div class="cell column2">&nbsp;</div>
-                <div class="cell subrow2">&nbsp;</div>
-                <div class="cell subrow2">&nbsp;</div>
-                <div class="ending"></div>            
-                <div class="cell column1">&nbsp;</div> 
+                <div class="row">
+                    @{
+                        var lessonsArray = lessons as Sc[] ?? lessons.ToArray();
+                    }
+                    @foreach (var lesson in lessonsArray)
+                    {
+                        <div class="cell column2">@lesson.Key.TimeString</div>
+                        var countOdd = lesson.Group.Count(x => x.IsWeekOdd);
+                        var countEven = lesson.Group.Count(x => !x.IsWeekOdd);
+                        foreach (var sc in lesson.Group)
+                        {
+                            <div class="cell lesson bg4">
+                                @{ var subrow = !sc.IsWeekOdd ? countEven : countOdd; }
+                                <div class="subrow@(subrow)">
+                                    <span class="subject-name">@sc.SubjectName</span>
+                                    <span class="subject-auditory">@sc.Auditory</span>
+                                </div>        
+                                <div class="subrow@(subrow) subject-lector">
+                                    @sc.LectorName
+                                </div>
+                            </div>
+                        }
+                        <div class="ending"></div>
+                        <div class="cell column1">&nbsp;</div>
+                    }@if (!lessonsArray.Any())
+                     {
+                         <div class="cell column2">&nbsp;</div>
+                         <div class="cell subrow2">&nbsp;</div>
+                         <div class="cell subrow2">&nbsp;</div>
+                         <div class="ending"></div>            
+                         <div class="cell column1">&nbsp;</div> 
+                     }
+                </div>
             }
-            </div>
-        }
         </div>
         <div class="ending"></div>
     }
-    
-
-    @*    @foreach (var weekday in Model.Weekdays)
-    {
-        <div class="weekday">
-            <div class="cell column1">@weekday.Name</div>
-            @foreach (var lesson in Model.Lessons)
-            {
-                <div class="cell">@lesson.TimeString</div>
-                var subjects = Model.Schedule.Where(x => x.LessonId == lesson.LessonId && x.WeekdayId == weekday.WeekdayId);
-                var subjectsCount = subjects.Count();
-            
-                foreach (var subject in subjects)
-                {
-                    <div class="cell">
-                        <div class="subrow@(3-subjectsCount)">
-                            <span class="subject-name">@subject.SubjectName</span>
-                            <span class="subject-auditory">@subject.Auditory</span>
-                        </div>
-                        <div class="subrow@(3-subjectsCount) subject-lector">
-                            @subject.LectorName
-                        </div>
-                    </div>
-                }
-                <div class="ending"></div>
-                <div class="cell column1">&nbsp;</div>
-            }
-            <div class="ending"></div>
-        </div>
-    }*@
-
-    
-    
-    
-
-
-
 </div>
-
-
-
 <script>
     $(document).ready(function () {
         methodToFixLayout();
     });
-
     function methodToFixLayout(e) {
         var winWidth = $(window).width();
         $("#selector-block").css("width", (winWidth <= 800) ? 'auto' : '');
         $("#selector-block").css("min-width", (winWidth <= 800) ? '300px' : '');
     }
-
     $(window).bind("resize", methodToFixLayout);
 
 </script>

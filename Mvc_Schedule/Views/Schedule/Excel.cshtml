@@ -1,0 +1,19 @@
+﻿@model List<Mvc_Schedule.Models.DataModels.Repositories.Ws>
+           
+
+
+@*@foreach (var weekday in @Model)
+                {
+    <p>@weekday.Key.Name</p>
+                    foreach (var lesson in weekday.Group)
+                    {
+                        foreach (var sc in lesson)
+                        {
+                            <p>@sc.Key.TimeString</p>
+                            foreach (var ws in sc.Group)
+                            {
+                                <p>@ws.SubjectName</p>
+                            }
+                        }
+                    }
+                }*@
