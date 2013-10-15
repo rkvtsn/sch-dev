@@ -1,5 +1,6 @@
 ﻿using Mvc_Schedule.Models;
 using System.Web.Mvc;
+using Mvc_Schedule.Models.DataModels.Entities;
 
 namespace Mvc_Schedule.Controllers
 {
@@ -12,31 +13,11 @@ namespace Mvc_Schedule.Controllers
         [HttpGet]
         public ActionResult Excel(int id = -1, int week = 1)
         {
-            //var fac = _db.Facults.Get(id);
-            //if (fac == null)
-            //    return RedirectToRoute(new { controller = "Default", action = "Error", id = 404 });
-            ////_db.Schedule.CreateExcel(id, week);
-            ////_db.Schedule.RenderToExcel(id, week);
-            _db.Schedule.UpdateExcel(id, week);
-            //_db.Schedule.GetWeekdaysWithScheduleByFacult(id, week);
-            return View();
-
-            /*
-            var document = ...
-            var cd = new System.Net.Mime.ContentDisposition
-            {
-                FileName = document.FileName, 
-
-                Inline = false, 
-            };
-            Response.AppendHeader("Content-Disposition", cd.ToString());
-            return File(document.Data, document.ContentType);
-            Response.BinaryWrite(pck.GetAsByteArray());
-            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            Response.AddHeader("content-disposition", "attachment;  filename=Sample3.xlsx");
-            */
+            var facult = _db.Facults.Get(id);
+            if (facult == null) return RedirectToAction("Error", "Default", new { id = 404 });
+            var result = facult.IsReady ? ExcelTemplate.Path(id, week) : _db.Schedule.CheckExcel(id, week);
+            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
-
 
         [HttpPost]
         public JsonResult GetList(string letter, string method)
@@ -45,7 +26,7 @@ namespace Mvc_Schedule.Controllers
             else if (method == "Auditory") { return Json(_db.Schedule.ListAuditory(letter)); }
             else return Json(_db.Schedule.ListSubjects(letter));
         }
-        
+
 
         [HttpPost]
         public JsonResult GetAvailableLectors(int timeId, string value, bool week)
@@ -71,7 +52,6 @@ namespace Mvc_Schedule.Controllers
             return View(model);
         }
 
-        // Поиска
         [HttpGet]
         public ActionResult Search(string keyword, int searchType, int week = 1)
         {
@@ -82,8 +62,8 @@ namespace Mvc_Schedule.Controllers
         }
 
 
-        [Authorize]
-        [HttpGet]
+
+        [Authorize, HttpGet]
         public ActionResult Create(int id = -1, int week = 1)
         {
             var model = _db.Schedule.ListForCreate(id, 1 == week);
@@ -93,9 +73,7 @@ namespace Mvc_Schedule.Controllers
             return View(model);
         }
 
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Authorize, HttpPost, ValidateAntiForgeryToken]
         public ActionResult Create(FormCollection scheduleRows)
         {
             bool isValid;
@@ -103,17 +81,18 @@ namespace Mvc_Schedule.Controllers
 
             if (isValid)
             {
-                _db.Schedule.ListAdd(scheduletable);
-                _db.SaveChanges();
-                return RedirectToAction("Index", "Facult");
+                if (_db.Schedule.ListAdd(scheduletable))
+                {
+                    _db.SaveChanges();
+                    return RedirectToAction("Index", "Facult");
+                }
             }
 
-            ViewBag.Error = "Ошибка ввода, заполните все поля";
+            ViewBag.Error = "Ошибка ввода (все поля должны быть заполнены)";
             scheduletable.Lessons = _db.Lessons.List();
             scheduletable.Weekdays = _db.Weekdays.List();
 
             return View(scheduletable);
-            //return View(new ScheduleTableCreate());
         }
 
 

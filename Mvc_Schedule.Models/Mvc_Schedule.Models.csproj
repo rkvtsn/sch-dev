@@ -52,20 +52,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataModels\ConnectionContext.cs" />
+    <Compile Include="DataModels\Entities\ExcelTemplate.cs" />
     <Compile Include="DataModels\Entities\Facult.cs" />
     <Compile Include="DataModels\Entities\Lesson.cs" />
     <Compile Include="DataModels\Entities\StudGroup.cs" />
+    <Compile Include="DataModels\Entities\TxtFile.cs" />
     <Compile Include="DataModels\Entities\Weekday.cs" />
     <Compile Include="DataModels\Entities\Lector.cs" />
     <Compile Include="DataModels\ModelViews\Account.cs" />
     <Compile Include="DataModels\ModelViews\FacultCreate.cs" />
+    <Compile Include="DataModels\ModelViews\FacultEdit.cs" />
     <Compile Include="DataModels\ModelViews\FacultName.cs" />
+    <Compile Include="DataModels\ModelViews\FileSizeAttribute.cs" />
+    <Compile Include="DataModels\ModelViews\FileTypesAttribute.cs" />
     <Compile Include="DataModels\ModelViews\GroupsJson.cs" />
     <Compile Include="DataModels\ModelViews\LessonsCreate.cs" />
     <Compile Include="DataModels\ModelViews\Member.cs" />
     <Compile Include="DataModels\ModelViews\ScheduleTableCreate.cs" />
     <Compile Include="DataModels\ModelViews\ScheduleTableIndex.cs" />
     <Compile Include="DataModels\ModelViews\ScheduleTableSearch.cs" />
+    <Compile Include="DataModels\Repositories\LectorEqualityComparer.cs" />
     <Compile Include="DataModels\Repositories\RepositoryBase.cs" />
     <Compile Include="DataModels\Repositories\RepositoryGroups.cs" />
     <Compile Include="DataModels\Repositories\RepositoryLectors.cs" />
@@ -75,6 +81,7 @@
     <Compile Include="DataModels\Repositories\RepositorySubjects.cs" />
     <Compile Include="DataModels\StaticData.cs" />
     <Compile Include="DataModels\Entities\Subject.cs" />
+    <Compile Include="DataModels\Repositories\TxtUploader.cs" />
     <Compile Include="DomainContext.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,6 +91,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Desktop\_Pager\Pager\Pager.csproj">
+      <Project>{7fa2e9bd-79fd-4f3a-9be3-fb17515c63d4}</Project>
+      <Name>Pager</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

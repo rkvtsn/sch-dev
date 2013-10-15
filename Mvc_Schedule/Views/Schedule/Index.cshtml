@@ -5,19 +5,37 @@
 
 <style>
     .lesson * { color: #ffffff; }
-    .bg1 {background: #ff5db1;}
+    .bg1 {background: #ff5db1;} 
     .bg2 {background: #4169e1;}
     .bg3 {background: #9acd32;}
     .bg4 {background: #dc143c;}
+    #legend { width: 100%; cursor: default; padding: 10px; }
+    #legend:hover { width: 100%; }
+    #legend:hover * { display: block; }
+    .legend.sq { width: 5px; height: 5px; cursor: pointer; }
+    .legend.title { display: none; width: 120px; height: 5px; padding: 0; cursor: pointer; }
 </style>
 
 
 <div id="selector-block">
     
+    <div id="legend">
+        <div class="legend sq cell bg1" title="Лекция"></div>
+        <div class="legend title cell">Лекция</div>
+        <div class="legend sq cell bg3" title="Лабораторная"></div>
+        <div class="legend title cell">Лабораторная</div>
+        <div class="ending"></div>
+        <div class="legend sq cell bg2" title="Практика"></div>
+        <div class="legend title cell">Практика</div>
+        <div class="legend sq cell bg4" title="Зачёт"></div>
+        <div class="legend title cell">Зачёт</div>
+        <div class="ending"></div>
+    </div>
+
     <div class="column1 cell">&nbsp;</div>
     <div class="column2 cell">&nbsp;</div>
-    <div class="subrow1 cell header1">Чётная</div>
     <div class="subrow1 cell header1">Нечётная</div>
+    <div class="subrow1 cell header1">Чётная</div>
     <div class="ending"></div>
     @foreach (var week in Model)
     {
@@ -36,7 +54,7 @@
                         var countEven = lesson.Group.Count(x => !x.IsWeekOdd);
                         foreach (var sc in lesson.Group)
                         {
-                            <div class="cell lesson bg4">
+                            <div class="cell lesson bg@(sc.LessonType)">
                                 @{ var subrow = !sc.IsWeekOdd ? countEven : countOdd; }
                                 <div class="subrow@(subrow)">
                                     <span class="subject-name">@sc.SubjectName</span>
@@ -65,6 +83,52 @@
 </div>
 <script>
     $(document).ready(function () {
+        $(".subrow2 .subject-name").each(function (i) {
+            var mCell = $(this).parent().parent();
+            var lesType = mCell.attr("class")[mCell.attr("class").length - 1];
+            var lesName = "Лекция";
+            if (lesType == 2) lesName = "Практика";
+            else if (lesType == 3) lesName = "Лабораторная";
+            else if (lesType == 4) lesName = "Зачёт";
+            mCell.attr("title", $(this).text() + " (" + lesName + ")");
+            var len = $(this).text().length + $(this).next().text().length; // Длина линейки
+            if (len >= 16) {
+                var words = $(this).text().split(/[ -]+/);
+                if (len <= 15 || words.length == 1)
+                    $(this).text($(this).text().substr(0, 10) + "...");
+                else {
+                    var name = "";
+                    for (var j = 0; j < words.length; j++) {
+                        name += words[j].toUpperCase()[0];
+                    }
+                    $(this).text(name);
+                }
+            }
+        });
+
+
+        var legend = function(element) {
+            element.toggle(
+                function() {
+                    $(this).css({
+                        opacity: "0.6"
+                    });
+                    var id = $(this).attr("class")[$(this).attr("class").length - 1];
+                    $(".lesson.bg" + id.toString()).hide();
+                },
+                function() {
+                    $(this).css({
+                        opacity: ""
+                    });
+                    var id = $(this).attr("class")[$(this).attr("class").length - 1];
+                    $(".lesson.bg" + id.toString()).show();
+                }
+            );
+        };
+        legend($("#legend .sq"));
+        $("#legend .title").click(function () {
+            $($(this).prev()).trigger("click");
+        });
         methodToFixLayout();
     });
     function methodToFixLayout(e) {

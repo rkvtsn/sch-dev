@@ -123,6 +123,10 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Desktop\_Pager\Pager\Pager.csproj">
+      <Project>{7FA2E9BD-79FD-4F3A-9BE3-FB17515C63D4}</Project>
+      <Name>Pager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Mvc_Schedule.Models\Mvc_Schedule.Models.csproj">
       <Project>{59B6ADDA-2CC8-4C9E-9361-0D1411A80A4E}</Project>
       <Name>Mvc_Schedule.Models</Name>
@@ -217,7 +221,16 @@
     <Content Include="Views\Shared\_ValidationStyles.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Schedule\Excel.cshtml" />
+    <Content Include="Views\Schedule\Editor.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Lectors\AddFromTxt.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Subjects\AddFromTxt.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Pager.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

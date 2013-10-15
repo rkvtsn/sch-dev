@@ -8,7 +8,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Mvc_Schedule.Models.DataModels.Entities;
-using System.Data.Entity;
 using Mvc_Schedule.Models.DataModels.ModelViews;
 using OfficeOpenXml;
 
@@ -35,7 +34,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
         public List<Ws> GetWeekdaysWithSchedule(int groupid)
         {
             var result = _ctx.Weekdays.Include(x => x.ScheduleTables).GroupBy(w => w, w => w.ScheduleTables.Where(x => x.GroupId == groupid)
-                .GroupBy(x => x.Lesson, x => x, (k, g) => new Sc { Key = k, Group = g.OrderBy(x => x.IsWeekOdd) }), //.Where(x => x.GroupId == groupid)
+                .GroupBy(x => x.Lesson, x => x, (k, g) => new Sc { Key = k, Group = g.OrderBy(x => x.IsWeekOdd) }).OrderBy(x => x.Key.Time), //.Where(x => x.GroupId == groupid)
                 (k, g) => new Ws { Key = k, Group = g }).OrderBy(x => x.Key.WeekdayId);
 
             return result.ToList();
@@ -202,9 +201,11 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                 var item = new ScheduleTable
                 {
                     ScheduleTableId = id,
+
                     Auditory = scheduleRows[i++].Trim(),
-                    SubjectName = scheduleRows[i++].Trim(),
                     LectorName = scheduleRows[i++].Trim(),
+                    SubjectName = scheduleRows[i++].Trim(),
+                    LessonType = int.Parse(scheduleRows[i++]),
                     LessonId = int.Parse(scheduleRows[i++]),
                     GroupId = int.Parse(scheduleRows[i++]),
                     WeekdayId = int.Parse(scheduleRows[i]),
@@ -223,16 +224,16 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
         //
         // TODO Всё переделать на AJAX ! - упростит мне всю работу с SQL
         //
-        public void ListAdd(ScheduleTableCreate table)
+        public bool ListAdd(ScheduleTableCreate table)
         {
             // Валидация
             var group = _ctx.StudGroups.Find(table.GroupId);
             if (group == null || (!Roles.IsUserInRole(group.FacultId.ToString(CultureInfo.InvariantCulture)) && !Roles.IsUserInRole("Admin")))
-                return;
+                return false;
 
             // Старая таблица - для сравнения по изменению
             var oldTable = List(table.GroupId, table.IsWeekOdd);
-
+            
             foreach (var tRow in table.ScheduleTableRows)
             {
                 // Убираем измененные
@@ -248,12 +249,20 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                     old.LectorName = tRow.LectorName;
                     old.SubjectName = tRow.SubjectName;
                     old.Auditory = tRow.Auditory;
+                    old.LessonType = tRow.LessonType;
                 }
             }
-
+            
             // Очистить удалённые
             foreach (var t in oldTable)
                 _ctx.ScheduleTables.Remove(t);
+            
+            // Обновление данных для экспорта
+            var facult = _ctx.Facults.Find(group.FacultId);
+            facult.IsReady = false;
+
+            // Все этапы пройдены успешно
+            return true;
         }
 
         public string[] ListSubjects(string firstLetters)
@@ -302,40 +311,81 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                     .Select(x => x.GroupId).FirstOrDefault().ToString(CultureInfo.InvariantCulture);
         }
 
-        public void UpdateExcel(int facultid, int week)
+        public List<Ws> GetWeekdaysWithScheduleByFacult(int facultid, int week)
         {
-            var newpath = HttpContext.Current.Server.MapPath("~/Content/xls/new.xlsx");
-            var templatename = "template.xlsx";
-            var path = HttpContext.Current.Server.MapPath("~/Content/xls/" + templatename);
+            var result = _ctx.Weekdays
+                        .Include(x => x.ScheduleTables) // псевдо JOIN
+                        .GroupBy(w => w, w => (from x in w.ScheduleTables // подзапрос.выборка SELECT
+                                               join studGroup in _ctx.StudGroups on x.GroupId equals studGroup.GroupId
+                                               join facult in _ctx.Facults on studGroup.FacultId equals facult.FacultId
+                                               where x.StudGroup.FacultId == facultid && x.IsWeekOdd == (week == 1) // УСЛОВИЕ
+                                               select x)
+                                              .GroupBy(l => l.Lesson, l => l, (k, g) => new Sc { Key = k, Group = g }),
+                                              (k, g) => new Ws { Key = k, Group = g }); // .OrderBy(x => x.Key.WeekdayId);
+            return result.ToList();
+        }
 
-            var source = new FileInfo(path);
+
+        public string CheckExcel(int facultid, int week)
+        {
+            var templatePath = ExcelTemplate.Path(facultid);
+            
+            var resultPath = ExcelTemplate.Path(facultid, week);
+            var source = new FileInfo(templatePath);
             using (var package = new ExcelPackage(source))
             {
-                var result = new FileInfo(newpath);
-
-                if (result.Exists)
-                    result.Delete();
-
+                var result = new FileInfo(resultPath);
+                if (result.Exists) result.Delete();
                 var sheet = package.Workbook.Worksheets[1];
-
                 var schTab = this.GetWeekdaysWithScheduleByFacult(facultid, week);
+
+                // определение чётности недели
+                var weekCell = (from x in sheet.Cells["A:X"]
+                                where x.Value != null && x.Value.ToString().Trim().ToLower() == ("неделя")
+                                select x).FirstOrDefault();
+
+                if (weekCell == null) throw new Exception("В шаблоне нет метки недели");
+                weekCell.Value = ((week == 2) ? "ч ё т н а я    н е д е л я" : "н е ч ё т н а я     н е д е л я");
+
+                // высота линейки дня
+                var lessonsRaw = _ctx.Lessons.Select(x => x).ToList();
+                var lessons = lessonsRaw.Select(x => x.TimeString.Remove(2, 1)).ToArray();
+                if (lessons.Length == 0) throw new Exception("Данные о звонках не найдены");
+                var rowCount = lessons.Count() * 2; // TODO
+
+                //var k = -1;
+                //int weekdayRowHeight = Math.Abs((from x in sheet.Cells["A:X"]
+                //                                 where x.Value != null &&
+                //                                 (x.Value.ToString().Trim().ToLower().Equals("понедельник")
+                //                                 || x.Value.ToString().Trim().ToLower().Equals("вторник"))
+                //                                 select x.Start.Row * (k *= -1)).Sum());
+
+                // колонка звонков
+                var firstLessonCell = (from x in sheet.Cells["A:X"]
+                                       where x.Value != null && lessons.Contains(x.Value.ToString().Substring(0, 4))
+                                       select x).FirstOrDefault();
+                if (firstLessonCell == null) throw new Exception("В шаблоне нет временных меток");
+                var lessonColumn = firstLessonCell.Start.Column;
+
 
                 foreach (var weekday in schTab)
                 {
-                    // поиск день недели
                     var weekdayCell = (from x in sheet.Cells["A:X"]
                                        where x.Value != null && x.Value.ToString().Trim().ToLower() == weekday.Key.Name.Trim().ToLower()
                                        select x).FirstOrDefault();
+
                     if (weekdayCell == null) continue;
                     foreach (var lesson in weekday.Group)
                     {
                         foreach (var sc in lesson.ToArray())
                         {
-                            // поиск время урока
-                            var timeCell = (from x in sheet.Cells[weekdayCell.Start.Row, weekdayCell.Start.Column + 1, weekdayCell.End.Row + 10, weekdayCell.Start.Column + 10] // TODO
+                            // поиск времени урока
+                            var timeCell = (from x in sheet.Cells[weekdayCell.Start.Row, lessonColumn,
+                                                                  weekdayCell.Start.Row + rowCount, lessonColumn]
                                             where x.Value != null
-                                                && x.Value.ToString().Trim().StartsWith(sc.Key.TimeString.Remove(2))
+                                                && x.Value.ToString().Trim().StartsWith(sc.Key.TimeString.Remove(2, 1))
                                             select x).FirstOrDefault();
+
                             foreach (var ws in sc.Group)
                             {
                                 var counter = sc.Group.Count(x => x.GroupId == ws.GroupId);
@@ -354,7 +404,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                                 }
                                 sheet.Cells[timeCell.Start.Row, startColumn].Value = ws.SubjectName + "    " + ws.Auditory;
                                 sheet.Cells[timeCell.Start.Row + 1, startColumn].Value = ws.LectorName;
-                                
+
                                 if (counter == 1)
                                 {
                                     sheet.Cells[
@@ -371,63 +421,67 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
 
                 package.SaveAs(result);
             }
+            return resultPath;
         }
+        #region @old
+        //public void RenderToExcel(int id, int week)
+        //{
+        //    var path = HttpContext.Current.Server.MapPath("~/Content/xls/render.xlsx");
+        //    using (var package = new ExcelPackage())
+        //    {
+        //        package.Workbook.Worksheets.Add("Чётная");
+        //        var sheet = package.Workbook.Worksheets[1];
 
-        public List<Ws> GetWeekdaysWithScheduleByFacult(int facultid, int week)
-        {
-            var result = _ctx.Weekdays
-                        .Include(x => x.ScheduleTables) // псевдо JOIN
-                        .GroupBy(w => w, w => (from x in w.ScheduleTables // подзапрос.выборка SELECT
-                                               join studGroup in _ctx.StudGroups on x.GroupId equals studGroup.GroupId
-                                               join facult in _ctx.Facults on studGroup.FacultId equals facult.FacultId
-                                               where x.StudGroup.FacultId == facultid && x.IsWeekOdd == (week == 1) // УСЛОВИЕ
-                                               select x)
-                                              .GroupBy(l => l.Lesson, l => l, (k, g) => new Sc() { Key = k, Group = g }),
-                                              (k, g) => new Ws { Key = k, Group = g }); // .OrderBy(x => x.Key.WeekdayId);
-            return result.ToList();
-        }
+        //        sheet.Cells[1, 1].Value = "Привет Мир";
 
-        public void RenderToExcel(int id, int week)
-        {
-            var path = HttpContext.Current.Server.MapPath("~/Content/xls/render.xlsx");
-            using (var package = new ExcelPackage())
-            {
-                package.Workbook.Worksheets.Add("Чётная");
-                var sheet = package.Workbook.Worksheets[1];
+        //        Byte[] bin = package.GetAsByteArray();
 
-                sheet.Cells[1, 1].Value = "Привет Мир";
-
-                Byte[] bin = package.GetAsByteArray();
-
-                File.WriteAllBytes(path, bin);
-            }
-        }
+        //        File.WriteAllBytes(path, bin);
+        //    }
+        //}
+        #endregion
     }
+    #region @tagged
+    //public class ScheduleExcel
+    //{
+    //    public Dictionary<string, ExcelRangeBase> Map { get; set; }
 
-    public class ScheduleExcel
-    {
-        public Dictionary<string, ExcelRangeBase> Map { get; set; }
+    //    public ScheduleExcel(ExcelWorksheet sheet)
+    //    {
+    //        Map = (from x in sheet.Cells["a:x"]
+    //               where x.Value != null
+    //               group x by x.Value.ToString() into g
+    //               where Tags.All.Contains(g.Key)
+    //               select new
+    //               {
+    //                   Key = g.Key,
+    //                   Value = g.FirstOrDefault()
+    //               }).ToDictionary(x => x.Key, x => x.Value);
+    //    }
 
-        public ScheduleExcel(ExcelWorksheet sheet)
-        {
-            Map = (from x in sheet.Cells["a:x"]
-                   where x.Value != null
-                   group x by x.Value.ToString() into g
-                   where Tags.All.Contains(g.Key)
-                   select new
-                   {
-                       Key = g.Key,
-                       Value = g.FirstOrDefault()
-                   }).ToDictionary(x => x.Key, x => x.Value);
-        }
+    //    internal static class Tags
+    //    {
+    //        public const string Week = "%week%";
+    //        public const string Weekday = "%wd%";
+    //        public const string Lesson = "%les%";
+    //        public const string Time = "%time%";
+    //        readonly static public string[] All = new[] { Lesson, Time, Week, Weekday };
+    //    }
+    //}
+    #endregion
 
-        internal static class Tags
-        {
-            public const string Week = "%week%";
-            public const string Weekday = "%wd%";
-            public const string Lesson = "%les%";
-            public const string Time = "%time%";
-            readonly static public string[] All = new[] { Lesson, Time, Week, Weekday };
-        }
-    }
+    //public class ExcelTemplate
+    //{
+    //    public ExcelTemplate(ExcelWorksheet sheet, int week)
+    //    {
+    //        var weekCell = (from x in sheet.Cells["A:X"]
+    //                        where x.Value != null && x.Value.ToString().Trim().ToLower().EndsWith("неделя")
+    //                        select x).FirstOrDefault();
+    //        if (weekCell == null) throw new Exception("В шаблоне нет метки недели");
+    //        weekCell.Value = ((week == 1) ? "чётная неделя" : "нечётная неделя");
+    //    }
+
+    //    public ExcelRangeBase Weekday { get; set; }
+    //    public ExcelRangeBase Time { get; set; }
+    //}
 }

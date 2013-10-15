@@ -17,9 +17,20 @@ namespace Mvc_Schedule.Models.DataModels.Entities
 
         [StringLength(20)]
         public string ThirdName { get; set; }
+        
 
+
+
+
+        /// <summary>
+        /// Сахар
+        /// </summary>
         public string FullName { get { return GetFullName(); } }
 
+        /// <summary>
+        /// Хелпер
+        /// </summary>
+        /// <returns></returns>
         public string GetFullName()
         {
             var sb = new StringBuilder(SecondName).Append(" ").Append(Name[0]).Append(".");

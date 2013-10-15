@@ -7,6 +7,7 @@
 
 	    public const string SaltPswd = "just_salt4PasswordSOplzUseMe!";
 
+        
 	    //public static readonly IDictionary<int, string> WeekdaysConst = new Dictionary<int, string>
 	    //                                                                    {
 	    //                                                                        { 1, "Понедельник" }, 

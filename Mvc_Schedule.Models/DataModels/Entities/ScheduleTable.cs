@@ -35,6 +35,9 @@ namespace Mvc_Schedule.Models.DataModels.Entities
 		[Display(Name = "Группа")]
 		public int GroupId { get; set; }
 
+        [Required]
+        public int LessonType { get; set; }
+
 		[ForeignKey("WeekdayId")]
 		public virtual Weekday Weekday { get; set; }
 		[ForeignKey("GroupId")]

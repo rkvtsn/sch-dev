@@ -7,20 +7,17 @@
 .editor-field { margin:0.5em 0 0 0; }
 
 .validation-summary-valid, .field-validation-valid { display: none; }
-.input-validation-error { border: 1px solid #ff0033; background-color: #ffeeee; }
-.field-validation-error,
-.validation-summary-errors {
+.input-validation-error { border: 1px solid #cc3366; background-color: #ffeeee; }
+span.field-validation-error span { color: #fff; }
+body span.field-validation-error,
+.validation-summary-errors{
 	display: block;
-    font-size: 14px;
-	margin: 0 auto;
-	width: 500px;
+    width: 50%;
+    font-size: 12px;
 	text-align: center;
 	font-weight: normal;
-	background: #ff0033;
-	padding: 3px;
+	background: #cc3366;
+    padding: 4px 8px;
 	color: #fff;
-	border: 1px solid #cc0033;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
+	border: 1px solid #cc3366;
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Mvc_Schedule.Models;
 using Mvc_Schedule.Models.DataModels;
 using Mvc_Schedule.Models.DataModels.Entities;
@@ -14,11 +12,37 @@ namespace Mvc_Schedule.Controllers
         {
             ViewBag.Title = "Справочник: Преподаватели";
         }
-        public ViewResult Index()
+        
+        [HttpGet, Authorize]
+        public ViewResult AddFromTxt()
+        {
+            return View();
+        }
+
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
+        public ActionResult AddFromTxt(TxtFile model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var db = new DomainContext())
+                {
+                    var result = db.Lectors.AddListFromTxt(model.Txt);
+                    db.SaveChanges();
+                    ViewBag.Result = result;
+                    return View();
+                }
+            }
+            return View(model);
+        }
+
+        public ActionResult Index(int page = 1)
         {
             using (var db = new DomainContext())
             {
-                return View(db.Lectors.List());
+                var model = db.Lectors.ListWithPager(page);
+                if (!model.IsValid)
+                    return RedirectToAction("Error", "Default", new { id = 404 });
+                return View(model);
             }
         }
         
@@ -26,7 +50,6 @@ namespace Mvc_Schedule.Controllers
         {
             return View();
         }
-
 
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Create(Lector lector)

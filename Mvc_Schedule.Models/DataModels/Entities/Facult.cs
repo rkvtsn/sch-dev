@@ -12,7 +12,9 @@ namespace Mvc_Schedule.Models.DataModels.Entities
 		[MaxLength(128)]
 		[Display(Name = "Название факультета")]
 		public string Name { get; set; }
-		
+
+        public bool IsReady { get; set; }
+
 		public virtual ICollection<StudGroup> StudGroups { get; set; }
 	}
 }

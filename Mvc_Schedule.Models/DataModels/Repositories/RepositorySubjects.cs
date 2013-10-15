@@ -1,15 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Web;
 using Mvc_Schedule.Models.DataModels.Entities;
 
 namespace Mvc_Schedule.Models.DataModels.Repositories
 {
-    public class RepositorySubjects : RepositoryBase<ConnectionContext>
+    public class RepositorySubjects : RepositoryBase<ConnectionContext, Subject>
     {
         public RepositorySubjects(ConnectionContext ctx)
             : base(ctx)
         {
+            QueryPager = from x in _ctx.Subjects orderby x.Title select x;
         }
+
+        public TxtUploaderResultModel AddListFromTxt(HttpPostedFileBase data)
+        {
+            return TxtUploader.AddListFromTxt(data, Encoding.GetEncoding(1251), subjectName =>
+            {
+                var subject = new Subject { Title = subjectName };
+                this.Add(subject);
+                return true;
+            });
+        }
+
+
 
         public IList<Subject> List()
         {

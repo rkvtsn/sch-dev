@@ -1,14 +1,14 @@
 ﻿@model Mvc_Schedule.Models.DataModels.Entities.StudGroup
 @if (!((SelectList)ViewBag.FacultId).Any())
 {
-	if ((bool)ViewData["IsAdmin"])
-	{
-		<div id="page-title">@Html.ActionLink("Нужно добавить факультет", "Create", "Facult")</div>
+    if ((bool)ViewData["IsAdmin"])
+    {
+    <div id="page-title">@Html.ActionLink("Нужно добавить факультет", "Create", "Facult")</div>
     }
-	else
-	{
-		<div id="page-title">У вас нет доступных факультетов</div>
-	}
+    else
+    {
+    <div id="page-title">У вас нет доступных факультетов</div>
+    }
     return;
 }
 
@@ -22,16 +22,20 @@
             @Html.LabelFor(model => model.FacultId, "Факультет")
         </div>
         <div class="editor-field">
-            @Html.DropDownList("FacultId")
+            @Html.DropDownList("FacultId", null, new { style = "width: 400px;" })
         </div>
 
-        <div class="editor-label">
-            @Html.Label("Name", "Название группы")
+        <div class="form-line">
+            <div class="editor-label">
+                @Html.Label("Name", "Название группы")
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Name, new { @class = "long" })
+                @if (Html.ValidationMessageFor(x => x.Name) != null)
+                { @Html.ValidationMessage("Name", "Неверно введено Название группы") }
+            </div>
         </div>
-        <div class="editor-field">
-            @Html.EditorFor(model => model.Name)
-            @if (Html.ValidationMessageFor(x => x.Name) != null){ @Html.ValidationMessage("Name", "Неверно введено Название группы") }
-        </div>
-        <p><input type="submit" value="Добавить" /></p>
+        <p>
+            <input type="submit" value="Добавить" /></p>
     }
 </div>

@@ -30,10 +30,12 @@ C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\M
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\Mvc_Schedule.pdb
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\EntityFramework.dll
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\Mvc_Schedule.Models.dll
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\EPPlus.dll
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\Mvc_Schedule.Models.pdb
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\EntityFramework.xml
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\EPPlus.xml
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\obj\Debug\Mvc_Schedule.csprojResolveAssemblyReference.cache
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\obj\Debug\Mvc_Schedule.dll
 C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\obj\Debug\Mvc_Schedule.pdb
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\EPPlus.dll
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\EPPlus.xml
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\Pager.dll
+C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\Pager.pdb

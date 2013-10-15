@@ -84,15 +84,28 @@ $(document).ready(function () {
         '<div class="is-available"></div>' +
 	    '<div class="form-line cell">' +
 		    '<label for="ScheduleTableRows_' + index + '__Auditory"> Аудитория </label>' +
-		        '<input class="auditory" id="ScheduleTableRows_' + index + '__Auditory" name="ScheduleTableRows[' + index + '].Auditory" type="text" value="" />' +
+            '<div class="ending"></div>' +
+		    '<input class="auditory" id="ScheduleTableRows_' + index + '__Auditory" name="ScheduleTableRows[' + index + '].Auditory" type="text" value="" />' +
+        '</div>' +
+        '<div class="form-line cell">' +
+		    '<label for="ScheduleTableRows_' + index + '__LectorName"> Преподаватель </label>' +
+		    '<div class="ending"></div>' +
+		    '<input type="text" class="lectors" id="ScheduleTableRows_' + index + '__LectorName" name="ScheduleTableRows[' + index + '].LectorName" />' +
         '</div>' +
         '<div class="form-line cell">' +
 		    '<label for="ScheduleTableRows_' + index + '__SubjectName"> Название дисциплины </label>' +
-		        '<input type="text" class="subjects" id="ScheduleTableRows_' + index + '__SubjectName" name="ScheduleTableRows[' + index + '].SubjectName" />' +
+		    '<div class="ending"></div>' +
+		    '<input type="text" class="subjects" id="ScheduleTableRows_' + index + '__SubjectName" name="ScheduleTableRows[' + index + '].SubjectName" />' +
 		'</div>' +
         '<div class="form-line cell">' +
-		    '<label for="ScheduleTableRows_' + index + '__LectorName"> Преподаватель </label>' +
-		        '<input type="text" class="lectors" id="ScheduleTableRows_' + index + '__LectorName" name="ScheduleTableRows[' + index + '].LectorName" />' +
+            '<label for="ScheduleTableRows_' + index + '__LessonType">Тип занятия</label>' +
+            '<div class="ending"></div>' +
+            '<select id="ScheduleTableRows_' + index + '__LessonType" name="ScheduleTableRows[' + index + '].LessonType">' +
+                '<option value="1" selected="selected">Лекция</option>' +
+                '<option value="2">Практика</option>' +
+                '<option value="3">Лабораторная</option>' + 
+                '<option value="4">Зачёт</option>' +
+            '</select>' +
         '</div>' +
                 '<input id="ScheduleTableRows_' + index + '__LessonId" name="ScheduleTableRows[' + index + '].LessonId" type="hidden" value="' + lessonId + '" />' +
 		        '<input id="ScheduleTableRows_' + index + '__GroupId" name="ScheduleTableRows[' + index + '].GroupId" type="hidden" value="' + groupId + '" />' +

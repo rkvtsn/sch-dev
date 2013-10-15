@@ -13,8 +13,6 @@ namespace Mvc_Schedule.Models
 
         #region @Repositories
 
-
-
         private RepositoryLessons _lessons;
         public RepositoryLessons Lessons
         {

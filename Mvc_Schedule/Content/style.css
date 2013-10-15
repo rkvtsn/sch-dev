@@ -1,6 +1,6 @@
 ﻿* {
-    margin: 0;
     font-family: 'Century Gothic', 'DejaVu Sans', 'Futura', 'Helvetica Light', 'Arial', sans-serif;
+    margin: 0;
     padding: 0;
     color: black;
 }
@@ -13,7 +13,7 @@ html {
     height: 100%;
 }
 
-header, nav, section, article, aside, footer {
+header, nav, section, article, aside, footer { 
     display: block;
 }
 
@@ -35,6 +35,7 @@ img {
 .form-line {
     margin: 5px 0;
 }
+
 #logon {
     padding: 30px;
     width: 220px;
@@ -44,7 +45,7 @@ img {
  }#logon input[type="submit"] {
       margin: 10px 0;
   }
-input, textarea {
+input, textarea, select {
     padding: 4px 8px;
     vertical-align: middle;
     border: 1px solid #999;
@@ -55,7 +56,7 @@ input.long { width: 100%; }
         border: 1px solid #3399cc;
     }
 
-    input:hover, textarea:hover {
+    input:hover, textarea:hover, select {
         border: 1px solid #0099cc;
     }
 
@@ -86,10 +87,9 @@ input.long { width: 100%; }
         }
 
 #header {
-    background: #333;
+    background: #33cc33;
     height: 50px;
     min-width: 400px;
-    padding-top: 10px;
     padding-left: 20px;
 }
 
@@ -99,12 +99,15 @@ input.long { width: 100%; }
     }
 
 a#agpa {
-    font-size: 36px;
+    font-size: 22px;
 }
 
 #header a#logo {
     padding: 10px;
-    font-size: 24px;
+    font-size: 18px;
+}
+#header a:hover {
+    text-decoration: underline;
 }
 
 #content {
@@ -113,7 +116,7 @@ a#agpa {
 
 #page-title {
     text-align: center;
-    font-size: 30px;
+    font-size: 20px;
     padding-top: 30px;
     padding-bottom: 15px;
 }
@@ -124,11 +127,18 @@ a#agpa {
     width: 50%;
 }
 
+
+
 .title {
-    font-size: 24px;
+    font-size: 20px;
     padding: 0px 5px;
     padding-top: 6px;
     padding-bottom: 10px;
+}
+
+#facults .title, #groups .title {
+    background: #3399FF;
+    color: #fff;
 }
 
 p.title img {
@@ -144,18 +154,21 @@ p.title img {
         padding: 5px 35px;
         display: block;
         font-size: 20px;
+        color: #fff;
+        background: #99CCFF;
         /*color: #cc3399;
         background: none;*/
     }
 
         #groups ul li a:hover, #facults ul li a:hover {
             text-decoration: underline;
-            color: #000;
-            /*color: #fff;
-            background: #cc3399;*/
+            color: #fff;
+            background: #33CCCC;
         }
 
 #facults .selected, #groups ul {
+    background: #99CCFF;
+    color: #fff;
 }
 
     #facults .selected:hover {
@@ -227,6 +240,10 @@ p.title img {
         clear: both;
     }
     .subrow2 {
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
         width: 132px;
     }
     .subrow1 {
@@ -246,14 +263,16 @@ p.title img {
     }
 ul.list li {
     margin: 5px 0px;
-    border: 1px solid #c0c0c0;
+    border: 1px solid #ccc;
 }
 .list .delete {
-    padding: 5px 10px;
+    padding: 4px 9px;
+    margin: 1px;
     background: #cc3333;
     color: #fff;
     display: inline-block;
 } 
+
     .list .delete:hover, .list .delete:focus {
         background: #fff;
         color: #cc3333;

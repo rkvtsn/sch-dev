@@ -16,9 +16,32 @@ namespace Mvc_Schedule.Controllers
             ViewBag.Title = "Справочник: Дисциплины";
         }
 
-        public ViewResult Index()
+        [HttpGet, Authorize]
+        public ViewResult AddFromTxt()
         {
-            return View(_db.Subjects.List());
+            return View();
+        }
+
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
+        public ActionResult AddFromTxt(TxtFile model)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var db = new DomainContext())
+                {
+                    var result = db.Subjects.AddListFromTxt(model.Txt);
+                    db.SaveChanges();
+                    ViewBag.Result = result;
+                    return View();
+                }
+            }
+            return View(model);
+        }
+
+
+        public ViewResult Index(int page = 1)
+        {
+            return View(_db.Subjects.ListWithPager(page));
         }
 
         public ActionResult Create()

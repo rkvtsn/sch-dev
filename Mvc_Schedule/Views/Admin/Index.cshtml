@@ -1,6 +1,4 @@
-﻿@*@model MembershipUserCollection*@
-@{ ViewBag.Title = "Пользователи"; }
-<!-- Тестовая страница -->
+﻿@{ ViewBag.Title = "Пользователи"; }
 <style type="text/css">
 	#selector-block label { padding: 5px; }
 	#saveChanges {
@@ -37,7 +35,7 @@
 		}
 	</div>
 </div>
-<style>#warning_bg { background: #333; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=90)"; filter: alpha(opacity=90); opacity: 0.9; -moz-opacity: 0.9; -khtml-opacity: 0.9; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; }#warning, #dialog { background: #fff; position: absolute; width: 400px; padding: 20px; }#close_dialog { color: #666666; text-decoration: underline; font-size: 12px; float: right;} #warning *, #dialog * {color: #333;} #warning a:hover, #usrname { text-decoration: underline; } .warning, #dialog { display: none; } </style><div class="warning" id="warning_bg"></div><div id="dialog"><p></p><a href="javascript:void(0);" id="close_dialog">закрыть</a></div><div class="warning" id="warning"><p>Вы уверены, что желаете удалить <span id="usrname"></span> ?</p><div><a href="javascript:void(0);" id="warning_y">Да</a></div><div><a href="javascript:void(0);" id="warning_n">Нет</a></div></div>
+<style>#warning_bg { background: #333; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=90)"; filter: alpha(opacity=90); opacity: 0.9; -moz-opacity: 0.9; -khtml-opacity: 0.9; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%; }#warning, #dialog { background: #ccc; position: absolute; width: 400px; padding: 20px; }#close_dialog { color: #666666; text-decoration: underline; font-size: 12px; float: right;} #warning *, #dialog * {color: #333;} #warning a:hover, #usrname { text-decoration: underline; } .warning, #dialog { display: none; } </style><div class="warning" id="warning_bg"></div><div id="dialog"><p></p><a href="javascript:void(0);" id="close_dialog">закрыть</a></div><div class="warning" id="warning"><p>Вы уверены, что желаете удалить <span id="usrname"></span> ?</p><div><a href="javascript:void(0);" id="warning_y">Да</a></div><div><a href="javascript:void(0);" id="warning_n">Нет</a></div></div>
 <script type="text/javascript">
 	// А далее идёт избыточный, зависимый и не рациональный код на самом лучшем в мире JS
 	var lastId = NaN, countdown, counter, chgRoot = $("#changepsw").attr("href"); 
