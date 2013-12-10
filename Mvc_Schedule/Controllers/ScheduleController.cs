@@ -52,13 +52,12 @@ namespace Mvc_Schedule.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public ActionResult Search(string keyword, int searchType, int week = 1)
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Search(string keyword) //, int searchType, int week = 1
         {
             if (keyword == null || keyword.Trim() == string.Empty)
                 return View();
-            else
-                return View(_db.Schedule.Search(keyword, searchType, 1 == week));
+            return View("Index", model: _db.Schedule.Search(keyword));    //return View(_db.Schedule.Search(keyword, searchType, 1 == week));
         }
 
 
@@ -73,6 +72,28 @@ namespace Mvc_Schedule.Controllers
             return View(model);
         }
 
+        //[Authorize, HttpPost, ValidateAntiForgeryToken]
+        //public ActionResult Create(FormCollection scheduleRows)
+        //{
+        //    bool isValid;
+        //    var scheduletable = _db.Schedule.FormToTable(scheduleRows, out isValid);
+
+        //    if (isValid)
+        //    {
+        //        if (_db.Schedule.ListAdd(scheduletable))
+        //        {
+        //            _db.SaveChanges();
+        //            return RedirectToAction("Index", "Facult");
+        //        }
+        //    }
+
+        //    ViewBag.Error = "Ошибка ввода (все поля должны быть заполнены)";
+        //    scheduletable.Lessons = _db.Lessons.List();
+        //    scheduletable.Weekdays = _db.Weekdays.List();
+
+        //    return View(scheduletable);
+        //}
+        
         [Authorize, HttpPost, ValidateAntiForgeryToken]
         public ActionResult Create(FormCollection scheduleRows)
         {
@@ -94,6 +115,7 @@ namespace Mvc_Schedule.Controllers
 
             return View(scheduletable);
         }
+
 
 
         protected override void Dispose(bool disposing)

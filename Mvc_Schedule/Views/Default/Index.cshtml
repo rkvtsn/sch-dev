@@ -7,13 +7,10 @@
     return;
 }
 <div id="search">
-@using(Html.BeginForm("Search","Schedule", FormMethod.Get)){
+@using(Html.BeginForm("Search","Schedule", FormMethod.Post)){
     <input type="text" placeholder="Поиск..." required="required" name="keyword" />
     <input type="submit" value="Найти"/>
-    <label for="lector">лектор</label>
-    <input type="radio" value="1" name="searchType" id="lector" checked="checked" />
-    <label for="auditory">аудитория</label>
-    <input type="radio" value="2" name="searchType" id="auditory" />
+    @Html.AntiForgeryToken()
 }
 </div>
 

@@ -81,24 +81,39 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             return _ctx.ScheduleTables.Where(x => x.GroupId == groupId && week == x.IsWeekOdd).ToList();
         }
 
-        public ScheduleTableSearch Search(string keyword, int searchType, bool week)
-        {
-            var q = (from x in _ctx.ScheduleTables
-                     where x.IsWeekOdd == week
-                     select x);
 
-            var table = searchType == 1 ? q.Where(x => x.LectorName.Contains(keyword)).Include(x => x.StudGroup) : q.Where(x => x.Auditory.Contains(keyword)).Include(x => x.StudGroup);
-            var result = new ScheduleTableSearch
-            {
-                IsWeekOdd = week,
-                Keyword = keyword,
-                SearchType = searchType,
-                Lessons = _ctx.Lessons.OrderBy(x => x.Time).ToList(),
-                Weekdays = _ctx.Weekdays.OrderBy(x => x.WeekdayId).ToList(),
-                Schedule = table
-            };
-            return result;
+        public List<Ws> Search(string keyword)
+        {
+            var result = _ctx.Weekdays.Include(x => x.ScheduleTables).GroupBy(w => w, w => w.ScheduleTables.Where(x => x.LectorName.Contains(keyword) || x.Auditory.Contains(keyword))
+                .GroupBy(x => x.Lesson, x => x, (k, g) => new Sc { Key = k, Group = g.OrderBy(x => x.IsWeekOdd) }).OrderBy(x => x.Key.Time), //.Where(x => x.GroupId == groupid)
+                (k, g) => new Ws { Key = k, Group = g }).OrderBy(x => x.Key.WeekdayId);
+
+            return result.ToList();
         }
+
+        
+        //public ScheduleTableSearch Search(string keyword, int searchType, bool week)
+        //{
+            //var q = (from x in _ctx.ScheduleTables
+            //         where x.IsWeekOdd == week
+            //         select x);
+
+
+
+            //var table = searchType == 1 ? q.Where(x => x.LectorName.Contains(keyword)).Include(x => x.StudGroup) : q.Where(x => x.Auditory.Contains(keyword)).Include(x => x.StudGroup);
+            //var result = new ScheduleTableSearch
+            //{
+            //    IsWeekOdd = week,
+            //    Keyword = keyword,
+            //    SearchType = searchType,
+            //    Lessons = _ctx.Lessons.OrderBy(x => x.Time).ToList(),
+            //    Weekdays = _ctx.Weekdays.OrderBy(x => x.WeekdayId).ToList(),
+            //    Schedule = table
+            //};
+            //return result;
+        //}
+
+        
 
 
         #region old
