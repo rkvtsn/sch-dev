@@ -1,0 +1,26 @@
+﻿@model Mvc_Schedule.Models.DataModels.Entities.Subject
+@Html.Partial("_ValidationStyles")
+<div id="page-title">Добавление дисциплин</div>
+<div id="selector-block">
+    @Html.ActionLink("Назад", "Index")
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-line">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Title, "Название дисциплины")
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Title, new { @class = "long" })
+                @Html.ValidationMessageFor(model => model.Title)
+            </div>
+        </div>
+        <p>
+            <input type="submit" value="Добавить" /></p>
+    }
+
+    @if (ViewBag.IsDublicate == true)
+    {
+        <p class="field-validation-error">Такая дисциплина была уже добавлена.</p>
+    }
+</div>

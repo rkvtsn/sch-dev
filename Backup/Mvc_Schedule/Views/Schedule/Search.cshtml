@@ -1,0 +1,81 @@
+﻿@model Mvc_Schedule.Models.DataModels.ModelViews.ScheduleTableSearch
+
+<link href="@Url.Content("~/Content/style_schedule.css")" rel="stylesheet" type="text/css" />
+
+@if (Model == null)
+{
+    <div id="page-title">Поиск невозможен, т.к. запрос не верный.</div>
+    return;
+}
+
+<div id="switchers">
+	@(Model.IsWeekOdd ? Html.ActionLink(" ", "Search", new {searchType = Model.SearchType, keyword = Model.Keyword, week = "2"}, new {id = "weekSwitcher", @class = "select"}) : Html.ActionLink(" ", "Search", new {searchType = Model.SearchType, keyword = Model.Keyword, week = "1"}, new {id = "weekSwitcher"}))
+	@*<a id="wrapSwitcher" href="javascript:void(0)"></a>*@
+</div>
+
+<div id="page-title">Поиск по @((Model.SearchType == 1) ? "лектору" : "аудитории" ) <em>"@Model.Keyword"</em></div>
+<div id="selector-block" class="list">
+@foreach (var weekday in Model.Weekdays)
+{
+	<div class="weekday">
+		<p class="name">@weekday.Name</p>
+		<ul>
+		@if (Model.Schedule.Any(x => x.WeekdayId == weekday.WeekdayId))
+		{
+		foreach (var lesson in Model.Lessons)
+		{
+		if (Model.Schedule.Any(x => x.LessonId == lesson.LessonId))
+		{
+		<li class="lesson">
+			<p class="time">@lesson.TimeString</p>
+			<div class="sublesson">
+				@foreach (var sublesson in Model.Schedule.Where(x => x.LessonId == lesson.LessonId && x.WeekdayId == weekday.WeekdayId))
+				{
+				<p class="auditory">@sublesson.Auditory</p>
+				<p>@sublesson.SubjectName</p>
+				<p class="lectors">@sublesson.LectorName</p>
+				<div class="ending"></div>
+				}
+			</div>
+			<div class="ending"></div>
+		</li>
+		}
+		}
+		}
+	   else
+	   {
+			<li class="lesson">
+				<p>Выходной</p>
+			</li>
+	   }
+		</ul>
+	</div>
+	}
+</div>
+
+
+<script>
+	$(document).ready(function () {
+		$("#wrapSwitcher").click(function () {
+			var switcher = $(this);
+			$("#selector-block").fadeOut(function () {
+				if (switcher.hasClass("select")) {
+					switcher.removeClass("select");
+					$(this).attr("class", "list");
+				} else {
+					switcher.addClass("select");
+					$(this).attr("class", "wrap");
+				}
+			}).fadeIn();
+		});
+	});
+
+	function methodToFixLayout(e) {
+		var winWidth = $(window).width();
+		$("#selector-block").css("width", (winWidth <= 800) ? 'auto' : '');
+		$("#selector-block").css("min-width", (winWidth <= 800) ? '300px' : '');
+	}
+	
+	$(window).bind("resize", methodToFixLayout);
+
+</script>

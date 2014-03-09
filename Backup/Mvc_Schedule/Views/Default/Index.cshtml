@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Mvc_Schedule.Models.DataModels.ModelViews.FacultName>
+<script src="@Url.Content("~/Scripts/DefaultIndex.js")" type="text/javascript"></script>
+
+@if (!Model.Any())
+{
+    <div id="page-title">Расписание в стадии разработки</div>
+    return;
+}
+<div id="search">
+@using(Html.BeginForm("Search","Schedule", FormMethod.Post)){
+    <input type="text" placeholder="Поиск..." required="required" name="keyword" />
+    <input type="submit" value="Найти"/>
+    @Html.AntiForgeryToken()
+}
+</div>
+
+<div id="page-title">Выберите факультет</div>
+
+<div id="selector-block">
+
+	<div id="facults" style="display: none;">
+		<p class="title"><img alt="Факультеты" src="@Url.Content("~/Content/images/facults.png")" />Факультеты:</p>
+		<ul>
+			@foreach (var facult in Model)
+   {
+			<li><a href="javascipt: void(0)" id="@facult.FacultId">@facult.Name</a></li>
+   }
+		</ul>
+	</div>
+
+	<div id="groups">
+		<p class="title"><img alt="Группы" src="@Url.Content("~/Content/images/groups.png")" />Группы:</p>
+		<ul></ul>
+	</div>
+</div>

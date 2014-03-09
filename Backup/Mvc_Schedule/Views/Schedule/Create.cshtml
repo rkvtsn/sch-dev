@@ -1,0 +1,136 @@
+﻿@model Mvc_Schedule.Models.DataModels.ModelViews.ScheduleTableCreate
+@if (!Model.Lessons.Any())
+{
+    <div id="page-title">Заполните время звонков.</div>
+    return;
+}
+<link href="@Url.Content("/Content/validation.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery-ui-1.8.23.custom.min.js")" type="text/javascript"></script>
+<link href="@Url.Content("~/Content/jquery.ui.autocomplete.css")" rel="stylesheet" type="text/css" />
+<style>
+    .weekday {
+        margin-top: 10px;
+    }
+
+        .weekday h3 {
+            cursor: pointer;
+            padding: 10px;
+            font-size: 20px;
+            font-weight: normal;
+        }
+
+    .is-available {
+        display: block;
+        width: 100%;
+        background: #ccc;
+    }
+
+    #selector-block a {
+        display: inline-block;
+        padding: 4px 10px;
+        text-align: center;
+        border: 1px solid #c0c0c0;
+    }
+
+        #selector-block a:hover {
+            border: 1px solid #3399cc;
+        }
+
+    .weekday h3:hover {
+        background: #c0c0c0;
+    }
+
+    .hideme {
+        font-size: 12px;
+        margin: 10px;
+        text-decoration: underline;
+    }
+    .weekday h3:hover .hideme {
+        text-decoration: none;
+    }
+    input[type=text] { width: 70px; }
+    input.subjects { width: 300px; }
+    input.lectors { width: 103px; }
+    select { height: 27px; }
+    input:hover, input:focus { color: #000; }
+    label {
+        cursor: pointer;
+    }
+</style>
+@{ var index = 0; }
+<div id="page-title">Расписание группы: @Model.GroupName на @(Model.IsWeekOdd ? "нечётную" : "чётную") неделю @if (ViewBag.Error != null) { 
+<br />
+    <span>@ViewBag.Error</span> }</div>
+<div id="selector-block">
+    <form method="GET">
+        <input type="submit" value="Отменить" style="float: left" /></form>
+    @using (Html.BeginForm())
+    {
+        <input type="submit" value="Сохранить" />
+        @Html.AntiForgeryToken()
+        @Html.Hidden("GroupId", Model.GroupId)
+        @Html.Hidden("IsOddWeek", Model.IsWeekOdd)
+        foreach (var weekday in Model.Weekdays)
+        {
+        <div class="weekday" id="@weekday.WeekdayId">
+            <h3>@weekday.Name<span class="hideme">скрыть</span></h3>
+            @foreach (var lesson in Model.Lessons)
+            {
+                <div class="lesson" id="@lesson.LessonId">
+                    <p class="time">@lesson.TimeString</p>
+                    <ul class="lesson-form">
+                        @if (Model.ScheduleTableRows != null && Model.ScheduleTableRows.Any(x => x.LessonId == lesson.LessonId && x.WeekdayId == weekday.WeekdayId))
+                        {
+                            foreach (var row in Model.ScheduleTableRows.Where(x => x.LessonId == lesson.LessonId && x.WeekdayId == weekday.WeekdayId))
+                            {
+                            <li>
+                                <div class="is-available"></div>
+
+                                @Html.Hidden("ScheduleTableRows[" + index + "].ScheduleTableId", row.ScheduleTableId)
+                                <div class="form-line cell">
+                                    @Html.Label("ScheduleTableRows[" + index + "].Auditory", "Аудитория")
+                                    <div class="ending"></div>
+                                    @Html.TextBox("ScheduleTableRows[" + index + "].Auditory", row.Auditory, new { @class = "auditory" })
+                                </div>
+                                <div class="form-line cell">
+                                    @Html.Label("ScheduleTableRows[" + index + "].LectorName", "Преподаватель")
+                                    <div class="ending"></div>
+                                    @Html.TextBox("ScheduleTableRows[" + index + "].LectorName", row.LectorName, new { @class = "lectors" })
+                                </div>
+                                <div class="form-line cell">
+                                    @Html.Label("ScheduleTableRows[" + index + "].Subject.Name", "Название дисциплины")
+                                    <div class="ending"></div>
+                                    @Html.TextBox("ScheduleTableRows[" + index + "].Subject.Name", row.SubjectName, new { @class = "subjects" })
+                                </div>
+                                <div class="form-line cell">
+                                    @Html.Label("ScheduleTableRows[" + index + "].LessonType", "Тип занятия")
+                                    <div class="ending"></div>
+                                    <select id="ScheduleTableRows_@(index)__LessonType" name="ScheduleTableRows[@(index)].LessonType">
+                                        <option value="1" @if (1 == row.LessonType) { @("selected=selected") }>Лекция</option>
+                                        <option value="2" @if (2 == row.LessonType) { @("selected=selected") }>Практика</option>
+                                        <option value="3" @if (3 == row.LessonType) { @("selected=selected") }>Лабораторная</option>
+                                        <option value="4" @if (4 == row.LessonType) { @("selected=selected") }>Зачёт</option>
+                                    </select>
+                                </div>
+                                @Html.Hidden("ScheduleTableRows[" + index + "].LessonId", lesson.LessonId)
+                                @Html.Hidden("ScheduleTableRows[" + index + "].GroupId", Model.GroupId)
+                                @Html.Hidden("ScheduleTableRows[" + index + "].WeekdayId", weekday.WeekdayId)
+                                @{ index++; }
+                                <div class="ending"></div>
+                            </li>
+                            }
+                        }
+                    </ul>
+                    <p>
+                        <a class="add_element" href="javascript:void(0)">+</a> <a class="remove_element" href="javascript:void(0)">-</a>
+                    </p>
+                </div>
+            }
+        </div>
+        }
+    }
+</div>
+@Html.Hidden("indexer", index)
+<script src="@Url.Content("~/Scripts/scheduleCreate.js")" type="text/javascript"></script>

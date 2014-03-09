@@ -1,0 +1,16 @@
+﻿@model Pager.PagerView<Mvc_Schedule.Models.DataModels.Entities.Subject>
+@Html.Partial("_ValidationStyles")
+<div id="page-title">Список дисциплин</div>
+<div id="selector-block">
+    @Html.Partial("_Pager", Model.Pager)
+    <p>@Html.ActionLink("Добавить", "Create") / @Html.ActionLink("Добавить (пакетом)", "AddFromTxt")</p>
+    <ul class="list">
+        @foreach (var item in Model.Model)
+        {
+            <li>
+                @Html.ActionLink("Удалить", "Delete", new { id = item.SubjectId }, new { @class = "delete" })
+                @Html.ActionLink(item.Title, "Edit", new { id = item.SubjectId })
+            </li>
+        }
+    </ul>
+</div>

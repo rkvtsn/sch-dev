@@ -1,0 +1,32 @@
+﻿@using Mvc_Schedule.Models.DataModels.Repositories
+@model Mvc_Schedule.Models.DataModels.Entities.TxtFile
+@Html.Partial("_ValidationStyles")
+<div id="page-title">Пакетное добавление предметов</div>
+<div id="selector-block">
+    
+    @if (ViewBag.Result != null)
+    {
+        var result = (TxtUploaderResultModel)ViewBag.Result;
+        if (result != null)
+        {
+            <p>Всего обработано: @result.Total (успешно: @result.Succeed, ошибки: @result.Failed)</p>
+        }
+    }
+   
+    @using (Html.BeginForm("AddFromTxt", "Subjects", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-line">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Txt, "Текстовый файл (*.txt, кодировка ANSI)")
+            </div>
+            <div class="editor-field">
+                <input type="file" class="long" name="txt" id="txt" />
+                @Html.ValidationMessageFor(x => x.Txt)
+            </div>
+        </div>
+        <p>
+            <input type="submit" value="Добавить" />
+        </p>
+    }
+</div>

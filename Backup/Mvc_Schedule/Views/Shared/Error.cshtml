@@ -1,0 +1,12 @@
+﻿@{ ViewBag.Title = "Ошибочка!"; }
+<div id="page-title">
+@if (ViewBag.Message != null)
+{
+	@ViewBag.Message
+}
+else
+{
+	@("Неизвестная ошибка, обратитесь к администратору")
+	 Response.StatusCode = 101;
+}
+</div>
