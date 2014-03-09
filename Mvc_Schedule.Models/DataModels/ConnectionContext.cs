@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Migrations;
+using System.Linq;
 using System.Transactions;
 using System.Web.Security;
 using Mvc_Schedule.Models.DataModels.Entities;
@@ -24,6 +26,8 @@ namespace Mvc_Schedule.Models.DataModels
         public DbSet<Lector> Lectors { get; set; }
 
         public DbSet<Subject> Subjects { get; set; }
+        
+        public DbSet<Plan> Plans { get; set; }
     }
 
     // TODO Замена на миграцию EF
@@ -90,17 +94,19 @@ namespace Mvc_Schedule.Models.DataModels
         public DbMigrate(MigrateStrategy migrateType = MigrateStrategy.OnlyAddTables) { _migrateType = migrateType; }
         protected virtual void Seed(ConnectionContext context)
         {
-            new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
-                .ForEach(x => context.Weekdays.Add(new Weekday { Name = x }));
+            if (Membership.GetUser(StaticData.AdminDefaultName) != null) return;
 
-            if (Membership.GetUser("admin") == null)
-            {
-                var admin = Membership.CreateUser("admin", "password", email: "email@email.ru");
-                if (!Roles.RoleExists(StaticData.AdminRoleName))
-                    Roles.CreateRole(StaticData.AdminRoleName);
-                if (!Roles.IsUserInRole(admin.UserName, StaticData.AdminRoleName))
-                    Roles.AddUserToRole(admin.UserName, StaticData.AdminRoleName);
-            }
+            if (!context.Weekdays.Any())
+                new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
+                    .ForEach(x => context.Weekdays.AddOrUpdate(new Weekday { Name = x }));
+
+            var admin = Membership.CreateUser(StaticData.AdminDefaultName, StaticData.AdminDefaultPassword, email: "email@email.ru");
+
+            if (!Roles.RoleExists(StaticData.AdminRole))
+                Roles.CreateRole(StaticData.AdminRole);
+
+            if (!Roles.IsUserInRole(admin.UserName, StaticData.AdminRole))
+                Roles.AddUserToRole(admin.UserName, StaticData.AdminRole);
         }
         public void InitializeDatabase(ConnectionContext context)
         {
@@ -182,8 +188,6 @@ namespace Mvc_Schedule.Models.DataModels
         }
 
     }
-
-
 
     #endregion
 }

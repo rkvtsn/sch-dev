@@ -1,23 +1,23 @@
 ﻿@using Mvc_Schedule.Models.DataModels
 @{
 	if (!Model) { return; }
-	ViewBag.Action = ViewContext.RouteData.Values["action"].ToString();
-	ViewBag.Controller = ViewContext.RouteData.Values["controller"].ToString();
+	ViewBag.Action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    ViewBag.Controller = ViewContext.RouteData.Values["controller"].ToString().ToLower();
 }
-@helper ActionLinkActive(string name, string action, string controller)
-	{
-	@Html.ActionLink(name, action, controller, null, (ViewBag.Action == action && ViewBag.Controller == controller) ? new { @class = "active" } : null)
+@helper ActionLinkActive(string name, string action, string controller) {
+    action = action.ToLower();
+    controller = controller.ToLower();
+    @Html.ActionLink(name, action, controller, null, (ViewBag.Action == action && ViewBag.Controller == controller) ? new { @class = "active" } : null)
 }
-@helper  ActionLinkActive(string name, string action, string controller, bool isControlled)
-	{
-		if (isControlled)
-		{
-	@Html.ActionLink(name, action, controller, null, (ViewBag.Controller == controller) ? new { @class = "active" } : null)
-		}
-		else
-		{
-	@ActionLinkActive(name, action, controller)
-		}
+@helper  ActionLinkActive(string name, string action, string controller, bool isControlled) {
+    if (isControlled)
+    {
+        action = action.ToLower();
+        controller = controller.ToLower(); 
+	    @Html.ActionLink(name, action, controller, null, (ViewBag.Controller == controller) ? new { @class = "active" } : null)
+	} else {
+	    @ActionLinkActive(name, action, controller)
+    }
 }
 <style>
 	.admin-menu {
@@ -36,4 +36,4 @@
 		color: #fff;
 	}
 </style>
-<div class="admin-menu">@if (User.IsInRole(StaticData.AdminRoleName)){@ActionLinkActive("Пользователи", "Index", "Admin", true)@ActionLinkActive("Дисциплины", "Index", "Subjects", true)@ActionLinkActive("Преподаватели", "Index", "Lectors", true)@ActionLinkActive("Добавить факультет", "Create", "Facult")@ActionLinkActive("Редактор звонков", "Index", "Lessons", true)}@ActionLinkActive("Расписание", "Index", "Facult")@ActionLinkActive("Добавить группу", "Create", "Groups")@Html.ActionLink("Выйти", "LogOff", "Auth")</div>
+<div class="admin-menu">@if (User.IsInRole(StaticData.AdminRole)){@ActionLinkActive("Пользователи", "Index", "Admin", true)@ActionLinkActive("Дисциплины", "Index", "Subjects", true)@ActionLinkActive("Преподаватели", "Index", "Lectors", true)@ActionLinkActive("Добавить факультет", "Create", "Facult")@ActionLinkActive("Редактор звонков", "Index", "Lessons", true)}@ActionLinkActive("Управление", "Index", "Facult")@ActionLinkActive("Добавить группу", "Create", "Groups")@Html.ActionLink("Выйти", "LogOff", "Auth")</div>

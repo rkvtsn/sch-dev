@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using Mvc_Schedule.Models.DataModels.Entities;
 using Mvc_Schedule.Models.DataModels.ModelViews;
@@ -28,15 +30,33 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
 
         public void Add(LessonsCreate lessons)
         {
+            Add(lessons.Lessons);
+        }
+
+        public void Add(LessonsTime[] lessons)
+        {
             var oldList = List();
 
             if (!oldList.Any())
-                foreach (var time in lessons.Lessons.Select(x => x.Time).Distinct())
-                    _ctx.Lessons.Add(new Lesson { Time = time });
+                foreach (var time in lessons.Select(x => x.Time).Distinct())
+                    Add(new Lesson { Time = time });
             else
-                foreach (var time in lessons.Lessons.Select(x => x.Time).Distinct())
+                foreach (var time in lessons.Select(x => x.Time).Distinct())
                     if (oldList.All(x => x.Time != time))
-                        _ctx.Lessons.Add(new Lesson { Time = time });
+                        Add(new Lesson { Time = time });
+        }
+
+        public bool Add(LessonsTime lesson)
+        {
+            return Add(new Lesson { Time = lesson.Time });
+        }
+
+        public bool Add(Lesson lesson)
+        {
+            var old = _ctx.Lessons.FirstOrDefault(x => x.Time == lesson.Time);
+            if (old != null) return false;
+            _ctx.Lessons.Add(lesson);
+            return true;
         }
 
         public IList<Lesson> List()
@@ -45,20 +65,34 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             return list;
         }
 
-        public Lesson[] Array()
+        public LessonsTime[] Array()
         {
-            return (from x in _ctx.Lessons orderby x.Time select x).ToArray();
+            var result = (from x in _ctx.Lessons
+                          orderby x.Time.Hour, x.Time.Minute
+                          select new LessonsTime
+                              {
+                                  Hours = x.Time.Hour,
+                                  LessonId = x.LessonId,
+                                  Minutes = x.Time.Minute
+                              }).ToArray();
+            return result;
         }
 
         public void Edit(LessonsTime lesson)
         {
             var old = Get(lesson.LessonId);
-            old.Time = lesson.Time;
+            var same = _ctx.Lessons.FirstOrDefault(x => lesson.LessonId != x.LessonId && (x.Time.Hour == lesson.Hours && x.Time.Minute == lesson.Minutes));
+            if (same != null) 
+                _ctx.Lessons.Remove(old);
+            else
+                old.Time = lesson.Time;
         }
 
-        public void Delete(int id)
+        public Lesson Delete(int id)
         {
-            _ctx.Lessons.Remove(Get(id));
+            var old = Get(id);
+            _ctx.Lessons.Remove(old);
+            return old;
         }
     }
 }

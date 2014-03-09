@@ -10,6 +10,7 @@ namespace Mvc_Schedule.Models.DataModels.ModelViews
 		public LessonsTime[] Lessons { get; set; }
 	}
 
+    [Serializable]
 	public class LessonsTime
 	{
         [Required(ErrorMessage = "Поле необходимо заполнить.")]

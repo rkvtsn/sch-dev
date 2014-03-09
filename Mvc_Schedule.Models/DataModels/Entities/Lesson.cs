@@ -11,6 +11,7 @@ namespace Mvc_Schedule.Models.DataModels.Entities
 
         [Required(ErrorMessage = "Поле необходимо заполнить")]
         [Display(Name = "Время звонка")]
+        [DataType(DataType.Time)]
         [DisplayFormat(DataFormatString = "{0:HH:mm}")]
         public DateTime Time { get; set; }
 

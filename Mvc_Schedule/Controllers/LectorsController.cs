@@ -5,7 +5,7 @@ using Mvc_Schedule.Models.DataModels.Entities;
 
 namespace Mvc_Schedule.Controllers
 {
-    [Authorize(Roles = StaticData.AdminRoleName)]
+    [Authorize(Roles = StaticData.AdminRole)]
     public class LectorsController : Controller
     {
         public LectorsController()
@@ -110,5 +110,18 @@ namespace Mvc_Schedule.Controllers
                 return RedirectToAction("Index");
             }
         }
+
+
+
+        #region
+        [HttpPost]
+        public JsonResult GetListByLetter(string letter)
+        {
+            using (var db= new DomainContext())
+            {
+                return Json(db.Ajax.ListAuditory(letter));
+            }
+        }
+        #endregion
     }
 }

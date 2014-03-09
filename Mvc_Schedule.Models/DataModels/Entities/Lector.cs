@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mvc_Schedule.Models.DataModels.Entities
 {
@@ -17,26 +17,17 @@ namespace Mvc_Schedule.Models.DataModels.Entities
 
         [StringLength(20)]
         public string ThirdName { get; set; }
-        
 
 
-
-
-        /// <summary>
-        /// Сахар
-        /// </summary>
-        public string FullName { get { return GetFullName(); } }
-
-        /// <summary>
-        /// Хелпер
-        /// </summary>
-        /// <returns></returns>
-        public string GetFullName()
+        [NotMapped]
+        public string FullName
         {
-            var sb = new StringBuilder(SecondName).Append(" ").Append(Name[0]).Append(".");
-            if (ThirdName != null && ThirdName.Trim() != String.Empty)
-                sb.Append(ThirdName[0]).Append(".");
-            return sb.ToString(); // _fullName = sb.ToString(); // return _fullName;
+            get
+            {
+                return SecondName + " " + Name[0] + "."
+                    + ((ThirdName != null && ThirdName.Trim() != String.Empty) ?
+                    ThirdName[0] + "." : "");
+            }
         }
     }
 }

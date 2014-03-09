@@ -1,0 +1,48 @@
+﻿#selector-block * {
+        font-size: 14px;
+        padding: 0;
+    }
+    .col {
+        display: inline-block;
+    }
+    #selector-block a {
+        padding: 2px 8px;
+        color: #999999;
+    }#selector-block a:hover {
+         color: #000;
+     }
+    #selector-block .edit {
+        float: right;
+        padding-left: 10px;
+    }
+    #selector-block .title {
+        cursor: pointer;
+        display: block;
+        padding: 5px 0;
+        border-bottom: 1px dashed #c0c0c0;
+    }
+    #selector-block li.focus,
+    #selector-block .focus .title,
+    #selector-block .title:hover {
+        border-bottom: 1px solid #00cc99;
+    }
+    #selector-block .title .col {
+        font-size: 16px;
+    }
+    #selector-block li {
+        padding: 0 10px;
+        display: block;
+    }
+    #selector-block .group_menu {
+        display: none;
+        padding: 10px 0;
+    }
+    .group_menu a {
+        display: inline;
+    }
+
+    #selector-block .group_title {
+        cursor: default;
+        padding: 4px 0;
+        border-bottom: 1px solid #eee;
+    }

@@ -4,7 +4,7 @@
 
 @if (Model == null)
 {
-    <div id="page-title">Поиск невозможен, т.к. запрос не верный.</div>
+    <h1 id="page-title">Поиск невозможен, т.к. запрос не верный.</h1>
     return;
 }
 
@@ -13,7 +13,7 @@
 	@*<a id="wrapSwitcher" href="javascript:void(0)"></a>*@
 </div>
 
-<div id="page-title">Поиск по @((Model.SearchType == 1) ? "лектору" : "аудитории" ) <em>"@Model.Keyword"</em></div>
+<h1 id="page-title">Поиск по @((Model.SearchType == 1) ? "лектору" : "аудитории" ) <em>"@Model.Keyword"</em></h1>
 <div id="selector-block" class="list">
 @foreach (var weekday in Model.Weekdays)
 {

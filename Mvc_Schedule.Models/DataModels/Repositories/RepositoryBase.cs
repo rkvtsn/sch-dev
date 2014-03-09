@@ -8,7 +8,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
     {
         protected TD _ctx;
 
-        public RepositoryBase(TD ctx)
+        protected RepositoryBase(TD ctx)
         {
             _ctx = ctx;
         }
@@ -25,16 +25,15 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
 
         protected RepositoryBase(TD ctx) : base(ctx) { }
 
+        protected readonly PagerViewBuilder<T> PagerViewBuilder = new PagerViewBuilder<T>();
+
         public PagerView<T> ListWithPager(int page = 1, int count = 10)
         {
-            var pager = new PagerViewBuilder<T>
-            {
-                Query = QueryPager,
-                CurrentPage = page,
-                ItemsOnPage = count,
-            }.Build();
-
-            return pager;
+            PagerViewBuilder.Query = QueryPager;
+            PagerViewBuilder.CurrentPage = page;
+            PagerViewBuilder.ItemsOnPage = count;
+            
+            return PagerViewBuilder.Build();
         }
     }
 }

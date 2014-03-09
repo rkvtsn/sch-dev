@@ -1,0 +1,62 @@
+﻿@using System.Web.Optimization
+@model Mvc_Schedule.Models.DataModels.ModelViews.PlanCreate
+@Html.Partial("_ValidationStyles")
+@Html.Partial("_jQuery-ui")
+
+<h1 id="page-title">@ViewBag.Title. Группа "@ViewBag.Group.Name"</h1>
+<div id="selector-block">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Plan.GroupId)
+        @Html.HiddenFor(x => x.Plan.SubjectId)
+        <div class="form-line cell">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.SubjectName, "Дисциплина: ")
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.SubjectName)
+                @Html.ValidationMessageFor(model => model.SubjectName)
+            </div>
+        </div>
+        
+        
+        <div class="form-line cell">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Plan.LabH, "Лабораторные: ")
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(x => x.Plan.LabH)
+                @Html.ValidationMessageFor(model => model.Plan.LabH)
+            </div>
+        </div>
+
+        <div class="form-line cell">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Plan.PracticeH, "Практические: ")
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(x => x.Plan.PracticeH)
+                @Html.ValidationMessageFor(model => model.Plan.PracticeH)
+            </div>
+        </div>
+            
+        <div class="form-line cell">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Plan.LectionH, "Лекционные: ")
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(x => x.Plan.LectionH)
+                @Html.ValidationMessageFor(model => model.Plan.LectionH)
+            </div>
+        </div>
+            
+        <div class="ending"></div>
+        
+        <p>
+            <input type="submit" value="Добавить" />
+        </p>
+    }
+</div>
+
+@Scripts.Render("~/scripts/plan-create")

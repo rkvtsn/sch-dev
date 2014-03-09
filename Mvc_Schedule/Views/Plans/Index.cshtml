@@ -1,0 +1,66 @@
+﻿@model Mvc_Schedule.Models.DataModels.Entities.StudGroup
+@using System.Web.Optimization
+@Styles.Render("~/styles/dlghelper")
+@Html.Partial("_ValidationStyles")
+@Html.Partial("_jQuery-ui")
+
+<h1 id="page-title">@ViewBag.Title. Группа "@Model.Name"</h1>
+
+<div id="selector-block">
+    <p><a id="add" href="javascript: void(0)">Добавить</a></p>
+    <ul id="list-elements" class="list" style="display: none;">
+        <li></li>
+    </ul>
+</div>
+
+<div class="warning" id="warning_bg"></div>
+<div class="warning" id="dialog">
+    <p>Идёт загрузка...</p>
+    <a href="javascript:void(0);" id="close_dialog">закрыть</a>
+</div>
+<div class="warning" id="warning">
+    <p>Вы уверены, что желаете удалить <span id="title_on_delete"></span>?</p>
+    <div><a href="javascript:void(0);" id="warning_y">Да</a></div>
+    <div><a href="javascript:void(0);" id="warning_n">Нет</a></div>
+</div>
+
+<form class="warning" id="dialog_form" style="width: 600px; height: 170px;">
+    <p id="msg"></p>
+    <div id="clearable">
+        <div class="form-line form-inline">
+            <label for="subject-title">Дисциплина:</label>
+            <input type="text" name="subject-title" id="subject-title" value="" required />
+        </div>
+
+        <div class="form-line form-inline">
+            <label for="lec">Лекции:</label>
+            <input type="number" name="lec" id="lec" value="0" min="0" />
+        
+        </div>
+        <div class="form-line form-inline">
+            <label for="lab">Лабораторные:</label>
+            <input type="number" name="lab" id="lab" value="0" min="0" />
+        
+        </div>
+        <div class="form-line form-inline">
+            <label for="pr">Практические:</label>
+            <input type="number" name="pr" id="pr" value="0" min="0" />
+        
+        </div>
+        <div class="ending"></div>
+
+        <a id="ok" href="javascript: void(0)">Ок</a>
+        <a id="cancel" href="javascript:void(0);">Отмена</a>
+
+        <input type="hidden" name="plan-id" id="plan-id" value="" />
+        <input type="hidden" name="group-id" id="group-id" value="@Model.GroupId" />
+    </div>
+    @Html.AntiForgeryToken()
+</form>
+@Scripts.Render("~/scripts/dlghelper")
+@Scripts.Render("~/scripts/plan-index")
+
+
+
+
+

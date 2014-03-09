@@ -1,0 +1,219 @@
+﻿@using System.Web.Optimization
+
+<h1 id="page-title">Расписание группы @ViewBag.Title</h1>
+
+<style>
+    .lesson * {
+        color: #ffffff;
+    }
+
+    .bg1 {
+        background: #ff5db1;
+    }
+
+    .bg2 {
+        background: #4169e1;
+    }
+
+    .bg3 {
+        background: #9acd32;
+    }
+
+    .bg4 {
+        background: #dc143c;
+    }
+
+    #legend {
+        width: 100%;
+        cursor: default;
+        padding: 10px;
+    }
+
+        #legend:hover {
+            width: 100%;
+        }
+
+            #legend:hover * {
+                display: block;
+            }
+
+    .legend.sq {
+        width: 5px;
+        height: 5px;
+        cursor: pointer;
+    }
+
+    .legend.title {
+        display: none;
+        width: 120px;
+        height: 5px;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    #tpl-template {
+        display: none;
+    }
+    #controls {
+        position: fixed;
+        left: 0;
+        background: #0099cc;
+        bottom: 0;
+        padding: 15px;
+    }
+
+</style>
+
+
+<div id="selector-block">
+
+    <div id="legend">
+        <div class="legend sq cell bg1" title="Лекция"></div>
+        <div class="legend title cell">Лекция</div>
+        <div class="legend sq cell bg3" title="Лабораторная"></div>
+        <div class="legend title cell">Лабораторная</div>
+        <div class="ending"></div>
+        <div class="legend sq cell bg2" title="Практика"></div>
+        <div class="legend title cell">Практика</div>
+        <div class="legend sq cell bg4" title="Зачёт"></div>
+        <div class="legend title cell">Зачёт</div>
+        <div class="ending"></div>
+    </div>
+    
+    <div id="controls">
+        <a href="javascript:void(0);" id="update" title="Обновить"><i class="fa fa-refresh fa-inverse"></i></a>
+    </div>
+
+    <div id="sch" style="display: none;">
+        <div class="column1 cell">&nbsp;</div>
+        <div class="column2 cell">&nbsp;</div>
+        <div class="subrow1 cell header1">Нечётная</div>
+        <div class="subrow1 cell header1">Чётная</div>
+        <div class="ending"></div>
+
+        <div id="list-weeks"></div>
+    </div>
+
+</div>
+
+
+
+@*<div id="tpl-template">
+    <!-- foreach in Model -->
+    <div tpl-foreach="Data">
+        <div class="weekday">
+            <div class="cell column1" tpl-data="Weekday.Name">WeekdayName</div>
+            <div tpl-foreach="Weeks">
+                <!-- foreach in Weeks -->
+                <div class="row" tpl-if-st>
+
+                    <div tpl-if="true">
+                        <!-- if lessons.Count > 0 -->
+
+                        <div tpl-foreach="Lessons">
+                            <!-- foreach in Lessons -->
+
+                            <div class="cell column2" tpl-data="TimeString">TimeString</div>
+                            <!-- var countOdd = IsWeekOdd; 
+                            var countEven = !IsWeekOdd; -->
+                            <div tpl-foreach="Sublessons">
+                                <!-- foreach in sublessons -->
+                                <div class="cell lesson" tpl-calc-class="bg">
+                                    <!-- subrow = !sc.IsWeekOdd ? countEven : countOdd -->
+                                    <div class="" tpl-calc-class="subrow">
+                                        <span class="subject-name" tpl-data="SubjectName">SubjectName</span>
+                                        <span class="subject-auditory" tpl-data="Auditory">Auditory</span>
+                                    </div>
+                                    <div class="subject-lector" tpl-calc-class="subrow" tpl-data="LectorName"></div>
+                                </div>
+                            </div>
+                            <!-- /foreach sublesson -->
+                            <div class="ending"></div>
+                            <div class="cell column1">&nbsp;</div>
+
+                        </div>
+                        <!-- /foreach lesson -->
+
+
+                    </div>
+                    <!-- /if lessons.Count > 0 -->
+
+                    <div tpl-if="false">
+                        <!-- else -->
+
+                        <div class="cell column2">&nbsp;</div>
+                        <div class="cell subrow2">&nbsp;</div>
+                        <div class="cell subrow2">&nbsp;</div>
+                        <div class="ending"></div>
+                        <div class="cell column1">&nbsp;</div>
+
+                    </div>
+                    <!-- /else -->
+
+                </div>
+            </div>
+            <!-- /foreach week -->
+        </div>
+        <div class="ending"></div>
+        <!-- /foreach in Model -->
+    </div>
+</div>*@
+@Styles.Render("~/styles/dlghelper")
+
+<div class="warning" id="warning_bg"></div>
+<div class="warning" id="dialog">
+<p>Идёт загрузка...</p>
+<a href="javascript:void(0);" id="close_dialog">закрыть</a>
+</div>
+
+
+@if (false)
+{
+    //ViewBag.IsAvailable
+    <div class="warning" id="warning">
+        <p>Вы уверены, что желаете удалить <span id="title_on_delete"></span>?</p>
+        <div><a href="javascript:void(0);" id="warning_y">Да</a></div>
+        <div><a href="javascript:void(0);" id="warning_n">Нет</a></div>
+    </div>
+
+    <form class="warning" id="dialog_form" style="width: 600px; height: 170px;">
+        <p id="msg"></p>
+        <div id="clearable">
+            <div class="form-line form-inline">
+                <label for="subject-title">Дисциплина:</label>
+                <input type="text" name="subject-title" id="subject-title" value="" required />
+            </div>
+
+            <div class="form-line form-inline">
+                <label for="lec">Лекции:</label>
+                <input type="number" name="lec" id="lec" value="0" min="0" />
+
+            </div>
+            <div class="form-line form-inline">
+                <label for="lab">Лабораторные:</label>
+                <input type="number" name="lab" id="lab" value="0" min="0" />
+
+            </div>
+            <div class="form-line form-inline">
+                <label for="pr">Практические:</label>
+                <input type="number" name="pr" id="pr" value="0" min="0" />
+
+            </div>
+            <div class="ending"></div>
+
+            <a id="ok" href="javascript: void(0)">Ок</a>
+            <a id="cancel" href="javascript:void(0);">Отмена</a>
+
+            <input type="hidden" name="plan-id" id="plan-id" value="" />
+        </div>
+        @Html.AntiForgeryToken()
+    </form>
+    @Scripts.Render("~/scripts/dlghelper")
+    @Scripts.Render("~/scripts/sch-create")
+}
+else
+{
+    <input type="hidden" name="group-id" id="group-id" value="@ViewBag.GroupId" />
+    @Scripts.Render("~/scripts/dlghelper")
+    @Scripts.Render("~/scripts/sch-index")
+}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -53,7 +54,10 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             _ctx.Facults.Add(facult.FacultInstance);
             if (facult.StudGroupsNames != null)
                 foreach (var group in facult.StudGroupsNames)
+                {
+                    group.LastCheck = DateTime.Now;
                     _ctx.StudGroups.Add(group);
+                }
         }
 
         public void Edit(Facult facult)

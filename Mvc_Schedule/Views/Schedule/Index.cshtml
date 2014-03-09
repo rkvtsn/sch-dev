@@ -1,7 +1,7 @@
 ﻿@using Mvc_Schedule.Models.DataModels.Repositories
 @model List<Ws>
 
-<div id="page-title">Расписание группы @ViewBag.Title</div>
+<h1 id="page-title">Расписание группы @ViewBag.Title</h1>
 
 <style>
     .lesson * { color: #ffffff; }
@@ -15,7 +15,6 @@
     .legend.sq { width: 5px; height: 5px; cursor: pointer; }
     .legend.title { display: none; width: 120px; height: 5px; padding: 0; cursor: pointer; }
 </style>
-
 
 <div id="selector-block">
     
@@ -107,27 +106,28 @@
         });
 
 
-        var legend = function(element) {
-            element.toggle(
-                function() {
+        var legend = function (element) {
+            element.click(function () {
+                var id = $(this).attr("class")[$(this).attr("class").length - 1];
+                var bg = $(".lesson.bg" + id.toString());
+                if (this.isVisible != true) {
                     $(this).css({
                         opacity: "0.6"
                     });
-                    var id = $(this).attr("class")[$(this).attr("class").length - 1];
-                    $(".lesson.bg" + id.toString()).hide();
-                },
-                function() {
+                    bg.hide();
+                    this.isVisible = true;
+                }else {
                     $(this).css({
                         opacity: ""
                     });
-                    var id = $(this).attr("class")[$(this).attr("class").length - 1];
-                    $(".lesson.bg" + id.toString()).show();
+                    bg.show();
+                    this.isVisible = false;
                 }
-            );
+            });
         };
         legend($("#legend .sq"));
         $("#legend .title").click(function () {
-            $($(this).prev()).trigger("click");
+            $($(this).prev()).click();
         });
         methodToFixLayout();
     });

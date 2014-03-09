@@ -1,41 +1,42 @@
-C:\Users\adb\Documents\GitHub\Schedule2\Mvc_Schedule\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\Andrey\Desktop\Schedule21\Mvc_Schedule\bin\Mvc_Schedule.dll
-C:\Users\Andrey\Desktop\Schedule21\Mvc_Schedule\bin\Mvc_Schedule.pdb
-C:\Users\Andrey\Desktop\Schedule21\Mvc_Schedule\bin\EntityFramework.dll
-C:\Users\Andrey\Desktop\Schedule21\Mvc_Schedule\bin\Mvc_Schedule.Models.dll
-C:\Users\Andrey\Desktop\Schedule21\Mvc_Schedule\bin\Mvc_Schedule.Models.pdb
-C:\Users\Andrey\Desktop\Schedule21\Mvc_Schedule\bin\EntityFramework.xml
-C:\Users\Andrey\Desktop\Schedule21\Mvc_Schedule\obj\Debug\Mvc_Schedule.csprojResolveAssemblyReference.cache
-C:\Users\Andrey\Desktop\Schedule21\Mvc_Schedule\obj\Debug\Mvc_Schedule.dll
-C:\Users\Andrey\Desktop\Schedule21\Mvc_Schedule\obj\Debug\Mvc_Schedule.pdb
-C:\Users\Andrey\Desktop\Schedule2_2\Mvc_Schedule\bin\Mvc_Schedule.dll
-C:\Users\Andrey\Desktop\Schedule2_2\Mvc_Schedule\bin\Mvc_Schedule.pdb
-C:\Users\Andrey\Desktop\Schedule2_2\Mvc_Schedule\bin\EntityFramework.dll
-C:\Users\Andrey\Desktop\Schedule2_2\Mvc_Schedule\bin\Mvc_Schedule.Models.dll
-C:\Users\Andrey\Desktop\Schedule2_2\Mvc_Schedule\bin\Mvc_Schedule.Models.pdb
-C:\Users\Andrey\Desktop\Schedule2_2\Mvc_Schedule\bin\EntityFramework.xml
-C:\Users\Andrey\Desktop\Schedule2_2\Mvc_Schedule\obj\Debug\Mvc_Schedule.csprojResolveAssemblyReference.cache
-C:\Users\Andrey\Desktop\Schedule2_2\Mvc_Schedule\obj\Debug\Mvc_Schedule.dll
-C:\Users\Andrey\Desktop\Schedule2_2\Mvc_Schedule\obj\Debug\Mvc_Schedule.pdb
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule\bin\Mvc_Schedule.dll
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule\bin\Mvc_Schedule.pdb
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule\bin\EntityFramework.dll
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule\bin\Mvc_Schedule.Models.dll
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule\bin\Mvc_Schedule.Models.pdb
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule\bin\EntityFramework.xml
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule\obj\Debug\Mvc_Schedule.csprojResolveAssemblyReference.cache
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule\obj\Debug\Mvc_Schedule.dll
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\Schedule2\Mvc_Schedule\obj\Debug\Mvc_Schedule.pdb
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\Mvc_Schedule.dll
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\Mvc_Schedule.pdb
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\EntityFramework.dll
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\Mvc_Schedule.Models.dll
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\EPPlus.dll
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\Mvc_Schedule.Models.pdb
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\EntityFramework.xml
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\EPPlus.xml
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\obj\Debug\Mvc_Schedule.csprojResolveAssemblyReference.cache
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\obj\Debug\Mvc_Schedule.dll
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\obj\Debug\Mvc_Schedule.pdb
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\Pager.dll
-C:\Users\Andrey\Documents\Visual Studio 2012\Projects\sch-dev\Mvc_Schedule\bin\Pager.pdb
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\Mvc_Schedule.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\Mvc_Schedule.pdb
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\Antlr3.Runtime.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\EntityFramework.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\Mvc_Schedule.Models.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\Newtonsoft.Json.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\Pager.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\System.Web.Optimization.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\WebGrease.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\EPPlus.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\Pager.pdb
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\Mvc_Schedule.Models.pdb
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\Antlr3.Runtime.pdb
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\EntityFramework.xml
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\Newtonsoft.Json.xml
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\System.Web.Optimization.xml
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\bin\EPPlus.xml
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\obj\Debug\Mvc_Schedule.csprojResolveAssemblyReference.cache
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\obj\Debug\Mvc_Schedule.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_1\Mvc_Schedule\obj\Debug\Mvc_Schedule.pdb
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\Mvc_Schedule.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\Mvc_Schedule.pdb
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\Antlr3.Runtime.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\EntityFramework.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\Mvc_Schedule.Models.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\Newtonsoft.Json.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\Pager.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\System.Web.Optimization.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\WebGrease.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\EPPlus.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\Pager.pdb
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\Mvc_Schedule.Models.pdb
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\Antlr3.Runtime.pdb
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\EntityFramework.xml
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\Newtonsoft.Json.xml
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\System.Web.Optimization.xml
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\bin\EPPlus.xml
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\obj\Debug\Mvc_Schedule.csprojResolveAssemblyReference.cache
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\obj\Debug\Mvc_Schedule.dll
+C:\Users\Andrey\Desktop\sch-dev_1_3_2\Mvc_Schedule\obj\Debug\Mvc_Schedule.pdb

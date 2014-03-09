@@ -1,24 +1,41 @@
-﻿@model IEnumerable<Mvc_Schedule.Models.DataModels.Entities.Lesson>
+﻿@using System.Web.Optimization
+@Styles.Render("~/styles/lesson-index")
+@Styles.Render("~/styles/dlghelper")
 
-<style>
-	#selector-block a {
-		font-size: 18px;
-	}
-		#selector-block a:hover {
-			color: #333;
-		}
-		.title {
-			margin-top: 20px;
-		}
-</style>
-
-<div id="page-title">@ViewBag.Title</div>
-
+<h1 id="page-title">@ViewBag.Title</h1>
 <div id="selector-block">
-	@Html.ActionLink("Добавить", "Create")
-	@foreach (var item in Model) {
-		<p class="title">@Html.DisplayFor(modelItem => item.TimeString)
-			@Html.ActionLink("Изменить", "Edit", new { id = item.LessonId }) @Html.ActionLink("Удалить", "Delete", new { id = item.LessonId })
-		</p>
-	}
+    <p><a class="add" id="add" href="javascript: void(0)">Добавить</a></p>
+    <ul id="list-elements" class="list" style="display: none;">
+        
+    </ul>
 </div>
+
+<div class="warning" id="warning_bg"></div>
+<form class="warning" id="dialog_form">
+    <p id="msg"></p>
+    @Html.Label("Время звонка:")
+    <select class="hours" id="hours" name="hours">
+    </select>
+    :
+    <select class="minutes" id="minutes" name="minutes">
+    </select>
+    <a id="ok" href="javascript: void(0)">Ок</a>
+    <a id="cancel" href="javascript:void(0);">Отмена</a >
+    <input id="lesson-id" name="lesson-id" type="hidden" value="" />
+    @Html.AntiForgeryToken()
+</form>
+<div class="warning" id="dialog">
+    <p>Идёт загрузка...</p>
+    <a href="javascript:void(0);" id="close_dialog">закрыть</a>
+</div>
+<div class="warning" id="warning">
+    <p>Вы уверены, что желаете удалить <span id="title_on_delete"></span>?</p>
+    <div><a href="javascript:void(0);" id="warning_y">Да</a></div>
+    <div><a href="javascript:void(0);" id="warning_n">Нет</a></div>
+</div>
+
+@Scripts.Render("~/scripts/dlghelper")
+@Scripts.Render("~/scripts/lesson-index")
+
+
+

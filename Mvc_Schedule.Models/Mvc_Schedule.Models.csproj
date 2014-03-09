@@ -39,7 +39,10 @@
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EPPlus">
-      <HintPath>..\..\..\..\..\Desktop\EPPlus.dll</HintPath>
+      <HintPath>..\packages\EPPlus.3.1.3.3\lib\net35\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Mvc_Schedule\bin\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -55,6 +58,7 @@
     <Compile Include="DataModels\Entities\ExcelTemplate.cs" />
     <Compile Include="DataModels\Entities\Facult.cs" />
     <Compile Include="DataModels\Entities\Lesson.cs" />
+    <Compile Include="DataModels\Entities\Plan.cs" />
     <Compile Include="DataModels\Entities\StudGroup.cs" />
     <Compile Include="DataModels\Entities\TxtFile.cs" />
     <Compile Include="DataModels\Entities\Weekday.cs" />
@@ -66,17 +70,22 @@
     <Compile Include="DataModels\ModelViews\FileSizeAttribute.cs" />
     <Compile Include="DataModels\ModelViews\FileTypesAttribute.cs" />
     <Compile Include="DataModels\ModelViews\GroupsJson.cs" />
+    <Compile Include="DataModels\ModelViews\Model4Views.cs" />
     <Compile Include="DataModels\ModelViews\LessonsCreate.cs" />
     <Compile Include="DataModels\ModelViews\Member.cs" />
+    <Compile Include="DataModels\ModelViews\PlanCreate.cs" />
+    <Compile Include="DataModels\ModelViews\PlanIndex.cs" />
     <Compile Include="DataModels\ModelViews\ScheduleTableCreate.cs" />
     <Compile Include="DataModels\ModelViews\ScheduleTableIndex.cs" />
     <Compile Include="DataModels\ModelViews\ScheduleTableSearch.cs" />
     <Compile Include="DataModels\Repositories\LectorEqualityComparer.cs" />
+    <Compile Include="DataModels\Repositories\RepositoryAjax.cs" />
     <Compile Include="DataModels\Repositories\RepositoryBase.cs" />
     <Compile Include="DataModels\Repositories\RepositoryGroups.cs" />
     <Compile Include="DataModels\Repositories\RepositoryLectors.cs" />
     <Compile Include="DataModels\Repositories\RepositoryLessons.cs" />
     <Compile Include="DataModels\Entities\ScheduleTable.cs" />
+    <Compile Include="DataModels\Repositories\RepositoryPlans.cs" />
     <Compile Include="DataModels\Repositories\RepositoryScheduleTable.cs" />
     <Compile Include="DataModels\Repositories\RepositorySubjects.cs" />
     <Compile Include="DataModels\StaticData.cs" />
@@ -93,7 +102,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Desktop\_Pager\Pager\Pager.csproj">
+    <ProjectReference Include="..\Pager\Pager.csproj">
       <Project>{7fa2e9bd-79fd-4f3a-9be3-fb17515c63d4}</Project>
       <Name>Pager</Name>
     </ProjectReference>

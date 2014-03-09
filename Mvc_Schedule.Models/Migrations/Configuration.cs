@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.Security;
 using Mvc_Schedule.Models.DataModels;
 using Mvc_Schedule.Models.DataModels.Entities;
@@ -15,18 +16,21 @@ namespace Mvc_Schedule.Models.Migrations
             AutomaticMigrationDataLossAllowed = true;
         }
 
-        protected override void Seed(Mvc_Schedule.Models.DataModels.ConnectionContext context)
+        protected override void Seed(DataModels.ConnectionContext context)
         {
-            //new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
-            //    .ForEach(x => context.Weekdays.AddOrUpdate(new Weekday { Name = x }));
+            if (Membership.GetUser(StaticData.AdminDefaultName) != null) return;
 
-            if (Membership.GetUser("admin") != null) return;
+            if (!context.Weekdays.Any())
+                new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
+                    .ForEach(x => context.Weekdays.AddOrUpdate(new Weekday { Name = x }));
 
-            var admin = Membership.CreateUser("admin", "password", email: "email@email.ru");
-            if (!Roles.RoleExists(StaticData.AdminRoleName))
-                Roles.CreateRole(StaticData.AdminRoleName);
-            if (!Roles.IsUserInRole(admin.UserName, StaticData.AdminRoleName))
-                Roles.AddUserToRole(admin.UserName, StaticData.AdminRoleName);
+            var admin = Membership.CreateUser(StaticData.AdminDefaultName, StaticData.AdminDefaultPassword, email: "email@email.ru");
+
+            if (!Roles.RoleExists(StaticData.AdminRole))
+                Roles.CreateRole(StaticData.AdminRole);
+            
+            if (!Roles.IsUserInRole(admin.UserName, StaticData.AdminRole))
+                Roles.AddUserToRole(admin.UserName, StaticData.AdminRole);
         }
     }
 }

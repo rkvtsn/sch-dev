@@ -18,18 +18,6 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
 			return _ctx.StudGroups.SingleOrDefault(x => x.GroupId == id);
 		}
 
-		public GroupsJson[] ByFacult(int id)
-		{
-			return (from x in _ctx.StudGroups
-					where x.FacultId == id
-					orderby x.Name
-					select new GroupsJson
-							{
-								Id = x.GroupId,
-								Name = x.Name
-							}).ToArray();
-		}
-
 		public void Edit(StudGroup group)
 		{
 			var old = Get(group.GroupId);

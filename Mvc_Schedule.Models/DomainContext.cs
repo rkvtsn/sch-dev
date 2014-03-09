@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Globalization;
+using System.Web.Security;
 using Mvc_Schedule.Models.DataModels;
+using Mvc_Schedule.Models.DataModels.Entities;
 using Mvc_Schedule.Models.DataModels.Repositories;
 
 namespace Mvc_Schedule.Models
@@ -11,6 +14,18 @@ namespace Mvc_Schedule.Models
         public int SaveChanges() { return _ctx.SaveChanges(); }
         public DomainContext() { _ctx = new ConnectionContext(); }
 
+        public StudGroup IsAccessableFor(int groupId)
+        {
+            var group = this.Groups.Get(groupId);
+            if (group == null ||
+                (!Roles.IsUserInRole(group.FacultId.ToString(CultureInfo.InvariantCulture)) &&
+                 !Roles.IsUserInRole("Admin")))
+                return null;
+            else
+                return group;
+        }
+
+
         #region @Repositories
 
         private RepositoryLessons _lessons;
@@ -19,6 +34,14 @@ namespace Mvc_Schedule.Models
             get { return _lessons ?? (_lessons = new RepositoryLessons(_ctx)); }
             set { _lessons = value; }
         }
+
+        private RepositoryAjax _ajax;
+        public RepositoryAjax Ajax
+        {
+            get { return _ajax ?? (_ajax = new RepositoryAjax(_ctx)); }
+            set { _ajax = value; }
+        }
+
 
         private RepositoryScheduleTable _schedule;
         public RepositoryScheduleTable Schedule
@@ -60,6 +83,13 @@ namespace Mvc_Schedule.Models
         {
             get { return _subjects ?? (_subjects = new RepositorySubjects(_ctx)); }
             set { _subjects = value; }
+        }
+
+        private RepositoryPlans _plans;
+        public RepositoryPlans Plans
+        {
+            get { return _plans ?? (_plans = new RepositoryPlans(_ctx)); }
+            set { _plans = value; }
         }
 
         #endregion

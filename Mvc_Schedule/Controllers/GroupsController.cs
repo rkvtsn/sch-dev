@@ -19,7 +19,7 @@ namespace Mvc_Schedule.Controllers
 
 		public ActionResult Create()
 		{
-			ViewData["IsAdmin"] = Roles.IsUserInRole(StaticData.AdminRoleName);
+			ViewData["IsAdmin"] = Roles.IsUserInRole(StaticData.AdminRole);
 			ViewBag.FacultId = new SelectList(_db.Facults.ListNames(), "FacultId", "Name");
 			return View();
 		}
@@ -30,7 +30,7 @@ namespace Mvc_Schedule.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				if (!Roles.IsUserInRole(studgroup.FacultId.ToString(CultureInfo.InvariantCulture)) && !Roles.IsUserInRole(StaticData.AdminRoleName))
+				if (!Roles.IsUserInRole(studgroup.FacultId.ToString(CultureInfo.InvariantCulture)) && !Roles.IsUserInRole(StaticData.AdminRole))
 					return RedirectToRoute(new { controller = "Default", action = "Error", id = 404 });
 
 				_db.Groups.Add(studgroup);
@@ -45,7 +45,7 @@ namespace Mvc_Schedule.Controllers
 		public ActionResult Edit(int id)
 		{
 			StudGroup studgroup = _db.Groups.Get(id);
-			if (studgroup == null || (!Roles.IsUserInRole(studgroup.FacultId.ToString(CultureInfo.InvariantCulture)) && !Roles.IsUserInRole(StaticData.AdminRoleName)))
+			if (studgroup == null || (!Roles.IsUserInRole(studgroup.FacultId.ToString(CultureInfo.InvariantCulture)) && !Roles.IsUserInRole(StaticData.AdminRole)))
 				return RedirectToRoute(new { controller = "Default", action = "Error", id = 404 });
 			ViewBag.FacultId = new SelectList(_db.Facults.ListNames(), "FacultId", "Name", studgroup.FacultId);
 			return View(studgroup);

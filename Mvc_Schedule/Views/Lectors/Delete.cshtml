@@ -1,11 +1,4 @@
 ﻿@model Mvc_Schedule.Models.DataModels.Entities.Lector
 @Html.Partial("_ValidationStyles")
-<div id="page-title">Удаление дисциплин</div>
-<div id="selector-block">
-    
-    <div class="form-line"><strong>Имя:</strong> @Model.SecondName</div>
-    <div class="form-line"><strong>Фамилия:</strong> @Model.Name</div>
-    <div class="form-line"><strong>Отчество:</strong> @(Model.ThirdName ?? "нет")</div>
-    
-    @Html.Partial("_CancelAgree")
-</div>
+<h1 id="page-title">Удалить из справочника лекторов: "@Model.SecondName @Model.Name @(Model.ThirdName ?? "нет")"</h1>
+<div id="selector-block">@Html.Partial("_CancelAgree")</div>

@@ -1,39 +1,37 @@
-﻿@model Mvc_Schedule.Models.DataModels.ModelViews.ScheduleTableCreate
+﻿@using System.Web.Optimization
+@model Mvc_Schedule.Models.DataModels.ModelViews.ScheduleTableCreate
 @if (!Model.Lessons.Any())
 {
-    <div id="page-title">Заполните время звонков.</div>
+    <h1 id="page-title">Заполните время звонков.</h1>
     return;
 }
-<link href="@Url.Content("/Content/validation.css")" rel="stylesheet" type="text/css" />
-<script src="@Url.Content("/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery-ui-1.8.23.custom.min.js")" type="text/javascript"></script>
-<link href="@Url.Content("~/Content/jquery.ui.autocomplete.css")" rel="stylesheet" type="text/css" />
+
+@Html.Partial("_ValidationStyles")
+@Html.Partial("_jQuery-ui")
+
+
 <style>
     .weekday {
         margin-top: 10px;
     }
-
         .weekday h3 {
             cursor: pointer;
             padding: 10px;
             font-size: 20px;
             font-weight: normal;
         }
-
     .is-available {
         display: block;
         width: 100%;
         background: #ccc;
     }
-
     #selector-block a {
         display: inline-block;
         padding: 4px 10px;
         text-align: center;
+        text-decoration: none;
         border: 1px solid #c0c0c0;
     }
-
         #selector-block a:hover {
             border: 1px solid #3399cc;
         }
@@ -55,14 +53,10 @@
     input.lectors { width: 103px; }
     select { height: 27px; }
     input:hover, input:focus { color: #000; }
-    label {
-        cursor: pointer;
-    }
+    label { cursor: pointer; }
 </style>
 @{ var index = 0; }
-<div id="page-title">Расписание группы: @Model.GroupName на @(Model.IsWeekOdd ? "нечётную" : "чётную") неделю @if (ViewBag.Error != null) { 
-<br />
-    <span>@ViewBag.Error</span> }</div>
+<h1 id="page-title">Расписание группы: @Model.GroupName на @(Model.IsWeekOdd ? "нечётную" : "чётную") неделю @if (ViewBag.Error != null) { <br /><span>@ViewBag.Error</span> }</h1>
 <div id="selector-block">
     <form method="GET">
         <input type="submit" value="Отменить" style="float: left" /></form>
@@ -132,5 +126,6 @@
         }
     }
 </div>
+
 @Html.Hidden("indexer", index)
-<script src="@Url.Content("~/Scripts/scheduleCreate.js")" type="text/javascript"></script>
+@Scripts.Render("~/scripts/schedule-create")

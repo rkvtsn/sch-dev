@@ -3,11 +3,11 @@
 {
     if ((bool)ViewData["isAccessable"])
     {
-    <div id="page-title">@Html.ActionLink("Нужно добавить факультет", "Create")</div>
+    <h1 id="page-title">@Html.ActionLink("Нужно добавить факультет", "Create")</h1>
     }
     else
     {
-    <div id="page-title">Список доступных факультетов пуст, обратитесь к администратору</div>
+    <h1 id="page-title">Список доступных факультетов пуст, обратитесь к администратору</h1>
     }
     return;
 }

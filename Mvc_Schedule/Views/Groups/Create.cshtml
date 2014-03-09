@@ -3,17 +3,17 @@
 {
     if ((bool)ViewData["IsAdmin"])
     {
-    <div id="page-title">@Html.ActionLink("Нужно добавить факультет", "Create", "Facult")</div>
+    <h1 id="page-title">@Html.ActionLink("Нужно добавить факультет", "Create", "Facult")</h1>
     }
     else
     {
-    <div id="page-title">У вас нет доступных факультетов</div>
+    <h1 id="page-title">У вас нет доступных факультетов</h1>
     }
     return;
 }
 
 @Html.Partial("_ValidationStyles")
-<div id="page-title">Добавление групп</div>
+<h1 id="page-title">Добавление групп</h1>
 <div id="selector-block">
     @using (Html.BeginForm())
     {

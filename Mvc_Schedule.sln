@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mvc_Schedule", "Mvc_Schedul
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mvc_Schedule.Models", "Mvc_Schedule.Models\Mvc_Schedule.Models.csproj", "{59B6ADDA-2CC8-4C9E-9361-0D1411A80A4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pager", "..\..\..\..\Desktop\_Pager\Pager\Pager.csproj", "{7FA2E9BD-79FD-4F3A-9BE3-FB17515C63D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pager", "Pager\Pager.csproj", "{7FA2E9BD-79FD-4F3A-9BE3-FB17515C63D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

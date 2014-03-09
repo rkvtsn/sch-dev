@@ -9,7 +9,7 @@ using Mvc_Schedule.Models.DataModels.ModelViews;
 
 namespace Mvc_Schedule.Controllers
 {
-	[Authorize(Roles = StaticData.AdminRoleName)]
+	[Authorize(Roles = StaticData.AdminRole)]
 	public class AdminController : Controller
 	{
 		public ActionResult Index() { return View(); }
@@ -50,8 +50,8 @@ namespace Mvc_Schedule.Controllers
 				model.RoleChecks.Add(new RoleCheck
 				{
 					Name = "Администратор",
-					RoleCheckId = StaticData.AdminRoleName,
-					IsChecked = Roles.IsUserInRole(usr.UserName, StaticData.AdminRoleName),
+					RoleCheckId = StaticData.AdminRole,
+					IsChecked = Roles.IsUserInRole(usr.UserName, StaticData.AdminRole),
 				});
 
 				return Json(model);

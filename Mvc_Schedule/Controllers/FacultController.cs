@@ -21,18 +21,18 @@ namespace Mvc_Schedule.Controllers
 
         public ViewResult Index()
         {
-            ViewData["isAccessable"] = User.IsInRole(StaticData.AdminRoleName);
+            ViewData["isAccessable"] = User.IsInRole(StaticData.AdminRole);
             var model = _db.Facults.ListNames();
             return View(model);
         }
 
-        [Authorize(Roles = StaticData.AdminRoleName)]
+        [Authorize(Roles = StaticData.AdminRole)]
         public ActionResult Create()
         {
             return View();
         }
 
-        [Authorize(Roles = StaticData.AdminRoleName)]
+        [Authorize(Roles = StaticData.AdminRole)]
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Create(FacultCreate model)
         {
@@ -50,7 +50,7 @@ namespace Mvc_Schedule.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = StaticData.AdminRoleName)]
+        [Authorize(Roles = StaticData.AdminRole)]
         public ActionResult Edit(int id)
         {
             var facult = _db.Facults.Get(id);
@@ -61,7 +61,7 @@ namespace Mvc_Schedule.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = StaticData.AdminRoleName)]
+        [Authorize(Roles = StaticData.AdminRole)]
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Edit(FacultEdit model)
         {
@@ -74,7 +74,7 @@ namespace Mvc_Schedule.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = StaticData.AdminRoleName)]
+        [Authorize(Roles = StaticData.AdminRole)]
         public ActionResult Delete(int id)
         {
             var facult = _db.Facults.Get(id);
@@ -83,7 +83,7 @@ namespace Mvc_Schedule.Controllers
             return View(facult);
         }
 
-        [Authorize(Roles = StaticData.AdminRoleName)]
+        [Authorize(Roles = StaticData.AdminRole)]
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {

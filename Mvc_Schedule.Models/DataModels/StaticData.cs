@@ -1,12 +1,20 @@
-﻿namespace Mvc_Schedule.Models.DataModels
+﻿using System;
+using System.Globalization;
+using System.Web.Security;
+using Mvc_Schedule.Models.DataModels.Entities;
+
+namespace Mvc_Schedule.Models.DataModels
 {
     // Статичные Данные приложения
 	public static class StaticData
 	{
-		public const string AdminRoleName = "Admin";
+	    public const string AdminDefaultName = "admin";
 
-	    public const string SaltPswd = "just_salt4PasswordSOplzUseMe!";
+	    public const string AdminDefaultPassword = "password";
 
+		public const string AdminRole = "Admin";
+
+	    public static readonly string SaltPswd = "just_salt4PasswordSOplzUseMe!" + new Random().Next();
         
 	    //public static readonly IDictionary<int, string> WeekdaysConst = new Dictionary<int, string>
 	    //                                                                    {
@@ -18,5 +26,6 @@
 	    //                                                                        { 6, "Суббота" }, 
 	    //                                                                        { 7, "Восскресение" }
 	    //                                                                    };
+        
 	}
 }

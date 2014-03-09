@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,7 +18,6 @@ namespace Mvc_Schedule.Models.DataModels.Entities
 		[MaxLength(127)]
 		public string LectorName { get; set; }
 
-		//Нечетная неделя
 		[Display(Name = "Нечётная неделя")]
 		public bool IsWeekOdd { get; set; }
 
@@ -32,17 +32,29 @@ namespace Mvc_Schedule.Models.DataModels.Entities
 		[Display(Name = "День недели")]
 		public int WeekdayId { get; set; }
 
-		[Display(Name = "Группа")]
-		public int GroupId { get; set; }
-
+		
         [Required]
         public int LessonType { get; set; }
 
-		[ForeignKey("WeekdayId")]
+
+        [Display(Name = "Группа")]
+        public int GroupId { get; set; }
+        [ForeignKey("GroupId")]
+        public virtual StudGroup StudGroup { get; set; }
+        
+        [ForeignKey("WeekdayId")]
 		public virtual Weekday Weekday { get; set; }
-		[ForeignKey("GroupId")]
-		public virtual StudGroup StudGroup { get; set; }
-		[ForeignKey("LessonId")]
+		
+        [ForeignKey("LessonId")]
 		public virtual Lesson Lesson { get; set; }
+
+        // Plans Update
+        public DateTime Date { get; set; }
+
+	    public ScheduleTable()
+	    {
+	        Date = DateTime.Now;
+	    }
 	}
+
 }

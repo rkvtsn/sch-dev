@@ -6,7 +6,7 @@ using Mvc_Schedule.Models.DataModels.Entities;
 
 namespace Mvc_Schedule.Controllers
 {
-    [Authorize(Roles = StaticData.AdminRoleName)]
+    [Authorize(Roles = StaticData.AdminRole)]
     public class SubjectsController : Controller
     {
         private readonly DomainContext _db = new DomainContext();
@@ -104,5 +104,9 @@ namespace Mvc_Schedule.Controllers
             _db.Dispose();
             base.Dispose(disposing);
         }
+
+
+
+       
     }
 }
