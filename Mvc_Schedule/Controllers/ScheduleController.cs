@@ -13,7 +13,26 @@ namespace Mvc_Schedule.Controllers
         
         public ScheduleController() { ViewBag.Title = "Редактор расписания"; }
 
-        #region
+
+
+        [HttpGet]
+        public ActionResult IndexDev(int id = -1)
+        {
+            var group = _db.Groups.Get(id);
+            if (group == null)
+                return RedirectToRoute(new { controller = "Default", action = "Error", id = 404 });
+
+            ViewBag.Title = group.Name;
+            ViewBag.GroupId = group.GroupId;
+            ViewBag.IsAvailable = (Roles.IsUserInRole(group.FacultId.ToString(CultureInfo.InvariantCulture)) ||
+                                   Roles.IsUserInRole(StaticData.AdminRole));
+
+            return View();
+        }
+
+
+
+        #region @main
 
         [HttpGet]
         public JsonResult List(int id)
@@ -21,6 +40,30 @@ namespace Mvc_Schedule.Controllers
             return Json(_db.Ajax.SchList(id), JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpGet]
+        public JsonResult Get(int id)
+        {
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
+        
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
+        public JsonResult Add(FormCollection form)
+        {
+            return Json(null);
+        }
+
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
+        public JsonResult Edit(FormCollection form)
+        {
+            return Json(null);
+        }
+        
+        [HttpPost, Authorize, ValidateAntiForgeryToken]
+        public JsonResult Drop(int id)
+        {
+            return Json(null);
+        }
 
         #endregion
 
@@ -32,31 +75,31 @@ namespace Mvc_Schedule.Controllers
 
 
 
+        #region @feat.
 
-
-
-
-
-
-
-        [HttpGet]
-        //[OutputCache(Duration = 3600, VaryByParam = "id")]
-        public ActionResult IndexDev(int id = -1)
+        [HttpPost]
+        public JsonResult GetList(string letter, string method)
         {
-            var group = _db.Groups.Get(id);
-            if (group == null)
-                return RedirectToRoute(new { controller = "Default", action = "Error", id = 404 });
-
-            ViewBag.Title = group.Name;
-            ViewBag.GroupId = group.GroupId;
-
-            ViewBag.IsAvailable = (Roles.IsUserInRole(group.FacultId.ToString(CultureInfo.InvariantCulture)) ||
-                                   Roles.IsUserInRole(StaticData.AdminRole));
-
-            //var model = _db.Schedule.GetWeekdaysWithSchedule(id);
-
-            return View();
+            if (method == "Lectors") { return Json(_db.Ajax.ListLectors(letter)); }
+            else if (method == "Auditory") { return Json(_db.Ajax.ListAuditory(letter)); }
+            else return Json(_db.Ajax.ListSubjects(letter));
         }
+
+        [HttpPost]
+        public JsonResult GetAvailableLectors(int timeId, string value, bool week)
+        {
+            return Json(_db.Ajax.IsAvailableLector(timeId, value, week));
+        }
+
+        [HttpPost]
+        public JsonResult GetAvailableAuditory(int timeId, string value, bool week)
+        {
+            return Json(_db.Ajax.IsAvailableAuditory(timeId, value, week));
+        }
+
+        #endregion
+
+
         
         [HttpGet]
         //[OutputCache(Duration = 3600, VaryByParam = "id")]
@@ -122,30 +165,7 @@ namespace Mvc_Schedule.Controllers
             return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
 
-        [HttpPost]
-        public JsonResult GetList(string letter, string method)
-        {
-            if (method == "Lectors") { return Json(_db.Ajax.ListLectors(letter)); }
-            else if (method == "Auditory") { return Json(_db.Ajax.ListAuditory(letter)); }
-            else return Json(_db.Ajax.ListSubjects(letter));
-        }
         
-
-
-
-
-
-        [HttpPost]
-        public JsonResult GetAvailableLectors(int timeId, string value, bool week)
-        {
-            return Json(_db.Ajax.IsAvailableLector(timeId, value, week));
-        }
-
-        [HttpPost]
-        public JsonResult GetAvailableAuditory(int timeId, string value, bool week)
-        {
-            return Json(_db.Ajax.IsAvailableAuditory(timeId, value, week));
-        }
 
 
         [HttpPost, ValidateAntiForgeryToken]

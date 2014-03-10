@@ -26,7 +26,7 @@
     #legend {
         width: 100%;
         cursor: default;
-        padding: 10px;
+        padding: 6px;
     }
 
         #legend:hover {
@@ -51,16 +51,39 @@
         cursor: pointer;
     }
 
-    #tpl-template {
-        display: none;
-    }
+    
     #controls {
         position: fixed;
         left: 0;
-        background: #0099cc;
         bottom: 0;
-        padding: 15px;
+        z-index: 1;
     }
+    #controls a {
+        float: left;
+        font-size: 1.5em;
+        padding: 9px;
+    }
+
+    a#sch-edit-btn {
+        margin: 8px;
+        padding: 4px;
+        text-decoration: none;
+    }a#sch-edit-btn:hover {color: #fff;}
+
+    #tpl-template {
+        display: none;
+    }
+
+    .btn {
+        background: #CC3399;
+        border: 1px solid #CC3399;
+    }.btn *, .btn, .btn:hover *, .btn:hover { color: #fff; }
+    .btn:hover {
+        background: #990066;
+        border: 1px solid #CC3399;
+    }
+
+
 
 </style>
 
@@ -80,10 +103,6 @@
         <div class="ending"></div>
     </div>
     
-    <div id="controls">
-        <a href="javascript:void(0);" id="update" title="Обновить"><i class="fa fa-refresh fa-inverse"></i></a>
-    </div>
-
     <div id="sch" style="display: none;">
         <div class="column1 cell">&nbsp;</div>
         <div class="column2 cell">&nbsp;</div>
@@ -96,9 +115,14 @@
 
 </div>
 
+<div id="controls">
+    <a href="#update" id="update" title="Обновить" class="btn"><i class="fa fa-refresh fa-inverse"></i></a>
+    <a href="#save" id="save" title="Сохранить страницу" class="btn"><i class="fa fa-cloud-download fa-inverse"></i></a>
+    <div class="ending"></div>
+</div>
 
-
-@*<div id="tpl-template">
+@*
+<div id="tpl-template">
     <!-- foreach in Model -->
     <div tpl-foreach="Data">
         <div class="weekday">
@@ -158,6 +182,8 @@
         <!-- /foreach in Model -->
     </div>
 </div>*@
+
+
 @Styles.Render("~/styles/dlghelper")
 
 <div class="warning" id="warning_bg"></div>
@@ -167,9 +193,8 @@
 </div>
 
 
-@if (false)
+@if (ViewBag.IsAvailable)
 {
-    //ViewBag.IsAvailable
     <div class="warning" id="warning">
         <p>Вы уверены, что желаете удалить <span id="title_on_delete"></span>?</p>
         <div><a href="javascript:void(0);" id="warning_y">Да</a></div>
@@ -179,33 +204,40 @@
     <form class="warning" id="dialog_form" style="width: 600px; height: 170px;">
         <p id="msg"></p>
         <div id="clearable">
+            
+            <div class="form-line form-inline">
+                <label for="auditory">Аудитория:</label>
+                <input type="text" name="auditory" id="auditory" value="" required />
+            </div>
+
+            <div class="form-line form-inline">
+                <label for="lector">Преподаватель:</label>
+                <input type="text" name="lector" id="lector" value="" required />
+            </div>
+            
             <div class="form-line form-inline">
                 <label for="subject-title">Дисциплина:</label>
                 <input type="text" name="subject-title" id="subject-title" value="" required />
             </div>
-
+            
             <div class="form-line form-inline">
-                <label for="lec">Лекции:</label>
-                <input type="number" name="lec" id="lec" value="0" min="0" />
-
+                <label for="lesson-type">Тип занятия:</label>
+                <select name="lesson-type" id="lesson-type">
+                    <option value="1">Лекция</option>
+                    <option value="2">Лабораторная</option>
+                    <option value="3">Практика</option>
+                    <option value="4">Зачёт</option>
+                </select>
             </div>
-            <div class="form-line form-inline">
-                <label for="lab">Лабораторные:</label>
-                <input type="number" name="lab" id="lab" value="0" min="0" />
-
-            </div>
-            <div class="form-line form-inline">
-                <label for="pr">Практические:</label>
-                <input type="number" name="pr" id="pr" value="0" min="0" />
-
-            </div>
+            
             <div class="ending"></div>
 
             <a id="ok" href="javascript: void(0)">Ок</a>
-            <a id="cancel" href="javascript:void(0);">Отмена</a>
+            <a id="cancel" href="javascript: void(0);">Отмена</a>
 
-            <input type="hidden" name="plan-id" id="plan-id" value="" />
+            <input type="hidden" name="sch-id" id="sch-id" value="" min="0" />
         </div>
+        <input type="hidden" name="group-id" id="group-id" value="@ViewBag.GroupId" />
         @Html.AntiForgeryToken()
     </form>
     @Scripts.Render("~/scripts/dlghelper")

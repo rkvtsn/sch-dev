@@ -15,7 +15,11 @@ namespace Mvc_Schedule
 
             #region @styles
             // @app
-            bundles.Add(new StyleBundle("~/styles/main").Include("~/Content/app/style.css", "~/Content/app/font-awesome.min.css"));
+            bundles.Add(new StyleBundle("~/styles/main").Include(
+                "~/Content/app/font-cleanvertising.css"
+                ,"~/Content/app/style.css"
+                , "~/Content/app/font-awesome.min.css"
+                ));
             bundles.Add(new StyleBundle("~/styles/lesson-index").Include("~/Content/app/lesson-index.css"));
             bundles.Add(new StyleBundle("~/styles/facult-index").Include("~/Content/app/facult-index.css"));
             

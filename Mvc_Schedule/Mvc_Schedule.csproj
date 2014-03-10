@@ -102,6 +102,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\app\font-cleanvertising.css" />
     <Content Include="Content\dlghelper.css" />
     <Content Include="Content\app\facult-index.css" />
     <Content Include="Content\app\lesson-index.css" />
@@ -299,6 +300,12 @@
     <Content Include="Content\scss\_spinning.scss" />
     <Content Include="Content\scss\_stacked.scss" />
     <Content Include="Content\scss\_variables.scss" />
+    <Content Include="Content\fonts\cleanvertising\cleanveb.eot" />
+    <Content Include="Content\fonts\cleanvertising\cleanveb.ttf" />
+    <Content Include="Content\fonts\cleanvertising\cleanveb.woff" />
+    <Content Include="Content\fonts\cleanvertising\cleanvel.eot" />
+    <Content Include="Content\fonts\cleanvertising\cleanvel.ttf" />
+    <Content Include="Content\fonts\cleanvertising\cleanvel.woff" />
     <None Include="Properties\PublishProfiles\Профиль1.pubxml" />
     <Content Include="Views\Plans\Create.cshtml" />
     <Content Include="Views\Shared\_jQuery-ui.cshtml" />

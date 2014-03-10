@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'cleanveb';
+    src: url('../Content/fonts/cleanvertising/cleanveb.eot');
+    src: url('../Content/fonts/cleanvertising/cleanveb.eot?#iefix') format('embedded-opentype'),
+         url('../Content/fonts/cleanvertising/cleanveb.woff') format('woff'),
+         url('../Content/fonts/cleanvertising/cleanveb.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'cleanvel';
+    src: url('../Content/fonts/cleanvertising/cleanvel.eot');
+    src: url('../Content/fonts/cleanvertising/cleanvel.eot?#iefix') format('embedded-opentype'),
+         url('../Content/fonts/cleanvertising/cleanvel.woff') format('woff'),
+         url('../Content/fonts/cleanvertising/cleanvel.ttf') format('truetype');
+}

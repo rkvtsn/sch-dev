@@ -13,7 +13,7 @@
             list.append(div);
         }
 
-        DlgHelper.ShowDialogSuccess("Обновлено!", 1000);
+        DlgHelper.ShowDialogSuccess("Готово!", 1000);
         updateSubrows();
         table.show();
     };
@@ -28,30 +28,41 @@
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             url: "/schedule/list/",
             data: { id: groupId },
-            success: function(data) {
+            success: function (data) {
                 renderTable(data);
+                legendBind();
             }
         });
     };
 
-
-
     $(document).ready(function () {
         methodToFixLayout();
-
-        var model = null;
-        //model = { load: function () { this.refresh(function () { DlgHelper.HideDialog(); }); } };
-        if (typeof schCreate == 'function') { // Загружаю редактора
-            //model = schCreate({ getList: getList });
-        } else { // Загружаю стандартный вывод 
-        }
-
-        //updatePage();
         $("#update").click(function (e) {
             updatePage();
-            legendBind();
+            e.preventDefault();
             return false;
-        }).click();
+        });
+
+        $("#save").click(function (e) {
+            e.preventDefault();
+
+            var htmlDoc = $("#list-weeks").html();
+            console.log(htmlDoc);
+
+            //TODO saving to file
+            // a: push on server -> pull from server...
+            // b: (isAuth) ? redirect-> {indexDev || index}
+
+            return false;
+        });
+
+        var model;
+        if (typeof schCreate == 'function')
+            model = schCreate({ update: updatePage });
+        else
+            model = { activate: updatePage };
+
+        model.activate();
     });
 
 
@@ -60,7 +71,7 @@
 
 
     function updateSubrows() {
-        $(".subject-name").each(function (i) { //TODO!!!
+        $(".subject-name").each(function (i) { //TODO!!! inject to Rendering
             var isSub1 = $(this).parent().hasClass("subrow1");
             var mCell = $(this).parent().parent();
             var lesType = mCell.attr("class")[mCell.attr("class").length - 1];
@@ -70,11 +81,11 @@
             else if (lesType == 4) lesName = "Зачёт";
             mCell.attr("title", $(this).text() + " (" + lesName + ")");
             var len = $(this).text().length + $(this).next().text().length; // Длина линейки
-            
+
             if (isSub1) {
                 if (len > 34)
                     $(this).text($(this).text().substr(0, 30) + "...");
-            }else
+            } else
                 if (len >= 16) {
                     var words = $(this).text().split(/[ -]+/);
                     if (len <= 15 || words.length == 1)
@@ -100,7 +111,7 @@
     function legendBind() {
         var legend = $("#legend .sq");
         if (this.isBinded == true) {
-            legend.each(function() { this.isVisible = false; });
+            legend.each(function () { this.isVisible = false; });
             legend.unbind("click");
             $("#legend .title").unbind("click");
             legend.css({ opacity: "" });
@@ -110,8 +121,8 @@
         $("#legend .title").click(function () {
             $($(this).prev()).click();
         });
-        
-        
+
+
         legend.click(function () {
             var id = $(this).attr("class")[$(this).attr("class").length - 1];
             var bg = $(".lesson.bg" + id.toString());
@@ -140,16 +151,18 @@
         return zero(dt.getHours()) + ":" + zero(dt.getMinutes());
     }
 
-    function renderTableRow(model) {
+
+    // @rendering
+    function renderTableRow(model) { // СУПЕР ТУПОЙ МЕТОД !!! TODO: переделать на AngularJS все подобные г*вно коды!
         var row = "";
-        $.each(model, function(i, week) {
+        $.each(model, function (i, week) {
             row += '<div class="weekday">' +
-                '<div class="cell column1">' + week.Key.Name + '</div>';
-            
+                   '<div class="cell column1">' + week.Key.Name + '</div>';
+
             $.each(week.Group, function (j, lessons) {
                 row += '<div class="row">';
                 if (lessons.length > 0) {
-                    $.each(lessons, function(k, lesson) {
+                    $.each(lessons, function (k, lesson) {
                         row += '<div class="cell column2">' + getTime(lesson.Key.Time) + '</div>';
                         $.each(lesson.Group, function (x, sc) {
                             var subrow = (!sc.IsWeekOdd) ? lesson.Key.CountEven : lesson.Key.CountOdd;
@@ -175,6 +188,7 @@
                         '<div class="ending"></div>' +
                         '<div class="cell column1">&nbsp;</div>';
                 }
+                row += '</div>';
             });
             row += '</div><div class="ending"></div>';
         });

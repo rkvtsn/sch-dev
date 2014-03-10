@@ -155,18 +155,23 @@
             $('.validation-error').remove();
             $('#clearable input').removeClass("input-validation-error");
         }
-        this.formDiv.find("#clearable input").each(function() {
-            if ($(this).attr("type") == "number") $(this).val($(this).attr('min') || 0);
+        this.formDiv.find("#clearable input").each(function () {
+            if ($(this).prop("min")) $(this).val($(this).attr('min'));
+            else if ($(this).attr("type") == "number") $(this).val($(this).attr('min') || 0);
             else if ($(this).attr("type") == "text") $(this).val('');
             else if ($(this).attr("type") == "checkbox") $(this).prop("checked", false);
         });
+        this.formDiv.find("#clearable select").each(function() {
+            $(this).find("option").first().prop('selected', true);
+        });
+        // TODO [input=radio]
         return this;
     },
 
     BindOn: function(generateForm, addAction, editAction, deleteAction) {
         if (generateForm == null || addAction == null || editAction == null || deleteAction == null) {
-            //this.ShowDialogError("Ошибка");
-            console.log("error dlg_binding");
+            console.log("[Error] dlghelper binding: attr null exception");
+            DlgHelper.ShowDialogError("Извините, произошла ошибка. Попробуйте перезагрузить страницу.", 10000);
             return null;
         }
         var x = this;
@@ -174,9 +179,9 @@
         x.delAction = deleteAction;
 
         //Form Dialog
-        $("#add").unbind('click');
-        $("#add, .edit, .add").click(function() {
-            console.log('Add OR Edit : click');
+        $("#add").unbind('click'); //
+        $("#add, .edit, .add").click(function() { // 
+            console.log('[Add] OR [Edit] : click');
             var isEdit = $(this).hasClass("edit");
 
             if (isEdit) {
