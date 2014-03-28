@@ -61,20 +61,11 @@
 
     AjaxAction: function(ajaxUrl, ajaxType, successFn) {
         var form = this.formDiv.serialize();
-        this.AjaxActionWithData(ajaxUrl, ajaxType, successFn, form);
-        //$.ajax({
-        //    type: ajaxType,
-        //    contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-        //    url: ajaxUrl,
-        //    data: form,
-        //    success: function(data) {
-        //        successFn(data);
-        //    }
-        //});
+        return this.AjaxActionWithData(ajaxUrl, ajaxType, successFn, form);
     },
 
     AjaxActionWithData: function(ajaxUrl, ajaxType, successFn, d) {
-        $.ajax({
+        return $.ajax({
             type: ajaxType,
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             url: ajaxUrl,
@@ -134,12 +125,11 @@
         this.__isValid = true;
     },
     _isEnableValidation: false,
-    EnableValidation: function() {
-        console.log("[Validation] is Enabled");
+    EnableValidation: function() { //console.log("[Validation] is Enabled");
         var x = this;
         this._isEnableValidation = true;
         $("#clearable input").each(function() {
-            $(this).blur(function() {
+            $(this).keyup(function () {
                 if ($(this).prop("required"))
                     if ($(this).val().trim() == "")
                         x._failedValidation($(this));
@@ -155,11 +145,12 @@
             $('.validation-error').remove();
             $('#clearable input').removeClass("input-validation-error");
         }
+        this.formDiv.find("#clearable .panel").html('');
         this.formDiv.find("#clearable input").each(function () {
             if ($(this).prop("min")) $(this).val($(this).attr('min'));
             else if ($(this).attr("type") == "number") $(this).val($(this).attr('min') || 0);
-            else if ($(this).attr("type") == "text") $(this).val('');
             else if ($(this).attr("type") == "checkbox") $(this).prop("checked", false);
+            else $(this).val(''); //($(this).attr("type") == "text")
         });
         this.formDiv.find("#clearable select").each(function() {
             $(this).find("option").first().prop('selected', true);
@@ -174,44 +165,39 @@
             DlgHelper.ShowDialogError("Извините, произошла ошибка. Попробуйте перезагрузить страницу.", 10000);
             return null;
         }
+
         var x = this;
         x.GenerateForm = generateForm;
         x.delAction = deleteAction;
 
-        //Form Dialog
+        //@Form Dialog
         $("#add").unbind('click'); //
-        $("#add, .edit, .add").click(function() { // 
-            console.log('[Add] OR [Edit] : click');
+        $("#add, .edit, .add").click(function() { // //console.log('[Add] OR [Edit] : click');
             var isEdit = $(this).hasClass("edit");
 
             if (isEdit) {
                 x.msg.html('<i class="fa fa-pencil-square"></i> Изменение:');
-                x.okAction = editAction;
-                console.log('[Edit]');
+                x.okAction = editAction;//console.log('[Edit]');
             } else {
                 x.msg.html('<i class="fa fa-plus-square"></i> Добавление:');
-                x.okAction = addAction;
-                console.log('[Add]');
+                x.okAction = addAction; //console.log('[Add]');
             }
 
             x.ShowForm();
             generateForm($(this), isEdit);
         });
 
-        // Warning [DELETE]
+        // @Warning [DELETE]
         $(".delete").click(function() {
             $("#title_on_delete").html($(this).parent().find(".subtitle").html());
             DlgHelper.warning.show();
             DlgHelper.warnBg.show();
-            warning._delCaller = $(this);
-            console.log('[Delete]');
-        });
-
-        console.log('[Binding] is On');
+            warning._delCaller = $(this);//console.log('[Delete]');
+        });//console.log('[Binding] is On');
         return this;
     },
 
-    // Dialog
+    // @Dialog
     countdown: {},
     cooldown: 3000,
     ShowDialog_display: function (msg, t) {

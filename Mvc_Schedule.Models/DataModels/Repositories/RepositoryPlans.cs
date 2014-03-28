@@ -18,7 +18,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             return (from x in _ctx.Plans
                     where x.GroupId == id
                     join s in _ctx.Subjects on x.SubjectId equals s.SubjectId
-                    select new { Key = x.PlanId, Value = s.Title }).ToList();
+                    select new { planId = x.PlanId, title = s.Title, pr = x.PracticeH, lab = x.LabH, lec = x.LectionH }).ToList();
         }
 
 
@@ -41,7 +41,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
         private PlanCreate PreparePlanCreate(PlanCreate planCreate)
         {
             planCreate.SubjectName = planCreate.SubjectName.Trim();
-            if (_ctx.Plans.Include(x => x.Subject).SingleOrDefault(x => x.Subject.Title.ToLower() == planCreate.SubjectName.ToLower() && planCreate.Plan.GroupId == x.GroupId) != null) return null;
+            if (_ctx.Plans.Include(x => x.Subject).SingleOrDefault(x => x.Subject.Title.ToLower() == planCreate.SubjectName.ToLower() && planCreate.Plan.GroupId == x.GroupId && planCreate.Plan.PlanId != x.PlanId) != null) return null;
             planCreate.Plan.Subject = _ctx.Subjects.SingleOrDefault(x => x.Title.ToLower() == planCreate.SubjectName.ToLower()) ?? new Subject { Title = planCreate.SubjectName };
 
             return planCreate;
@@ -51,11 +51,11 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
         {
             var p = PreparePlanCreate(planCreate);
             if (p == null) return null;
-            
+
             _ctx.Plans.Add(planCreate.Plan);
             return planCreate.SubjectName;
         }
-        
+
 
         public string Edit(PlanCreate planCreate)
         {
@@ -67,10 +67,10 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             plan.PracticeH = p.Plan.PracticeH;
             plan.LectionH = p.Plan.LectionH;
             plan.Subject = p.Plan.Subject;
-            
+
             return planCreate.SubjectName;
         }
-        
+
         public string Delete(int planId)
         {
             var p = _ctx.Plans.Include(x => x.Subject).SingleOrDefault(x => x.PlanId == planId);
@@ -80,5 +80,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             _ctx.Plans.Remove(p);
             return result;
         }
+
+        
     }
 }

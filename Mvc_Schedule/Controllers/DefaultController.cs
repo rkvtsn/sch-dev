@@ -19,7 +19,7 @@ namespace Mvc_Schedule.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetGroups(string id)
         {
             int facultId;
@@ -27,9 +27,9 @@ namespace Mvc_Schedule.Controllers
                 using (var db = new DomainContext())
                 {
                     var data = db.Ajax.GroupsByFacult(facultId);
-                    return Json(data);
+                    return Json(data, JsonRequestBehavior.AllowGet);
                 }
-            return Json(null);
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
         public ViewResult Error(int id = 101)

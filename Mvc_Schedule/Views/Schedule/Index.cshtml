@@ -1,23 +1,12 @@
-﻿@using Mvc_Schedule.Models.DataModels.Repositories
-@model List<Ws>
+﻿@model Mvc_Schedule.Models.DataModels.ModelViews.SchIndex
+@using System.Web.Optimization
+@Styles.Render("~/styles/sch")
+@Styles.Render("~/styles/dlghelper")
 
-<h1 id="page-title">Расписание группы @ViewBag.Title</h1>
-
-<style>
-    .lesson * { color: #ffffff; }
-    .bg1 {background: #ff5db1;} 
-    .bg2 {background: #4169e1;}
-    .bg3 {background: #9acd32;}
-    .bg4 {background: #dc143c;}
-    #legend { width: 100%; cursor: default; padding: 10px; }
-    #legend:hover { width: 100%; }
-    #legend:hover * { display: block; }
-    .legend.sq { width: 5px; height: 5px; cursor: pointer; }
-    .legend.title { display: none; width: 120px; height: 5px; padding: 0; cursor: pointer; }
-</style>
+<h1 id="page-title">Расписание "@Model.Title"</h1>
 
 <div id="selector-block">
-    
+
     <div id="legend">
         <div class="legend sq cell bg1" title="Лекция"></div>
         <div class="legend title cell">Лекция</div>
@@ -31,111 +20,92 @@
         <div class="ending"></div>
     </div>
 
-    <div class="column1 cell">&nbsp;</div>
-    <div class="column2 cell">&nbsp;</div>
-    <div class="subrow1 cell header1">Нечётная</div>
-    <div class="subrow1 cell header1">Чётная</div>
-    <div class="ending"></div>
-    @foreach (var week in Model)
-    {
-        <div class="weekday">
-            <div class="cell column1">@week.Key.Name</div>
-            @foreach (var lessons in week.Group)
-            {
-                <div class="row">
-                    @{
-                        var lessonsArray = lessons as Sc[] ?? lessons.ToArray();
-                    }
-                    @foreach (var lesson in lessonsArray)
-                    {
-                        <div class="cell column2">@lesson.Key.TimeString</div>
-                        var countOdd = lesson.Group.Count(x => x.IsWeekOdd);
-                        var countEven = lesson.Group.Count(x => !x.IsWeekOdd);
-                        foreach (var sc in lesson.Group)
-                        {
-                            <div class="cell lesson bg@(sc.LessonType)">
-                                @{ var subrow = !sc.IsWeekOdd ? countEven : countOdd; }
-                                <div class="subrow@(subrow)">
-                                    <span class="subject-name">@sc.SubjectName</span>
-                                    <span class="subject-auditory">@sc.Auditory</span>
-                                </div>        
-                                <div class="subrow@(subrow) subject-lector">
-                                    @sc.LectorName
-                                </div>
-                            </div>
-                        }
-                        <div class="ending"></div>
-                        <div class="cell column1">&nbsp;</div>
-                    }@if (!lessonsArray.Any())
-                     {
-                         <div class="cell column2">&nbsp;</div>
-                         <div class="cell subrow2">&nbsp;</div>
-                         <div class="cell subrow2">&nbsp;</div>
-                         <div class="ending"></div>            
-                         <div class="cell column1">&nbsp;</div> 
-                     }
-                </div>
-            }
-        </div>
+    <div id="sch" style="display: none;">
+        <div class="column1 cell">&nbsp;</div>
+        <div class="column2 cell">&nbsp;</div>
+        <div class="subrow1 cell header1" val="false">Чётная</div>
+        <div class="subrow1 cell header1" val="true">Нечётная</div>
         <div class="ending"></div>
-    }
+
+        <div id="list-weeks"></div>
+    </div>
+
 </div>
-<script>
-    $(document).ready(function () {
-        $(".subrow2 .subject-name").each(function (i) {
-            var mCell = $(this).parent().parent();
-            var lesType = mCell.attr("class")[mCell.attr("class").length - 1];
-            var lesName = "Лекция";
-            if (lesType == 2) lesName = "Практика";
-            else if (lesType == 3) lesName = "Лабораторная";
-            else if (lesType == 4) lesName = "Зачёт";
-            mCell.attr("title", $(this).text() + " (" + lesName + ")");
-            var len = $(this).text().length + $(this).next().text().length; // Длина линейки
-            if (len >= 16) {
-                var words = $(this).text().split(/[ -]+/);
-                if (len <= 15 || words.length == 1)
-                    $(this).text($(this).text().substr(0, 10) + "...");
-                else {
-                    var name = "";
-                    for (var j = 0; j < words.length; j++) {
-                        name += words[j].toUpperCase()[0];
-                    }
-                    $(this).text(name);
-                }
-            }
-        });
+
+<div id="controls">
+    <a href="javascript:void(0);" id="update" title="Обновить" class="btn"><i class="fa fa-refresh fa-inverse"></i></a>
+    <a href="#save" id="save" title="Сохранить страницу" class="btn"><i class="fa fa-cloud-download fa-inverse"></i></a>
+    <div class="ending"></div>
+</div>
 
 
-        var legend = function (element) {
-            element.click(function () {
-                var id = $(this).attr("class")[$(this).attr("class").length - 1];
-                var bg = $(".lesson.bg" + id.toString());
-                if (this.isVisible != true) {
-                    $(this).css({
-                        opacity: "0.6"
-                    });
-                    bg.hide();
-                    this.isVisible = true;
-                }else {
-                    $(this).css({
-                        opacity: ""
-                    });
-                    bg.show();
-                    this.isVisible = false;
-                }
-            });
-        };
-        legend($("#legend .sq"));
-        $("#legend .title").click(function () {
-            $($(this).prev()).click();
-        });
-        methodToFixLayout();
-    });
-    function methodToFixLayout(e) {
-        var winWidth = $(window).width();
-        $("#selector-block").css("width", (winWidth <= 800) ? 'auto' : '');
-        $("#selector-block").css("min-width", (winWidth <= 800) ? '300px' : '');
-    }
-    $(window).bind("resize", methodToFixLayout);
+<div class="warning" id="warning_bg"></div>
+<div class="warning" id="dialog">
+    <p>Идёт загрузка...</p>
+    <a href="javascript:void(0);" id="close_dialog">закрыть</a>
+</div>
 
-</script>
+<input type="hidden" value="@Model.Keyword" name="search-keyword" id="search-keyword" />
+
+@if (Model.IsAvailable)
+{
+    @Html.Partial("_ValidationStyles")
+    @Styles.Render("~/styles/jquery-ui")
+    <div class="warning" id="warning">
+        <p>Вы уверены, что желаете удалить <span id="title_on_delete"></span>?</p>
+        <div><a href="javascript:void(0);" id="warning_y">Да</a></div>
+        <div><a href="javascript:void(0);" id="warning_n">Нет</a></div>
+    </div>
+
+    <form class="warning" id="dialog_form" style="width: 600px; height: 170px;">
+        <p id="msg"></p>
+        <div id="clearable">
+
+            <div class="form-line form-inline">
+                <label for="auditory">Аудитория:</label>
+                <input type="text" name="auditory" id="auditory" value="" required />
+            </div>
+
+            <div class="form-line form-inline">
+                <label for="lector">Преподаватель:</label>
+                <input type="text" name="lector" id="lector" value="" required />
+            </div>
+            
+            <div class="form-line form-inline">
+                <label for="subject-title">Дисциплина:</label>
+                <input type="text" name="subject-title" id="subject-title" value="" required />
+            </div>
+
+            <div class="form-line form-inline">
+                <label for="lesson-type">Тип занятия:</label>
+                <select name="lesson-type" id="lesson-type">
+                    <option value="1">Лекция</option>
+                    <option value="2">Лабораторная</option>
+                    <option value="3">Практика</option>
+                    <option value="4">Зачёт</option>
+                </select>
+            </div>
+
+            <div class="ending"></div>
+            
+            <a id="ok" href="javascript: void(0)">Ок</a>
+            <a id="cancel" href="javascript: void(0);">Отмена</a>
+            
+            <div id="is-available" class="panel"></div>
+
+            <input type="hidden" name="sch-id" id="sch-id" value="0" />
+            <input type="hidden" name="weekday-id" id="weekday-id" value="0" />
+            <input type="hidden" name="lesson-id" id="lesson-id" value="0" />
+            <input type="hidden" name="week" id="week" value="0" />
+        </div>
+        <input type="hidden" name="group-id" id="group-id" value="@Model.GroupId" />
+
+        @Html.AntiForgeryToken()
+    </form>
+    @Scripts.Render("~/scripts/sch-create")
+}
+else
+{
+    <input type="hidden" name="group-id" id="group-id" value="@Model.GroupId" />
+    @Scripts.Render("~/scripts/sch-index")
+}

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -19,6 +20,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             return TxtUploader.AddListFromTxt(data, Encoding.GetEncoding(1251), subjectName =>
             {
                 var subject = new Subject { Title = subjectName };
+
                 this.Add(subject);
                 return true;
             });
@@ -42,11 +44,11 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             }
             return first.SubjectId != subject.SubjectId;
         }
-        
+
         public void Add(Subject subject)
         {
             subject.Title = subject.Title.Trim();
-            _ctx.Subjects.Add(subject);
+            _ctx.Subjects.AddOrUpdate(x => x.Title, subject);
         }
 
         public Subject Get(int id)
@@ -71,5 +73,10 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             }
         }
 
+        public void Add(string subjectName)
+        {
+            var subject = new Subject { Title = subjectName };
+            this.Add(subject);
+        }
     }
 }

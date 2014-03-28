@@ -7,7 +7,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
     {
         public bool Equals(Lector x, Lector y)
         {
-            return x.SecondName == y.SecondName && x.Name == y.Name && x.ThirdName == y.ThirdName;
+            return x.SecondName == y.SecondName && x.Name == y.Name && (x.ThirdName == y.ThirdName);
         }
 
         public int GetHashCode(Lector obj)

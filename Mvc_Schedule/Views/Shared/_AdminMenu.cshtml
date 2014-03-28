@@ -22,9 +22,12 @@
 <style>
 	.admin-menu {
 	    /*font-size: 13px;*/
+	    position: relative;
+        z-index: 10;
         font-size: 15px;
 		display: block;
 		background: #fff;
+        background-color: rgba(250, 250, 250, 0.9);
 	}
 	.admin-menu a {
 		color: #333;
@@ -37,4 +40,4 @@
 		color: #fff;
 	}
 </style>
-<div class="admin-menu">@if (User.IsInRole(StaticData.AdminRole)){@ActionLinkActive("Пользователи", "Index", "Admin", true)@ActionLinkActive("Дисциплины", "Index", "Subjects", true)@ActionLinkActive("Преподаватели", "Index", "Lectors", true)@ActionLinkActive("Добавить факультет", "Create", "Facult")@ActionLinkActive("Редактор звонков", "Index", "Lessons", true)}@ActionLinkActive("Управление", "Index", "Facult")@ActionLinkActive("Добавить группу", "Create", "Groups")@Html.ActionLink("Выйти", "LogOff", "Auth")</div>
+<div class="admin-menu">@if (User.IsInRole(StaticData.AdminRole)){@ActionLinkActive("Пользователи", "Index", "Admin", true)@ActionLinkActive("Дисциплины", "Index", "Subjects", true)@ActionLinkActive("Аудитории", "Index", "Auditory", true)@ActionLinkActive("Преподаватели", "Index", "Lectors", true)@ActionLinkActive("Добавить факультет", "Create", "Facult")@ActionLinkActive("Редактор звонков", "Index", "Lessons", true)}@ActionLinkActive("Управление", "Index", "Facult")@ActionLinkActive("Добавить группу", "Create", "Groups")@Html.ActionLink("Выйти", "LogOff", "Auth")</div>

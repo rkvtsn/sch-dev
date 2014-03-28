@@ -13,6 +13,8 @@ namespace Mvc_Schedule.Models.DataModels
 {
     public sealed class ConnectionContext : DbContext
     {
+        public DbSet<Auditory> Auditories { get; set; }
+
         public DbSet<ScheduleTable> ScheduleTables { get; set; }
 
         public DbSet<Lesson> Lessons { get; set; }
@@ -29,6 +31,7 @@ namespace Mvc_Schedule.Models.DataModels
         
         public DbSet<Plan> Plans { get; set; }
     }
+
 
     // TODO Замена на миграцию EF
     #region DbIni:

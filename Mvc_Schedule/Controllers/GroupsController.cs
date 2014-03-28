@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Web.Mvc;
 using System.Web.Security;
 using Mvc_Schedule.Models;
@@ -17,6 +18,7 @@ namespace Mvc_Schedule.Controllers
 			ViewBag.Title = "Редактор групп";
 		}
 
+        [HttpGet]
 		public ActionResult Create()
 		{
 			ViewData["IsAdmin"] = Roles.IsUserInRole(StaticData.AdminRole);
@@ -32,8 +34,10 @@ namespace Mvc_Schedule.Controllers
 			{
 				if (!Roles.IsUserInRole(studgroup.FacultId.ToString(CultureInfo.InvariantCulture)) && !Roles.IsUserInRole(StaticData.AdminRole))
 					return RedirectToRoute(new { controller = "Default", action = "Error", id = 404 });
-
-				_db.Groups.Add(studgroup);
+			    
+                studgroup.LastCheck = DateTime.Now;
+				
+                _db.Groups.Add(studgroup);
 				_db.SaveChanges();
 				return RedirectToAction("Index", new { controller = "Facult" });
 			}

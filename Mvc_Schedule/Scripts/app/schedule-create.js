@@ -1,13 +1,14 @@
-﻿(function() {
+﻿(function () {
     var isOddWeek = false;
     var timer;
     var groupId;
 
-    function popupAvail(data, div, dt) {
+    function popupAvail(data, div, str) {
 
-        var p = div.children("p[data-type='" + dt + "']");
+        var p = div.children("a[data-type='" + str + "']");
 
-        if (data == "0" || data == groupId) {
+        var d = Number(data);
+        if ((str != "Subjects" && (data == groupId || d == 0)) || d < 0) {
 
             if (p.length != 0) {
                 p.remove();
@@ -15,54 +16,75 @@
 
         } else {
 
-            var str = (dt == "Lectors") ? "Лектор занят" : "Аудитория занята";
-
+            var txt = (str == "Lectors") ? 'Преподаватель занят' : (str != "Subjects") ? 'Аудитория занята' : 'Осталось ' + data + ' ч.';
             if (p.length == 0) {
-                p = document.createElement("P");
-                p.setAttribute("data-type", dt);
-                var text = document.createTextNode(str);
-                p.appendChild(text);
+                if (str == "Subjects") {
+                    p = $('<a href="/plans/' + groupId + '" data-type="' + str + '"></a>');
+                } else
+                    p = $('<a href="/schedule/create/' + data + '/' + (isOddWeek ? 2 : 1) + '" data-type="' + str + '"></a>');
                 div.append(p);
-            } else {
-                p.text(str);
             }
+            p.html(txt);
 
         }
 
     }
 
-    function autocompleteHandler(element, str) {
-        if (str == "Lectors" || str == "Auditory") {
-            element.on('keydown blur', function(event) {
-                clearTimeout(timer);
-                var jq = $(this);
-                timer = setTimeout(function() {
-                    var val = jq.val();
-                    var lesson = jq.closest('.lesson');
-                    var lessonId = lesson.attr("id");
+    function getSubjectPlan(jq) {
+        var li = jq.closest("li");
+        var div = li.find(".is-available");
+        var val = li.find(".subjects").val();
+        var lessonType = li.find("select").val();
+        if (lessonType > 3 || lessonType < 1) {
+            popupAvail(-1, div, "Subjects");
+        } else
+            $.ajax({
+                url: '/Schedule/GetSubjectPlan',
+                type: "GET",
+                dataType: "json",
+                data: { groupid: groupId, value: val, lessontype: lessonType },
+                success: function (data) {
+                    popupAvail(data, div, "Subjects");
+                }
+            });
+    }
 
+    function autocompleteHandler(element, str) {
+
+        element.on('keydown blur', function (event) {
+            clearTimeout(timer);
+            var jq = $(this);
+            timer = setTimeout(function () {
+                var val = jq.val();
+                var lesson = jq.closest('.lesson');
+                var lessonId = lesson.attr("id");
+                if (str == "Lectors" || str == "Auditory") {
+                    var div = jq.parent("DIV").parent("LI").children(".is-available");
                     $.ajax({
                         url: '/Schedule/GetAvailable' + str,
-                        type: "POST",
+                        type: "GET",
                         dataType: "json",
                         data: { timeId: lessonId, value: val, week: isOddWeek },
-                        success: function(data) {
-                            var div = jq.parent("DIV").parent("LI").children(".is-available");
+                        success: function (data) {
                             popupAvail(data, div, str);
                         }
                     });
-                }, event.type === "blur" ? 0 : 2000);
-            });
-        }
+                } else {
+                    getSubjectPlan(jq);
+                }
+                if (event.type === "blur") clearInterval(timer);
+            }, event.type === "blur" ? 0 : 1000);
+        });
+
         element.autocomplete({
-            source: function(request, response) {
+            source: function (request, response) {
                 $.ajax({
                     url: '/Schedule/GetList',
-                    type: "POST",
+                    type: "GET",
                     dataType: "json",
                     data: { letter: request.term, method: str },
-                    success: function(data) {
-                        response($.map(data, function(item) {
+                    success: function (data) {
+                        response($.map(data, function (item) {
                             return { label: item, value: item };
                         }));
                     }
@@ -72,12 +94,12 @@
         });
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         isOddWeek = $("#IsOddWeek").attr("value");
         var index = $("#indexer").val(); // баластовый счётчик, но без него совсем скучно
         groupId = $("#GroupId").val(); //
 
-        $(".add_element").click(function() {
+        $(".add_element").click(function () {
             var counter = $(this).parent("P").prev(".lesson-form").children("LI").length;
 
             if (counter >= 2) { return; }
@@ -118,10 +140,11 @@
             autocompleteHandler($(this).parent("P").prev(".lesson-form").find('.subjects'), "Subjects");
             autocompleteHandler($(this).parent("P").prev(".lesson-form").find('.auditory'), "Auditory");
             autocompleteHandler($(this).parent("P").prev(".lesson-form").find('.lectors'), "Lectors");
+            $(this).parent("P").prev(".lesson-form").find('select').change(function () { getSubjectPlan($(this)); });
             index++;
         });
 
-        $(".remove_element").click(function() {
+        $(".remove_element").click(function () {
             var element = $(this).parent("P").prev(".lesson-form").children("LI").last();
             if (element != null) element.remove();
         });
@@ -145,5 +168,6 @@
         autocompleteHandler($("input.subjects"), "Subjects");
         autocompleteHandler($("input.auditory"), "Auditory");
         autocompleteHandler($("input.lectors"), "Lectors");
+        $(".lesson-form select").change(function () { getSubjectPlan($(this)); });
     });
 })();

@@ -18,11 +18,11 @@ namespace Mvc_Schedule.Models.Migrations
 
         protected override void Seed(DataModels.ConnectionContext context)
         {
-            if (Membership.GetUser(StaticData.AdminDefaultName) != null) return;
-
             if (!context.Weekdays.Any())
                 new List<string> { "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье" }
                     .ForEach(x => context.Weekdays.AddOrUpdate(new Weekday { Name = x }));
+
+            if (Membership.GetUser(StaticData.AdminDefaultName) != null) return;
 
             var admin = Membership.CreateUser(StaticData.AdminDefaultName, StaticData.AdminDefaultPassword, email: "email@email.ru");
 

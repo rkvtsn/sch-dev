@@ -28,7 +28,7 @@
     function refresh(onsuccess) {
         DlgHelper.onUpdate(list,
             "/lessons/list",
-            "POST",
+            "GET",
             function (i, x) {
                 var div = $('<li val="' + x.LessonId + '">' +
                     '<a class="delete" href="javascript: void(0)">Удалить</a> ' +

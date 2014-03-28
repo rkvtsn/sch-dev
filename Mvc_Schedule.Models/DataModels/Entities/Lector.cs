@@ -18,13 +18,16 @@ namespace Mvc_Schedule.Models.DataModels.Entities
         [StringLength(20)]
         public string ThirdName { get; set; }
 
+        [Required, StringLength(20)]
+        public string PreName { get; set; }
+
 
         [NotMapped]
         public string FullName
         {
             get
             {
-                return SecondName + " " + Name[0] + "."
+                return PreName + " " + SecondName + " " + Name[0] + "."
                     + ((ThirdName != null && ThirdName.Trim() != String.Empty) ?
                     ThirdName[0] + "." : "");
             }

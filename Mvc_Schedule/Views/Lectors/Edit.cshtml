@@ -9,6 +9,16 @@
 
         <div class="form-line">
             <div class="editor-label">
+                @Html.LabelFor(model => model.PreName, "Префикс (*)")
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.PreName, new { @class = "long" })
+                @Html.ValidationMessageFor(model => model.PreName)
+            </div>
+        </div>
+        
+        <div class="form-line">
+            <div class="editor-label">
                 @Html.LabelFor(model => model.Name, "Имя (*)")
             </div>
             <div class="editor-field">

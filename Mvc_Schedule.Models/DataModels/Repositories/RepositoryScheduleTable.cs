@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Web.Mvc;
 using System.Web.Security;
 using Mvc_Schedule.Models.DataModels.Entities;
@@ -160,9 +161,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             //var group = _ctx.StudGroups.Find(table.GroupId);
             //if (group == null || (!Roles.IsUserInRole(group.FacultId.ToString(CultureInfo.InvariantCulture)) && !Roles.IsUserInRole("Admin")))
             //    return false;
-
             if (studgroup == null) return false;
-
 
             // Старая таблица - для сравнения по изменению
             var oldids = table.ScheduleTableRows.Select(x => x.ScheduleTableId);
@@ -171,7 +170,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                                   && table.IsWeekOdd == x.IsWeekOdd
                                   && oldids.All(i => i != x.ScheduleTableId)
                             select x).ToList();
-            
+
             foreach (var tRow in table.ScheduleTableRows)
             {
                 //// Убираем 
@@ -316,6 +315,137 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                 package.SaveAs(result);
             }
             return resultPath;
+        }
+
+
+        public void UpdateSchCache(int facultId)
+        {
+            var facult = _ctx.Facults.Find(facultId);
+            facult.IsReady = false;
+        }
+
+
+        public void Add(ScheduleTable sch)
+        {
+            this._ctx.ScheduleTables.Add(sch);
+            this.UpdateSchCache(sch.StudGroup.FacultId);
+            this.UpdatePlan(sch, -2);
+        }
+
+
+        public void Edit(ScheduleTable sch)
+        {
+            var schOld = _ctx.ScheduleTables
+                             .Include(x => x.StudGroup)
+                             .SingleOrDefault(x => x.ScheduleTableId == sch.ScheduleTableId);
+
+            if (schOld == null) return;
+
+
+            schOld.Auditory = sch.Auditory;
+            schOld.LectorName = sch.LectorName;
+            schOld.LessonType = sch.LessonType;
+            //schOld.Date = sch.Date;
+
+            if (schOld.SubjectName == sch.SubjectName)
+            {
+                this.UpdatePlan(schOld);
+            }
+            else
+            {
+                this.UpdatePlanOnDelete(schOld);
+                this.UpdatePlan(sch, -2);
+            }
+
+            schOld.SubjectName = sch.SubjectName;
+
+            this.UpdateSchCache(sch.StudGroup.FacultId);
+        }
+
+        public string Delete(int id)
+        {
+            var x = _ctx.ScheduleTables.Find(id);
+            if (x == null) return null;
+            var result = x.SubjectName + " " + x.Auditory;
+            this.UpdatePlanOnDelete(x);
+            _ctx.ScheduleTables.Remove(x);
+            return result;
+        }
+
+
+        private DateTime GetSchDateTime(ScheduleTable table)
+        {
+            var schDate = new DateTime(table.Date.Year, table.Date.Month, table.Date.Day,
+                                    table.Lesson.Time.Hour, table.Lesson.Time.Minute, table.Lesson.Time.Second);
+
+            var weekdayForSch = NormalizationWeekday((int)schDate.DayOfWeek);
+            var weekdayOffset = table.WeekdayId - weekdayForSch;
+            var daysOffset = (table.WeekdayId >= weekdayForSch) ? weekdayOffset : weekdayOffset + 7;
+            schDate = schDate.AddDays(daysOffset);
+            return schDate;
+        }
+
+        // Скажем нет длиннокоду и CultureInfo (:
+        private static int NormalizationWeekday(int weekday) { return (weekday == 0) ? 7 : weekday; }
+
+        private void UpdatePlanOnDelete(ScheduleTable schOld)
+        {
+            if (!UpdatePlan(schOld)) UpdatePlan(schOld, +2);
+        }
+
+        private bool UpdatePlan(ScheduleTable sch)
+        {
+            var df = DateTime.Now - GetSchDateTime(sch);
+            var h = (df.Days / 7 - 1) * 2;
+
+            if (df.Hours < 2) return false;
+
+            UpdatePlan(sch, -1 * (h + 2));
+            return true;
+        }
+
+        private void UpdatePlan(ScheduleTable sch, int h)
+        {
+            if (sch.LessonType > 3) return;
+
+            sch.Date = DateTime.Now;
+
+            var plan =
+                _ctx.Plans.Include(x => x.Subject)
+                .SingleOrDefault(x => x.GroupId == sch.GroupId && x.Subject.Title == sch.SubjectName);
+
+            if (plan == null || (plan.LabH == 0 && plan.LectionH == 0 && plan.PracticeH == 0)) return;
+
+            UpdatePlanTime(plan, sch.LessonType, h);
+        }
+
+
+        private void UpdatePlanTime(Plan plan, int lessonType, int h)
+        {
+            if (lessonType == 1)
+            {
+                plan.LectionH = Math.Max(plan.LectionH + h, 0);
+            }
+            else if (lessonType == 2)
+            {
+                plan.LabH = Math.Max(plan.LabH + h, 0);
+            }
+            else
+            {
+                plan.PracticeH = Math.Max(plan.PracticeH + h, 0);
+            }
+        }
+
+
+        public void UpdateAllPlans(int id)
+        {
+            // Select all sch
+            var schTable = _ctx.ScheduleTables.Include(x => x.Lesson).Where(x => x.GroupId == id);
+            // Update sch
+            foreach (var x in schTable)
+            {
+                UpdatePlan(x);
+            }
         }
     }
     #region @tagged

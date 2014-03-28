@@ -96,6 +96,7 @@ namespace Mvc_Schedule.Controllers
             using (var db = new DomainContext())
             {
                 Lector lector = db.Lectors.Get(id);
+                if (lector == null) return RedirectToAction("Error", "Default", new { id = 404 });
                 return View(lector);
             }
         }

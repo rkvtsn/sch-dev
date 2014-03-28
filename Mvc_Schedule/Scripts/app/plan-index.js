@@ -42,7 +42,7 @@
     var edit = function () {
         DlgHelper.AjaxAction(thisUri("edit"), "POST", function(data) {
             refresh(function() {
-                if (data != null) {
+                if (data != null && data != "") {
                     DlgHelper.ShowDialog("Изменено: " + data);
                 } else {
                     DlgHelper.ShowDialogError("План с такой дисциплиной уже существует...", 2000);
@@ -62,10 +62,14 @@
             });
     };
     
-    var appendItemToList = function(i, x) {
-        var div = $('<li val="' + x.Key + '">' +
+    function appendItemToList(i, x) {
+        var div = $('<li val="' + x.planId + '">' +
                 '<a class="delete" href="javascript: void(0)">Удалить</a> ' +
-                '<a class="edit subtitle" href="javascript: void(0)">' + x.Value + '</a></li>');
+                '<a class="edit subtitle" href="javascript: void(0)">' + x.title +
+                ' [лекции: ' + x.lec + 
+                ' лабораторные: ' + x.lab +
+                ' практика: ' + x.pr + ']' +
+                '</a></li>');
         list.append(div);
     };
     
@@ -75,8 +79,7 @@
             "POST",
             appendItemToList,
             onsuccess,
-            function () { DlgHelper.BindOn(refreshForm, add, edit, del); }
-        );
+            function () { DlgHelper.BindOn(refreshForm, add, edit, del); });
     }
 
     function autocompleteHandler(element) {

@@ -1,20 +1,10 @@
 ﻿@using System.Web.Optimization
 @model IEnumerable<Mvc_Schedule.Models.DataModels.ModelViews.FacultName>
-@*<script src="@Url.Content("~/Scripts/default-index.js")" type="text/javascript"></script>*@
-
-
 @if (!Model.Any())
 {
     <h1 id="page-title">Расписание в стадии разработки</h1>
     return;
 }
-<div id="search">
-@using(Html.BeginForm("search","schedule", FormMethod.Post)){
-    <input type="text" placeholder="Поиск..." required="required" name="keyword" />
-    <input type="submit" value="Найти"/>
-    @Html.AntiForgeryToken()
-}
-</div>
 
 <h1 id="page-title">Выберите факультет</h1>
 

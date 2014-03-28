@@ -17,12 +17,13 @@ namespace Mvc_Schedule
             // @app
             bundles.Add(new StyleBundle("~/styles/main").Include(
                 "~/Content/app/font-cleanvertising.css"
-                ,"~/Content/app/style.css"
+                , "~/Content/app/style.css"
                 , "~/Content/app/font-awesome.min.css"
                 ));
-            bundles.Add(new StyleBundle("~/styles/lesson-index").Include("~/Content/app/lesson-index.css"));
             bundles.Add(new StyleBundle("~/styles/facult-index").Include("~/Content/app/facult-index.css"));
-            
+            bundles.Add(new StyleBundle("~/styles/schedule-create").Include("~/Content/app/schedule-create.css"));
+            bundles.Add(new StyleBundle("~/styles/sch").Include("~/Content/app/sch-create.css"));
+
             // @addons
             bundles.Add(new StyleBundle("~/styles/validation").Include("~/Content/validation.css"));
             bundles.Add(new StyleBundle("~/styles/dlghelper").Include("~/Content/dlghelper.css"));
@@ -37,9 +38,12 @@ namespace Mvc_Schedule
             bundles.Add(new ScriptBundle("~/scripts/facult-index").Include("~/Scripts/app/facult-index.js"));
             bundles.Add(new ScriptBundle("~/scripts/plan-index").Include("~/Scripts/app/plan-index.js"));
             bundles.Add(new ScriptBundle("~/scripts/plan-create").Include("~/Scripts/app/plan-create.js"));
-            bundles.Add(new ScriptBundle("~/scripts/sch-index").Include("~/Scripts/app/sch-index.js"));
-            bundles.Add(new ScriptBundle("~/scripts/sch-create")
-                .Include("~/Scripts/app/sch-index.js", "~/Scripts/app/sch-create.js"));
+            bundles.Add(new ScriptBundle("~/scripts/sch-index").Include("~/Scripts/dlghelper.js",
+                                                                        "~/Scripts/app/sch-index.js"));
+            bundles.Add(new ScriptBundle("~/scripts/sch-create").Include("~/Scripts/dlghelper.js",
+                                                                         "~/Scripts/jquery-ui-{version}.custom.min.js",
+                                                                         "~/Scripts/app/sch-index.js",
+                                                                         "~/Scripts/app/sch-create.js"));
 
             // @addons
             bundles.Add(new ScriptBundle("~/scripts/jquery", "//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js")
@@ -51,8 +55,10 @@ namespace Mvc_Schedule
             bundles.Add(new ScriptBundle("~/scripts/jquery-ui").Include("~/Scripts/jquery-ui-{version}.custom.min.js"));
             #endregion
             
-            //<script src="@Url.Content("~/Scripts/jquery-ui-1.8.23.custom.min.js")" type="text/javascript"></script>
-            //<link href="@Url.Content("~/Content/jquery.ui.autocomplete.css")" rel="stylesheet" type="text/css" />
+            //foreach (var bundle in BundleTable.Bundles)
+            //{
+            //    bundle.Transforms.Clear();
+            //}
 
             BundleTable.EnableOptimizations = true;
         }

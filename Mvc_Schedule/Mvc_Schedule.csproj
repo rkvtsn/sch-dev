@@ -62,6 +62,10 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.5.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Pager, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Pager.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
@@ -87,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AuditoryController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\FacultController.cs" />
@@ -103,11 +108,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\app\font-cleanvertising.css" />
+    <Content Include="Content\app\sch-create.css" />
+    <Content Include="Content\app\schedule-create.css" />
     <Content Include="Content\dlghelper.css" />
     <Content Include="Content\app\facult-index.css" />
-    <Content Include="Content\app\lesson-index.css" />
     <Content Include="Content\app\font-awesome.min.css" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\images\agpa.png" />
+    <Content Include="Content\images\logo.png" />
     <Content Include="Content\style_logon.css" />
     <Content Include="Content\images\body_bg.png" />
     <Content Include="Content\images\color_bw.png" />
@@ -116,7 +124,6 @@
     <Content Include="Content\images\favicon.png" />
     <Content Include="Content\images\glow_bg.png" />
     <Content Include="Content\images\groups.png" />
-    <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\panel_list.png" />
     <Content Include="Content\images\panel_wrap.png" />
     <Content Include="Content\images\week1.png" />
@@ -154,10 +161,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Pager\Pager.csproj">
-      <Project>{7FA2E9BD-79FD-4F3A-9BE3-FB17515C63D4}</Project>
-      <Name>Pager</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Mvc_Schedule.Models\Mvc_Schedule.Models.csproj">
       <Project>{59B6ADDA-2CC8-4C9E-9361-0D1411A80A4E}</Project>
       <Name>Mvc_Schedule.Models</Name>
@@ -188,7 +191,7 @@
     <Content Include="Views\Groups\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Schedule\Index.cshtml" />
+    <Content Include="Views\Schedule\Static.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Schedule\Create.cshtml" />
@@ -267,7 +270,7 @@
     <Content Include="Views\Plans\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Schedule\IndexDev.cshtml" />
+    <Content Include="Views\Schedule\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
@@ -310,8 +313,15 @@
     <Content Include="Views\Plans\Create.cshtml" />
     <Content Include="Views\Shared\_jQuery-ui.cshtml" />
     <Content Include="Views\Plans\Edit.cshtml" />
+    <Content Include="Views\Auditory\AddFromTxt.cshtml" />
+    <Content Include="Views\Auditory\Create.cshtml" />
+    <Content Include="Views\Auditory\Delete.cshtml" />
+    <Content Include="Views\Auditory\Edit.cshtml" />
+    <Content Include="Views\Auditory\Index.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\Excel\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

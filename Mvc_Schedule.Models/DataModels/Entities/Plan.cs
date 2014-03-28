@@ -28,6 +28,4 @@ namespace Mvc_Schedule.Models.DataModels.Entities
         public virtual Subject Subject { get; set; }
 
     }
-    
-    
 }

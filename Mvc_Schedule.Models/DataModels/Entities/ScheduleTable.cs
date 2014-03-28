@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mvc_Schedule.Models.DataModels.Entities
 {
-	public class ScheduleTable
+    public class ScheduleTable
 	{
 		[Key]
 		public int ScheduleTableId { get; set; }

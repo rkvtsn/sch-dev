@@ -31,11 +31,10 @@ function SlidePanel(element) {
     element.find('span').css('visibility', 'visible');
     var gmenu = element.parents("li").children(".group_menu");
     $.ajax({
-        type: "POST",
+        type: "GET",
         contentType: "application/json;charset=utf-8",
         url: 'Default/GetGroups/',
-        data: '{"id":"' + facultId + '"}',
-        dataType: "json",
+        data: { id :facultId },
         success: function (data) {
             UpdateGroupList(data, gmenu);
             gmenu.stop();

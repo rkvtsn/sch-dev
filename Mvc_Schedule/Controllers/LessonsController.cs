@@ -8,13 +8,13 @@ using Mvc_Schedule.Models.DataModels.ModelViews;
 
 namespace Mvc_Schedule.Controllers
 {
-    [Authorize(Roles = StaticData.AdminRole)]
     public class LessonsController : Controller
     {
         private readonly DomainContext _db = new DomainContext();
 
         public LessonsController() { ViewBag.Title = "Редактор звонков"; }
-
+        
+        [Authorize(Roles = StaticData.AdminRole)]
         public ViewResult Index()
         {
             return View();
@@ -23,6 +23,7 @@ namespace Mvc_Schedule.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = StaticData.AdminRole)]
         public JsonResult Add(FormCollection form)
         {
             var lesson = new Lesson { Time = DateTime.Parse(form[0] + ":" + form[1]) };
@@ -31,15 +32,16 @@ namespace Mvc_Schedule.Controllers
             return success ? Json(lesson.TimeString) : Json(false);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult List()
         {
             var model = _db.Lessons.Array();
-            return Json(model);
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = StaticData.AdminRole)]
         public JsonResult Edit(FormCollection form)
         {
             int h = 0;
@@ -58,6 +60,7 @@ namespace Mvc_Schedule.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = StaticData.AdminRole)]
         public JsonResult Drop(FormCollection form)
         {
             int id = 0;

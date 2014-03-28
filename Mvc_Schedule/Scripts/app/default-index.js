@@ -4,7 +4,7 @@
 	groupsDiv.html("");
 	if (data != null && data.length > 0) {
 		$.each(data, function (index, d) {
-			var group = '<li><a href="/Schedule/Index/' + d.Id + '">' + d.Name + '</a></li>';
+			var group = '<li><a href="/schedule/index/' + d.Id + '">' + d.Name + '</a></li>';
 			groupsDiv.append(group);
 		});
 	} else {
@@ -26,11 +26,10 @@ $(document).ready(function () {
 		lastId = facultId;
 		$("#groups").fadeOut(function () {
 			$.ajax({
-				type: "POST",
+				type: "GET",
 				contentType: "application/json;charset=utf-8",
 				url: "/Default/GetGroups",
-				data: '{"id":"' + facultId + '"}',
-				dataType: "json",
+				data: { id: facultId },
 				success: function (data) {
 					loadGroups(data);
 					$("#groups").fadeIn();

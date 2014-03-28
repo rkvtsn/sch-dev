@@ -1,33 +1,52 @@
-﻿(function () {
+﻿function zero(m) {
+    return (m < 10) ? "0" + m : m;
+}
+
+function getTime(jsonDt) {
+    var dt = new Date(parseInt(jsonDt.substr(6)));
+    return zero(dt.getHours()) + ":" + zero(dt.getMinutes());
+}
+
+var emptyCellHtml = function (isWeekOdd) {
+    return '<div class="cell empty lesson" week="' + isWeekOdd + '"><div class="subrow1">&nbsp</div><div class="subrow1">&nbsp</div></div>';
+};
+var defaultHash = "#header";
+window.lastPointer = defaultHash;
+
+(function () {
 
     var list = $("#list-weeks");
     var table = $("#sch");
     var groupId = $("#group-id").val();
 
     var renderTable = function (data) {
-        console.log("renderTable");
-
         if (data != null) {
-            console.log("appended");
-            var div = renderTableRow(data);
-            list.append(div);
+            list.append(renderTableRow(data));
         }
-
         DlgHelper.ShowDialogSuccess("Готово!", 1000);
         updateSubrows();
+        var lessons = table.find(".lesson");
+        lessons.stop().hide();
         table.show();
+        $.when(lessons.fadeIn()).then(function () {
+            if (window.lastPointer == defaultHash)
+                $(document.body).scrollTop($(window.lastPointer).offset().top);
+            else {
+                $(document.body).stop().animate({ 'scrollTop': $(window.lastPointer).offset().top });
+            }
+        });
     };
 
+    var methodList = function () {
 
-    var updatePage = function () {
-        table.hide();
-        list.html('');
-        DlgHelper.ShowDialog("Обнавляю...", 5000);
-        $.ajax({
+    };
+    var methodSearch = function () {
+        return $.ajax({
             type: "GET",
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-            url: "/schedule/list/",
-            data: { id: groupId },
+            url: "/schedule/search/",
+            dataType: "json",
+            data: { keyword: search },
             success: function (data) {
                 renderTable(data);
                 legendBind();
@@ -35,43 +54,111 @@
         });
     };
 
+    var updatePage = function () {
+
+        table.hide();
+        list.html('');
+        DlgHelper.ShowDialog("Обнавляю...", 5000);
+
+        var d = { id: groupId };
+        var u = "/list/";
+
+        if (isSearching()) {
+            d = { keyword: keyword };
+            u = "/search/";
+        }
+
+        return $.when($.ajax({
+            type: "GET",
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            url: "/schedule" + u,
+            dataType: "json",
+            data: d,
+            success: function (data) {
+                renderTable(data);
+                legendBind();
+            }
+        }));
+
+    };
+
+    var keyword = $("#search-keyword").val();
+    var isSearching = function () { return keyword != ""; };
+
     $(document).ready(function () {
-        methodToFixLayout();
+
+        $(window).bind("resize", methodToFixLayout);
+
+        var model = (typeof schCreate == 'function' && !isSearching()) ? schCreate(updatePage) : { refresh: updatePage };
+
+        model.refresh().done(function () { methodToFixLayout(); });
+
         $("#update").click(function (e) {
-            updatePage();
+            window.lastPointer = defaultHash;
+            model.refresh().done(function () { methodToFixLayout(e, true); });
             e.preventDefault();
             return false;
         });
 
-        $("#save").click(function (e) {
+        $("#save").hide().click(function (e) {
             e.preventDefault();
-
-            var htmlDoc = $("#list-weeks").html();
-            console.log(htmlDoc);
-
-            //TODO saving to file
-            // a: push on server -> pull from server...
-            // b: (isAuth) ? redirect-> {indexDev || index}
-
             return false;
         });
-
-        var model;
-        if (typeof schCreate == 'function')
-            model = schCreate({ update: updatePage });
-        else
-            model = { activate: updatePage };
-
-        model.activate();
     });
 
 
+    // На скорую руку..
+    // TODO style.class
+    function methodToFixLayout(e, v) {
+        var x = this;
+        var winWidth = $(window).width();
+        if (v) setFullScreen(x);
 
+        if (winWidth <= 800) {
 
+            if (x.currentMode == "m") return;
+            x.currentMode = "m";
 
+            $(".header1").css({
+                "cursor": "pointer",
+                "color": "#000",
+                "font-weight": ""
+            }).addClass("btn")
+            .click(function () {
+                if ($(this).attr("activated") == "true") return;
+                if (!x.last) x.last = $(this).next();
+
+                x.last.css({ "font-weight": "" });
+                $(this).css({ "font-weight": "bold" });
+                $('[week="' + $(this).attr("val") + '"]').show();
+                $('[week="' + x.last.attr("val") + '"]').hide();
+
+                $(this).attr("activated", true);
+                x.last.attr("activated", false);
+                x.last = $(this);
+            });
+
+            $('.header1[val="false"]').click();
+            $("#selector-block").css({ "width": '300px', "min-width": '300px' });
+
+        } else {
+            if (x.currentMode == "f") return;
+            setFullScreen(x);
+        }
+
+    }
+    function setFullScreen(x) {
+        x.currentMode = "f";
+        x.last = null;
+        $("[week]").show();
+        $(".header1").unbind("click")
+                     .css({ "cursor": "default", "font-weight": "" })
+                     .removeClass("btn");
+        $("#selector-block").css({ "width": '', "min-width": '' });
+    }
 
     function updateSubrows() {
-        $(".subject-name").each(function (i) { //TODO!!! inject to Rendering
+        $(".subject-name").each(function () { //TODO!!! inject to Rendering
             var isSub1 = $(this).parent().hasClass("subrow1");
             var mCell = $(this).parent().parent();
             var lesType = mCell.attr("class")[mCell.attr("class").length - 1];
@@ -101,12 +188,6 @@
         });
     }
 
-    function methodToFixLayout() {
-        var winWidth = $(window).width();
-        $("#selector-block").css("width", (winWidth <= 800) ? 'auto' : '');
-        $("#selector-block").css("min-width", (winWidth <= 800) ? '300px' : '');
-    }
-    $(window).bind("resize", methodToFixLayout);
 
     function legendBind() {
         var legend = $("#legend .sq");
@@ -142,38 +223,52 @@
         });
     };
 
-    function zero(m) {
-        return (m < 10) ? "0" + m : m;
-    }
-
-    function getTime(jsonDt) {
-        var dt = new Date(parseInt(jsonDt.substr(6)));
-        return zero(dt.getHours()) + ":" + zero(dt.getMinutes());
-    }
-
+    var emptyRowHtml =
+        '<div class="cell column2">&nbsp;</div>' +
+        '<div class="ending"></div>' +
+        '<div class="cell column1">&nbsp;</div>';
 
     // @rendering
-    function renderTableRow(model) { // СУПЕР ТУПОЙ МЕТОД !!! TODO: переделать на AngularJS все подобные г*вно коды!
+    function renderTableRow(model) { // TODO: переделать на AngularJS все подобные г*вно коды!
         var row = "";
         $.each(model, function (i, week) {
-            row += '<div class="weekday">' +
+            row += '<div class="weekday" id="weekday_' + week.Key.WeekdayId + '" val="' + week.Key.WeekdayId + '">' +
                    '<div class="cell column1">' + week.Key.Name + '</div>';
 
             $.each(week.Group, function (j, lessons) {
                 row += '<div class="row">';
                 if (lessons.length > 0) {
                     $.each(lessons, function (k, lesson) {
-                        row += '<div class="cell column2">' + getTime(lesson.Key.Time) + '</div>';
+                        row += '<div class="cell column2" val="' + lesson.Key.LessonId + '">' + getTime(lesson.Key.Time) + '</div>';
+
+                        var f = false;
                         $.each(lesson.Group, function (x, sc) {
                             var subrow = (!sc.IsWeekOdd) ? lesson.Key.CountEven : lesson.Key.CountOdd;
-                            row +=
-                                '<div class="cell lesson bg' + (sc.LessonType) + '">' +
+
+                            var tempRow =
+                                '<div sch-id="' + sc.ScheduleTableId + '" week="' + sc.IsWeekOdd + '" class="cell lesson bg' + (sc.LessonType) + '">' +
                                 '<div class="subrow' + (subrow) + '">' +
                                 '<span class="subject-name">' + sc.SubjectName + '</span>' +
                                 '<span class="subject-auditory">' + sc.Auditory + '</span>' +
                                 '</div>' +
                                 '<div class="subrow' + subrow + ' subject-lector">' + sc.LectorName + '</div>' +
                                 '</div>';
+
+                            if (lesson.Key.CountEven == 0 && lesson.Key.CountOdd > 0) {
+                                if (lesson.Key.CountOdd == 1) tempRow = emptyCellHtml(!sc.IsWeekOdd) + tempRow;
+                                else {
+                                    if (!f) tempRow = emptyCellHtml(!sc.IsWeekOdd) + tempRow;
+                                    f = !f;
+                                }
+                            } else if (lesson.Key.CountOdd == 0 && lesson.Key.CountEven > 0) {
+                                if (lesson.Key.CountEven == 1) tempRow = tempRow + emptyCellHtml(!sc.IsWeekOdd);
+                                else {
+                                    if (f) tempRow = tempRow + emptyCellHtml(!sc.IsWeekOdd);
+                                    f = !f;
+                                }
+                            }
+
+                            row += tempRow;
                         });
 
                         row +=
@@ -181,12 +276,7 @@
                             '<div class="cell column1">&nbsp;</div>';
                     });
                 } else {
-                    row +=
-                        '<div class="cell column2">&nbsp;</div>' +
-                        '<div class="cell subrow2">&nbsp;</div>' +
-                        '<div class="cell subrow2">&nbsp;</div>' +
-                        '<div class="ending"></div>' +
-                        '<div class="cell column1">&nbsp;</div>';
+                    row += emptyRowHtml;
                 }
                 row += '</div>';
             });

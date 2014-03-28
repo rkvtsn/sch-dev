@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Mvc_Schedule.Models.DataModels.Entities;
-using Mvc_Schedule.Models.DataModels.ModelViews;
 
 namespace Mvc_Schedule.Models.DataModels.Repositories
 {
@@ -15,7 +10,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
 
 		public StudGroup Get(int id)
 		{
-			return _ctx.StudGroups.SingleOrDefault(x => x.GroupId == id);
+			return _ctx.StudGroups.Include("Facult").SingleOrDefault(x => x.GroupId == id);
 		}
 
 		public void Edit(StudGroup group)

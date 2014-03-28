@@ -12,7 +12,10 @@ namespace Mvc_Schedule.Models
         private readonly ConnectionContext _ctx;
 
         public int SaveChanges() { return _ctx.SaveChanges(); }
-        public DomainContext() { _ctx = new ConnectionContext(); }
+        public DomainContext()
+        {
+            _ctx = new ConnectionContext();
+        }
 
         public StudGroup IsAccessableFor(int groupId)
         {
@@ -83,6 +86,13 @@ namespace Mvc_Schedule.Models
         {
             get { return _subjects ?? (_subjects = new RepositorySubjects(_ctx)); }
             set { _subjects = value; }
+        }
+
+        private RepositoryAuditory _auditories;
+        public RepositoryAuditory Auditories
+        {
+            get { return _auditories ?? (_auditories = new RepositoryAuditory(_ctx)); }
+            set { _auditories = value; }
         }
 
         private RepositoryPlans _plans;

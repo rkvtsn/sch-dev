@@ -44,6 +44,10 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Mvc_Schedule\bin\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Pager, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Pager.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -55,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataModels\ConnectionContext.cs" />
+    <Compile Include="DataModels\Entities\Auditory.cs" />
     <Compile Include="DataModels\Entities\ExcelTemplate.cs" />
     <Compile Include="DataModels\Entities\Facult.cs" />
     <Compile Include="DataModels\Entities\Lesson.cs" />
@@ -78,8 +83,10 @@
     <Compile Include="DataModels\ModelViews\ScheduleTableCreate.cs" />
     <Compile Include="DataModels\ModelViews\ScheduleTableIndex.cs" />
     <Compile Include="DataModels\ModelViews\ScheduleTableSearch.cs" />
+    <Compile Include="DataModels\ModelViews\SchIndex.cs" />
     <Compile Include="DataModels\Repositories\LectorEqualityComparer.cs" />
     <Compile Include="DataModels\Repositories\RepositoryAjax.cs" />
+    <Compile Include="DataModels\Repositories\RepositoryAuditory.cs" />
     <Compile Include="DataModels\Repositories\RepositoryBase.cs" />
     <Compile Include="DataModels\Repositories\RepositoryGroups.cs" />
     <Compile Include="DataModels\Repositories\RepositoryLectors.cs" />
@@ -100,12 +107,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Pager\Pager.csproj">
-      <Project>{7fa2e9bd-79fd-4f3a-9be3-fb17515c63d4}</Project>
-      <Name>Pager</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

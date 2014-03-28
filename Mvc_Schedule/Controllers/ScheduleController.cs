@@ -1,109 +1,215 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Web.Security;
 using Mvc_Schedule.Models;
 using System.Web.Mvc;
 using Mvc_Schedule.Models.DataModels;
 using Mvc_Schedule.Models.DataModels.Entities;
+using Mvc_Schedule.Models.DataModels.ModelViews;
 
 namespace Mvc_Schedule.Controllers
 {
     public class ScheduleController : Controller
     {
         private readonly DomainContext _db = new DomainContext();
-        
+
         public ScheduleController() { ViewBag.Title = "Редактор расписания"; }
 
-
-
         [HttpGet]
-        public ActionResult IndexDev(int id = -1)
+        public ActionResult Index(int id = -1, string search = "")
         {
+            var model = new SchIndex(search);
+            if (model.IsValid) return View("Index", model);
+
             var group = _db.Groups.Get(id);
-            if (group == null)
-                return RedirectToRoute(new { controller = "Default", action = "Error", id = 404 });
+            if (group == null) return RedirectToRoute(new { controller = "Default", action = "Error", id = 404 });
 
-            ViewBag.Title = group.Name;
-            ViewBag.GroupId = group.GroupId;
-            ViewBag.IsAvailable = (Roles.IsUserInRole(group.FacultId.ToString(CultureInfo.InvariantCulture)) ||
-                                   Roles.IsUserInRole(StaticData.AdminRole));
+            model = new SchIndex
+            {
+                GroupId = id,
+                IsAvailable = (Roles.IsUserInRole(group.FacultId.ToString(CultureInfo.InvariantCulture)) || Roles.IsUserInRole(StaticData.AdminRole)),
+                Keyword = null,
+                Title = group.Name
+            };
 
-            return View();
+            if (model.IsAvailable && (group.LastCheck - DateTime.Now).Days >= 7)
+            {
+                _db.Schedule.UpdateAllPlans(id);
+                group.LastCheck = DateTime.Now;
+                _db.SaveChanges();
+            }
+            return View(model);
         }
-
-
 
         #region @main
 
         [HttpGet]
-        public JsonResult List(int id)
-        {
-            return Json(_db.Ajax.SchList(id), JsonRequestBehavior.AllowGet);
-        }
-
+        public JsonResult List(int id) { return Json(_db.Ajax.SchList(id), JsonRequestBehavior.AllowGet); }
 
         [HttpGet]
-        public JsonResult Get(int id)
+        public JsonResult Search(string keyword)
         {
-            return Json(null, JsonRequestBehavior.AllowGet);
+            return Json(_db.Ajax.SchSearch(keyword), JsonRequestBehavior.AllowGet);
         }
-        
+
+        [HttpGet]
+        public JsonResult Get(int id) { return Json(_db.Ajax.SchGet(id), JsonRequestBehavior.AllowGet); }
+
+        // {MVC3 не поддерживает сериализацию токена}
+        private ScheduleTable CheckGroup(FormCollection form)
+        {
+            int groupId;
+            if (int.TryParse(form.GetValue("group-id").AttemptedValue, out groupId))
+            {
+                var auditory = form.Get("auditory").Trim();
+                var lector = form.Get("lector").Trim();
+                var subjectTitle = form.Get("subject-title").Trim();
+
+                if (auditory == "" || lector == "" || subjectTitle == "") return null;
+
+                var group = _db.IsAccessableFor(groupId);
+                if (group != null)
+                    return new ScheduleTable
+                    {
+                        StudGroup = group,
+                        Auditory = auditory,
+                        LectorName = lector,
+                        SubjectName = subjectTitle
+                    };
+            }
+            return null;
+        }
+
+
         [HttpPost, Authorize, ValidateAntiForgeryToken]
         public JsonResult Add(FormCollection form)
         {
+
+            var sch = CheckGroup(form);
+            bool week;
+            int lessonId, lessonType, weekdayId;
+            if (sch != null &&
+                bool.TryParse(form.Get("week"), out week) &&
+                int.TryParse(form.Get("lesson-id"), out lessonId) &&
+                int.TryParse(form.Get("lesson-type"), out lessonType) &&
+                int.TryParse(form.Get("weekday-id"), out weekdayId))
+            {
+
+                sch.IsWeekOdd = week;
+                sch.LessonId = lessonId;
+                sch.LessonType = lessonType;
+                sch.WeekdayId = weekdayId;
+
+                _db.Schedule.Add(sch);
+                _db.Lectors.Add(sch.LectorName);
+                _db.Subjects.Add(sch.SubjectName);
+                _db.Auditories.Add(sch.Auditory);
+                _db.SaveChanges();
+                return Json(sch.SubjectName + " " + sch.Auditory);
+            }
+
             return Json(null);
         }
 
         [HttpPost, Authorize, ValidateAntiForgeryToken]
         public JsonResult Edit(FormCollection form)
         {
+            var sch = CheckGroup(form);
+            int lessonType;
+            int schId;
+            if (sch != null
+                && int.TryParse(form.Get("lesson-type"), out lessonType)
+                && int.TryParse(form.Get("sch-id"), out  schId))
+            {
+                sch.ScheduleTableId = schId;
+                sch.LessonType = lessonType;
+
+                _db.Schedule.Edit(sch);
+                _db.Lectors.Add(sch.LectorName);
+                _db.Subjects.Add(sch.SubjectName);
+                _db.Auditories.Add(sch.Auditory);
+                _db.SaveChanges();
+                return Json(sch.SubjectName + " " + sch.Auditory);
+            }
+
             return Json(null);
         }
-        
+
         [HttpPost, Authorize, ValidateAntiForgeryToken]
-        public JsonResult Drop(int id)
+        public JsonResult Drop(FormCollection form)
         {
-            return Json(null);
+            int id;
+            if (!int.TryParse(form.Get("sch-id"), out id)) return Json(null);
+            var result = _db.Schedule.Delete(id);
+            if (result != null) _db.SaveChanges();
+            return Json(result);
         }
 
         #endregion
-
-
-
-
-
-
-
 
 
         #region @feat.
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetList(string letter, string method)
         {
-            if (method == "Lectors") { return Json(_db.Ajax.ListLectors(letter)); }
-            else if (method == "Auditory") { return Json(_db.Ajax.ListAuditory(letter)); }
-            else return Json(_db.Ajax.ListSubjects(letter));
+            if (method == "Lectors") { return Json(_db.Ajax.ListLectors(letter), JsonRequestBehavior.AllowGet); }
+            else if (method == "Auditory") { return Json(_db.Ajax.ListAuditory(letter), JsonRequestBehavior.AllowGet); }
+            else return Json(_db.Ajax.ListSubjects(letter), JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public JsonResult GetAvailableLectors(int timeId, string value, bool week)
+        [HttpGet]
+        public JsonResult GetAvailableLectors(int groupId, int timeId, string value, bool week, int weekdayId)
         {
-            return Json(_db.Ajax.IsAvailableLector(timeId, value, week));
+            return Json(_db.Ajax.IsAvailableLector(groupId, timeId, value, week, weekdayId), JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public JsonResult GetAvailableAuditory(int timeId, string value, bool week)
+        [HttpGet]
+        public JsonResult GetSubjectPlan(int groupid, string value, int lessontype)
         {
-            return Json(_db.Ajax.IsAvailableAuditory(timeId, value, week));
+            return Json(_db.Ajax.IsAvailablePlan(groupid, value, lessontype), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult GetAvailableAuditory(int groupId, int timeId, string value, bool week, int weekdayId)
+        {
+            return Json(_db.Ajax.IsAvailableAuditory(groupId, timeId, value, week, weekdayId), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult CheckLessons(int groupId)
+        {
+            return Json(_db.Ajax.CheckListOnAvailability(groupId), JsonRequestBehavior.AllowGet);
         }
 
         #endregion
 
 
-        
+
+        [HttpGet]
+        public ActionResult Excel(int id = -1, int week = 1)
+        {
+            var facult = _db.Facults.Get(id);
+            if (facult == null) return RedirectToAction("Error", "Default", new { id = 404 });
+            var result = facult.IsReady ? ExcelTemplate.Path(id, week) : _db.Schedule.CheckExcel(id, week);
+            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        }
+
+
+
+
+        protected override void Dispose(bool disposing)
+        {
+            _db.Dispose();
+            base.Dispose(disposing);
+        }
+
+
+
+        #region @static
         [HttpGet]
         //[OutputCache(Duration = 3600, VaryByParam = "id")]
-        public ActionResult Index(int id = -1)
+        public ActionResult Static(int id = -1)
         {
             var group = _db.Groups.Get(id);
             if (group == null)
@@ -142,7 +248,7 @@ namespace Mvc_Schedule.Controllers
                 if (_db.Schedule.ListAdd(scheduletable, group))
                 {
                     _db.SaveChanges();
-                    return RedirectToAction("Create", new { id = group.GroupId, week = scheduletable.IsWeekOdd ? 1 : 0 });
+                    return RedirectToAction("Index", new { controller = "Facult" });
                 }
             }
 
@@ -153,33 +259,8 @@ namespace Mvc_Schedule.Controllers
             return View(scheduletable);
         }
 
+        #endregion
 
 
-
-        [HttpGet]
-        public ActionResult Excel(int id = -1, int week = 1)
-        {
-            var facult = _db.Facults.Get(id);
-            if (facult == null) return RedirectToAction("Error", "Default", new { id = 404 });
-            var result = facult.IsReady ? ExcelTemplate.Path(id, week) : _db.Schedule.CheckExcel(id, week);
-            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        }
-
-        
-
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult Search(string keyword)
-        {
-            if (keyword == null || keyword.Trim() == string.Empty)
-                return View();
-            return View("Index", model: _db.Schedule.Search(keyword));
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _db.Dispose();
-            base.Dispose(disposing);
-        }
     }
 }
