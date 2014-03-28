@@ -1,0 +1,27 @@
+﻿@model Mvc_Schedule.Models.DataModels.Entities.Auditory
+@Html.Partial("_ValidationStyles")
+<h1 id="page-title">Добавление аудитории</h1>
+<div id="selector-block">
+    @Html.ActionLink("Назад", "Index")
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(x => x.AuditoryId)
+        <div class="form-line">
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Number, "Аудитория")
+            </div>
+            <div class="editor-field">
+                @Html.TextBoxFor(model => model.Number, new { @class = "long" })
+                @Html.ValidationMessageFor(model => model.Number)
+            </div>
+        </div>
+        <p>
+            <input type="submit" value="Сохранить" />
+        </p>
+    }
+    @if (ViewBag.IsDublicate == true)
+    {
+        <p class="field-validation-error">Такая аудитория была уже добавлена.</p>
+    }
+</div>

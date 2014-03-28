@@ -1,0 +1,45 @@
+﻿    .weekday {
+        margin-top: 10px;
+    }
+    .weekday h3 {
+        cursor: pointer;
+        padding: 10px;
+        font-size: 20px;
+        font-weight: normal;
+    }
+    .is-available {
+        display: block;
+        width: 100%;
+    }
+    .is-available a {
+        color: #cc3300;
+    }
+    #selector-block a {
+        padding: 4px 10px;
+        text-align: center;
+        display: inline-block;
+        text-decoration: none;
+        border: 1px solid #c0c0c0;
+    }
+    #selector-block a:hover {
+        border: 1px solid #3399cc;
+    }
+
+    .weekday h3:hover {
+        background: #c0c0c0;
+    }
+
+    .hideme {
+        font-size: 12px;
+        margin: 10px;
+        text-decoration: underline;
+    }
+    .weekday h3:hover .hideme {
+        text-decoration: none;
+    }
+    input[type=text] { width: 70px; }
+    input.subjects { width: 300px; }
+    input.lectors { width: 103px; }
+    select { height: 27px; }
+    input:hover, input:focus { color: #000; }
+    label { cursor: pointer; }
