@@ -18,7 +18,7 @@ namespace Mvc_Schedule.Models.DataModels.Entities
         [StringLength(20)]
         public string ThirdName { get; set; }
 
-        [Required, StringLength(20)]
+        [StringLength(20)]
         public string PreName { get; set; }
 
 
@@ -27,10 +27,27 @@ namespace Mvc_Schedule.Models.DataModels.Entities
         {
             get
             {
-                return PreName + " " + SecondName + " " + Name[0] + "."
-                    + ((ThirdName != null && ThirdName.Trim() != String.Empty) ?
-                    ThirdName[0] + "." : "");
+                return PreName + " "
+                     + SecondName + " "
+                     + Name[0] + "." 
+                     + ((ThirdName != null && ThirdName != String.Empty) ? ThirdName[0] + "." : "");
             }
+        }
+
+
+        public Lector()
+        {
+
+        }
+        
+        public void InitLector()
+        {
+            Name = Name.Trim();
+            PreName = PreName.Trim();
+            SecondName = SecondName.Trim();
+            ThirdName = ThirdName != null && ThirdName.Trim() != string.Empty
+                                   ? ThirdName.Trim()
+                                   : null;
         }
     }
 }

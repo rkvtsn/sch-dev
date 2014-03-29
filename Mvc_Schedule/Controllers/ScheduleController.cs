@@ -59,7 +59,9 @@ namespace Mvc_Schedule.Controllers
         private ScheduleTable CheckGroup(FormCollection form)
         {
             int groupId;
-            if (int.TryParse(form.GetValue("group-id").AttemptedValue, out groupId))
+            short groupSub;
+            if (int.TryParse(form.GetValue("group-id").AttemptedValue, out groupId)
+                && short.TryParse(form.GetValue("group-sub").AttemptedValue, out groupSub))
             {
                 var auditory = form.Get("auditory").Trim();
                 var lector = form.Get("lector").Trim();
@@ -74,7 +76,8 @@ namespace Mvc_Schedule.Controllers
                         StudGroup = group,
                         Auditory = auditory,
                         LectorName = lector,
-                        SubjectName = subjectTitle
+                        SubjectName = subjectTitle,
+                        GroupSub = groupSub
                     };
             }
             return null;
@@ -100,8 +103,8 @@ namespace Mvc_Schedule.Controllers
                 sch.LessonType = lessonType;
                 sch.WeekdayId = weekdayId;
 
+                sch.LectorName = _db.Lectors.Add(sch.LectorName);
                 _db.Schedule.Add(sch);
-                _db.Lectors.Add(sch.LectorName);
                 _db.Subjects.Add(sch.SubjectName);
                 _db.Auditories.Add(sch.Auditory);
                 _db.SaveChanges();
@@ -124,8 +127,9 @@ namespace Mvc_Schedule.Controllers
                 sch.ScheduleTableId = schId;
                 sch.LessonType = lessonType;
 
+
+                sch.LectorName = _db.Lectors.Add(sch.LectorName);
                 _db.Schedule.Edit(sch);
-                _db.Lectors.Add(sch.LectorName);
                 _db.Subjects.Add(sch.SubjectName);
                 _db.Auditories.Add(sch.Auditory);
                 _db.SaveChanges();

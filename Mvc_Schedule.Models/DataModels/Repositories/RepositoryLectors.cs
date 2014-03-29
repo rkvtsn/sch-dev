@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -21,9 +20,13 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             var lectors = new List<Lector>();
             var result = TxtUploader.AddListFromTxt(data, 2, Encoding.GetEncoding(1251), fullName =>
             {
-                var lector = new Lector { PreName = fullName[0], SecondName = fullName[1], Name = fullName[2] };
-                if (fullName.Length > 3)
-                    lector.ThirdName = fullName[3];
+                var fName = fullName.ToList();
+
+                if (char.IsUpper(fullName[0][0])) fName.Insert(0, String.Empty);
+
+                var lector = new Lector { PreName = fName[0], SecondName = fName[1], Name = fName[2] };
+                
+                if (fName.Count > 3) lector.ThirdName = fName[3];
                 lectors.Add(lector);
                 return true;
             });
@@ -56,12 +59,13 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
         }
         public bool Add(Lector lector)
         {
-            lector.Name = lector.Name.Trim();
-            lector.PreName = lector.PreName.Trim();
-            lector.SecondName = lector.SecondName.Trim();
-            lector.ThirdName = lector.ThirdName != null && lector.ThirdName.Trim() != string.Empty
-                                   ? lector.ThirdName.Trim()
-                                   : null;
+            //lector.Name = lector.Name.Trim();
+            //lector.PreName = lector.PreName.Trim();
+            //lector.SecondName = lector.SecondName.Trim();
+            //lector.ThirdName = lector.ThirdName != null && lector.ThirdName.Trim() != string.Empty
+            //                       ? lector.ThirdName.Trim()
+            //                       : null;
+            lector.InitLector();
 
             _ctx.Lectors.Add(lector);
             return true;
@@ -73,6 +77,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             old.SecondName = lector.SecondName;
             old.ThirdName = lector.ThirdName;
             old.PreName = lector.PreName;
+            old.InitLector();
         }
         public void Remove(int id)
         {
@@ -84,7 +89,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             return _ctx.Lectors.Find(id);
         }
 
-        public void Add(string str)
+        public string Add(string str)
         {
             var begin = (from ch in str.ToArray() where Char.IsUpper(ch) select str.IndexOf(ch)).FirstOrDefault();
 
@@ -94,19 +99,19 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
 
             var lector = name.Replace(".", " ").Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var newLector = new Lector { Name = lector[1], SecondName = lector[0], PreName = prefix};
+            var newLector = new Lector { Name = lector[1].Trim(), SecondName = lector[0].Trim(), PreName = prefix.Trim()};
             if (lector.Length > 2)
                 newLector.ThirdName = lector[2];
             
             var q = _ctx.Lectors
-                    .SingleOrDefault(x =>
+                    .FirstOrDefault(x =>
                          x.Name == newLector.Name
                       && x.SecondName.StartsWith(newLector.SecondName)
                       && x.ThirdName.StartsWith(newLector.ThirdName));
-            if (q != null) return;
+            if (q != null) return newLector.FullName;
             
-
             Add(newLector);
+            return newLector.FullName;
         }
     }
 }

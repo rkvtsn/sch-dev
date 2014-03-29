@@ -8,7 +8,8 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
     static public class TxtUploader
     {
 
-        static public TxtUploaderResultModel AddListFromTxt(HttpPostedFileBase data, int minlen, Encoding encoding, Func<string[], bool> work)
+        // sub
+        public static TxtUploaderResultModel AddListFromTxt(HttpPostedFileBase data, int minlen, Encoding encoding, Func<string[], bool> work)
         {
             return TxtUploader.AddListFromTxt(data, encoding, line =>
                 {
@@ -17,6 +18,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                 });
         }
 
+        // main
         public static TxtUploaderResultModel AddListFromTxt(HttpPostedFileBase data, Encoding encoding, Func<string, bool> work)
         {
             var result = new TxtUploaderResultModel();

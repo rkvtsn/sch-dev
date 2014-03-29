@@ -199,7 +199,6 @@
         setPointer(caller);
         DlgHelper.ClearForm();
 
-        // @auto @calc
         if (x._lock != true) {
             x._lock = true;
             autocompleteHandler($("#subject-title"), "Subjects");
@@ -213,6 +212,7 @@
             DlgHelper.AjaxActionWithData("/schedule/get/", "GET", function (data) {
                 checkByElement("Auditory", $("#auditory").val(data.Auditory));
                 checkByElement("Lectors", $("#lector").val(data.LectorName));
+                $("#group-sub").val(data.GroupSub);
                 $("#subject-title").val(data.SubjectName);
                 $("#lesson-type").val(data.LessonType);
             }, { id: id });
@@ -262,8 +262,8 @@
             }
 
         } else {
-
-            var txt = (str == "Lectors") ? 'Преподаватель занят' : (str != "Subjects") ? 'Аудитория занята (доступна ' + data.Available + ')' : 'Осталось ' + data + ' ч.';
+            
+            var txt = (str == "Lectors") ? 'Преподаватель занят' : (str != "Subjects") ? 'Аудитория занята (' + ((data.Available == null) ? 'доступных нет' : 'доступна ' + data.Available ) + ')' : 'Осталось ' + data + ' ч.';
             if (p.length == 0) {
                 if (str == "Subjects") {
                     p = $('<a href="/plans/' + groupId + '" data-type="' + str + '"></a>');

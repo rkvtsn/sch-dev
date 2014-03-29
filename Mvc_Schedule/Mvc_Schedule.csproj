@@ -132,6 +132,7 @@
     <Content Include="Content\jquery.ui.autocomplete.css" />
     <Content Include="Content\validation.css" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\app\adm-index.js" />
     <Content Include="Scripts\app\plan-index.js" />
     <Content Include="Scripts\app\sch-create.js" />
     <Content Include="Scripts\app\sch-index.js" />

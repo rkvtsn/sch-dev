@@ -68,7 +68,6 @@ a#sch-edit-btn {
     bottom: 0;
     z-index: 1;
     background: #666699;
-    /*background: #cc3399;*/
 }
 
     #controls a {
@@ -78,8 +77,6 @@ a#sch-edit-btn {
     }
 
 .btn {
-    /*background: #CC3399;
-        border: 1px solid #CC3399;*/
     background-color: transparent;
     border: 1px solid transparent;
 }
@@ -89,8 +86,6 @@ a#sch-edit-btn {
     }
 
         .btn:hover {
-            /*background: #990066;
-        border: 1px solid #CC3399;*/
             background-color: black;
             background-color: rgba(0, 0, 0, 0.2);
         }
@@ -107,6 +102,10 @@ a#sch-edit-btn {
     margin: 0 auto;
 }
 
+.subrow2 .add {
+    width: 100%;
+}
+
 .lesson:hover .ctrl-tile {
     display: block;
 }
@@ -115,6 +114,9 @@ a#sch-edit-btn {
     width: 50%;
 }
 
+.lesson.empty .subrow2 + .ctrl-tile .ctrl.add {
+    width: 100%;
+}
     .lesson .subrow2 + .ctrl-tile .ctrl.delete {
         margin-left: 50%;
     }
@@ -145,15 +147,12 @@ a#sch-edit-btn {
     background-color: #ccc;
     background-color: rgba(100, 100, 100, 0.5);
 }
-/*background-color: rgba(204, 51, 153, 0.8);*/
+
 .empty .ctrl-tile {
     display: block;
     background: #ccc;
 }
 
-.empty .add {
-    width: 100%;
-}
 
 
 #is-available {

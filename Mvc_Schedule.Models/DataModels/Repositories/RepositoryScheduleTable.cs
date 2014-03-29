@@ -10,6 +10,7 @@ using System.Web.Security;
 using Mvc_Schedule.Models.DataModels.Entities;
 using Mvc_Schedule.Models.DataModels.ModelViews;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 namespace Mvc_Schedule.Models.DataModels.Repositories
 {
@@ -244,8 +245,9 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                 var lessonsRaw = _ctx.Lessons.Select(x => x).ToList();
                 var lessons = lessonsRaw.Select(x => x.TimeString.Remove(2, 1)).ToArray();
                 if (lessons.Length == 0) throw new Exception("Данные о звонках не найдены");
-                var rowCount = lessons.Count() * 2; // TODO
+                var rowCount = lessons.Count() * 2; // TODO =>
 
+                // Тот самый TODO
                 //var k = -1;
                 //int weekdayRowHeight = Math.Abs((from x in sheet.Cells["A:X"]
                 //                                 where x.Value != null &&
@@ -259,14 +261,12 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                                        select x).FirstOrDefault();
                 if (firstLessonCell == null) throw new Exception("В шаблоне нет временных меток");
                 var lessonColumn = firstLessonCell.Start.Column;
-
-
+                
                 foreach (var weekday in schTab)
                 {
                     var weekdayCell = (from x in sheet.Cells["A:X"]
                                        where x.Value != null && x.Value.ToString().Trim().ToLower() == weekday.Key.Name.Trim().ToLower()
                                        select x).FirstOrDefault();
-
                     if (weekdayCell == null) continue;
                     foreach (var lesson in weekday.Group)
                     {
@@ -295,18 +295,34 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                                 {
                                     startColumn++;
                                 }
-                                sheet.Cells[timeCell.Start.Row, startColumn].Value = ws.SubjectName + "    " + ws.Auditory;
-                                sheet.Cells[timeCell.Start.Row + 1, startColumn].Value = ws.LectorName;
+
+
+                                // group-sub
+                                var offset = 0;
 
                                 if (counter == 1)
                                 {
-                                    sheet.Cells[
-                                        timeCell.Start.Row, groupCell.Start.Column,
-                                        timeCell.Start.Row, groupCell.Start.Column + 1].Merge = true;
-                                    sheet.Cells[
-                                        timeCell.Start.Row + 1, groupCell.Start.Column,
-                                        timeCell.Start.Row + 1, groupCell.Start.Column + 1].Merge = true;
+                                    if (ws.GroupSub == 0)
+                                    {
+                                        sheet.Cells[
+                                            timeCell.Start.Row, groupCell.Start.Column,
+                                            timeCell.Start.Row, groupCell.Start.Column + 1].Merge = true;
+                                        sheet.Cells[
+                                            timeCell.Start.Row + 1, groupCell.Start.Column,
+                                            timeCell.Start.Row + 1, groupCell.Start.Column + 1].Merge = true;
+                                    }
+                                    else
+                                    {
+                                        // group-sub
+                                        offset = (ws.GroupSub - 1);
+                                    }
                                 }
+
+                                sheet.Cells[timeCell.Start.Row, startColumn + offset].Value = ws.SubjectName + "    " + ws.Auditory;
+                                sheet.Cells[timeCell.Start.Row + 1, startColumn + offset].Value = ws.LectorName;
+                                sheet.Cells[timeCell.Start.Row, startColumn + offset].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                                sheet.Cells[timeCell.Start.Row + 1, startColumn + offset].Style
+                                    .HorizontalAlignment = ExcelHorizontalAlignment.Center;
                             }
                         }
                     }
@@ -345,7 +361,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
             schOld.Auditory = sch.Auditory;
             schOld.LectorName = sch.LectorName;
             schOld.LessonType = sch.LessonType;
-            //schOld.Date = sch.Date;
+            schOld.GroupSub = sch.GroupSub;
 
             if (schOld.SubjectName == sch.SubjectName)
             {

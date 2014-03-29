@@ -177,6 +177,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                               x.LessonType,
                               x.ScheduleTableId,
                               x.SubjectName,
+                              x.GroupSub,
                               Weekday = new
                               {
                                   x.Weekday.Name,
@@ -197,7 +198,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                                     CountOdd = g.Count(x => x.IsWeekOdd),
                                     CountEven = g.Count(x => !x.IsWeekOdd),
                                 },
-                                Group = g.OrderBy(x => x.IsWeekOdd)
+                                Group = g.OrderBy(x => new { x.IsWeekOdd, x.GroupSub })
                             }).OrderBy(x => x.Key.Time.Hour),
                             (k, g) => new
                             {
@@ -242,6 +243,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                               x.LessonType,
                               x.ScheduleTableId,
                               x.SubjectName,
+                              x.GroupSub,
                               Weekday = new
                               {
                                   x.Weekday.Name,
@@ -262,7 +264,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                                     CountOdd = g.Count(x => x.IsWeekOdd),
                                     CountEven = g.Count(x => !x.IsWeekOdd),
                                 },
-                                Group = g.OrderBy(x => x.IsWeekOdd)
+                                Group = g.OrderBy(x => new { x.IsWeekOdd, x.GroupSub })//.ThenBy(x => x.IsWeekOdd)
                             }).OrderBy(x => x.Key.Time.Hour),
                             (k, g) => new
                             {
@@ -284,6 +286,7 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                         x.LessonType,
                         x.LectorName,
                         x.Auditory,
+                        x.GroupSub,
                         x.SubjectName
                     }).SingleOrDefault();
         }

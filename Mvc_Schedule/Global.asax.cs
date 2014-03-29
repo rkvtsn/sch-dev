@@ -38,6 +38,8 @@ namespace Mvc_Schedule
             bundles.Add(new ScriptBundle("~/scripts/facult-index").Include("~/Scripts/app/facult-index.js"));
             bundles.Add(new ScriptBundle("~/scripts/plan-index").Include("~/Scripts/app/plan-index.js"));
             bundles.Add(new ScriptBundle("~/scripts/plan-create").Include("~/Scripts/app/plan-create.js"));
+            bundles.Add(new ScriptBundle("~/scripts/adm-index").Include("~/Scripts/dlghelper.js",
+                                                                        "~/Scripts/app/adm-index.js"));
             bundles.Add(new ScriptBundle("~/scripts/sch-index").Include("~/Scripts/dlghelper.js",
                                                                         "~/Scripts/app/sch-index.js"));
             bundles.Add(new ScriptBundle("~/scripts/sch-create").Include("~/Scripts/dlghelper.js",

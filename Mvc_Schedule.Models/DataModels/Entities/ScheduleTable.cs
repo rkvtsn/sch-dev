@@ -32,7 +32,8 @@ namespace Mvc_Schedule.Models.DataModels.Entities
 		[Display(Name = "День недели")]
 		public int WeekdayId { get; set; }
 
-		
+        public short GroupSub { get; set; }
+        
         [Required]
         public int LessonType { get; set; }
 

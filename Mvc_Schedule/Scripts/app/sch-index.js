@@ -7,8 +7,8 @@ function getTime(jsonDt) {
     return zero(dt.getHours()) + ":" + zero(dt.getMinutes());
 }
 
-var emptyCellHtml = function (isWeekOdd) {
-    return '<div class="cell empty lesson" week="' + isWeekOdd + '"><div class="subrow1">&nbsp</div><div class="subrow1">&nbsp</div></div>';
+var emptyCellHtml = function (isWeekOdd, subrow) {
+    return '<div class="cell empty lesson" week="' + isWeekOdd + '"><div class="subrow' + (subrow || 1) + '">&nbsp</div><div class="subrow' + (subrow || 1) + '">&nbsp</div></div>';
 };
 var defaultHash = "#header";
 window.lastPointer = defaultHash;
@@ -33,23 +33,6 @@ window.lastPointer = defaultHash;
                 $(document.body).scrollTop($(window.lastPointer).offset().top);
             else {
                 $(document.body).stop().animate({ 'scrollTop': $(window.lastPointer).offset().top });
-            }
-        });
-    };
-
-    var methodList = function () {
-
-    };
-    var methodSearch = function () {
-        return $.ajax({
-            type: "GET",
-            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-            url: "/schedule/search/",
-            dataType: "json",
-            data: { keyword: search },
-            success: function (data) {
-                renderTable(data);
-                legendBind();
             }
         });
     };
@@ -109,6 +92,7 @@ window.lastPointer = defaultHash;
 
     // На скорую руку..
     // TODO style.class
+    // TODO header.style
     function methodToFixLayout(e, v) {
         var x = this;
         var winWidth = $(window).width();
@@ -242,17 +226,34 @@ window.lastPointer = defaultHash;
                         row += '<div class="cell column2" val="' + lesson.Key.LessonId + '">' + getTime(lesson.Key.Time) + '</div>';
 
                         var f = false;
+
+                        var line = "";
+
                         $.each(lesson.Group, function (x, sc) {
                             var subrow = (!sc.IsWeekOdd) ? lesson.Key.CountEven : lesson.Key.CountOdd;
+                            var isSub = false;
+
+                            if (sc.GroupSub >= 1 && subrow == 1) {
+                                subrow = 2;
+                                isSub = true;
+                            }
 
                             var tempRow =
-                                '<div sch-id="' + sc.ScheduleTableId + '" week="' + sc.IsWeekOdd + '" class="cell lesson bg' + (sc.LessonType) + '">' +
+                                '<div group-sub="' + sc.GroupSub + '" sch-id="' + sc.ScheduleTableId + '" week="' + sc.IsWeekOdd + '" class="cell lesson bg' + (sc.LessonType) + '">' +
                                 '<div class="subrow' + (subrow) + '">' +
                                 '<span class="subject-name">' + sc.SubjectName + '</span>' +
                                 '<span class="subject-auditory">' + sc.Auditory + '</span>' +
                                 '</div>' +
-                                '<div class="subrow' + subrow + ' subject-lector">' + sc.LectorName + '</div>' +
+                                '<div class="subrow' + subrow + ' subject-lector" >' + sc.LectorName + '</div>' +
                                 '</div>';
+
+                            if (isSub) {
+                                if (sc.GroupSub == 1) {
+                                    tempRow = tempRow + emptyCellHtml(sc.IsWeekOdd, 2);
+                                } else if (sc.GroupSub == 2) {
+                                    tempRow = emptyCellHtml(sc.IsWeekOdd, 2) + tempRow;
+                                }
+                            }
 
                             if (lesson.Key.CountEven == 0 && lesson.Key.CountOdd > 0) {
                                 if (lesson.Key.CountOdd == 1) tempRow = emptyCellHtml(!sc.IsWeekOdd) + tempRow;
@@ -268,10 +269,13 @@ window.lastPointer = defaultHash;
                                 }
                             }
 
-                            row += tempRow;
+                            line += tempRow;
                         });
 
+                        //var groupSubs = line.find("[group-sub]");
+
                         row +=
+                            line +
                             '<div class="ending"></div>' +
                             '<div class="cell column1">&nbsp;</div>';
                     });
@@ -280,8 +284,10 @@ window.lastPointer = defaultHash;
                 }
                 row += '</div>';
             });
+            
             row += '</div><div class="ending"></div>';
         });
+
         return row;
     }
 
