@@ -96,6 +96,7 @@
     <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\FacultController.cs" />
     <Compile Include="Controllers\GroupsController.cs" />
+    <Compile Include="Controllers\HelpController.cs" />
     <Compile Include="Controllers\LectorsController.cs" />
     <Compile Include="Controllers\LessonsController.cs" />
     <Compile Include="Controllers\PlansController.cs" />
@@ -310,6 +311,7 @@
     <Content Include="Content\fonts\cleanvertising\cleanvel.eot" />
     <Content Include="Content\fonts\cleanvertising\cleanvel.ttf" />
     <Content Include="Content\fonts\cleanvertising\cleanvel.woff" />
+    <Content Include="Content\sch-tpl.xlsx" />
     <None Include="Properties\PublishProfiles\Профиль1.pubxml" />
     <Content Include="Views\Plans\Create.cshtml" />
     <Content Include="Views\Shared\_jQuery-ui.cshtml" />
@@ -319,6 +321,7 @@
     <Content Include="Views\Auditory\Delete.cshtml" />
     <Content Include="Views\Auditory\Edit.cshtml" />
     <Content Include="Views\Auditory\Index.cshtml" />
+    <Content Include="Views\Help\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Excel\" />

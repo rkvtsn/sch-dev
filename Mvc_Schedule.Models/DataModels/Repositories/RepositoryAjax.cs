@@ -194,12 +194,14 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                                 Key = new
                                 {
                                     k.LessonId,
-                                    k.Time,
+                                    //k.Time,
+                                    Hours = k.Time.Hour,
+                                    Minutes = k.Time.Minute,
                                     CountOdd = g.Count(x => x.IsWeekOdd),
                                     CountEven = g.Count(x => !x.IsWeekOdd),
                                 },
                                 Group = g.OrderBy(x => new { x.IsWeekOdd, x.GroupSub })
-                            }).OrderBy(x => x.Key.Time.Hour),
+                            }).OrderBy(x => x.Key.Hours), // ch
                             (k, g) => new
                             {
                                 Key = k,
@@ -260,12 +262,13 @@ namespace Mvc_Schedule.Models.DataModels.Repositories
                                 Key = new
                                 {
                                     k.LessonId,
-                                    k.Time,
+                                    Hours = k.Time.Hour, //ch
+                                    Minutes = k.Time.Minute, //ch
                                     CountOdd = g.Count(x => x.IsWeekOdd),
                                     CountEven = g.Count(x => !x.IsWeekOdd),
                                 },
                                 Group = g.OrderBy(x => new { x.IsWeekOdd, x.GroupSub })//.ThenBy(x => x.IsWeekOdd)
-                            }).OrderBy(x => x.Key.Time.Hour),
+                            }).OrderBy(x => x.Key.Hours), // ch
                             (k, g) => new
                             {
                                 Key = k,

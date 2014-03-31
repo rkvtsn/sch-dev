@@ -2,9 +2,8 @@
     return (m < 10) ? "0" + m : m;
 }
 
-function getTime(jsonDt) {
-    var dt = new Date(parseInt(jsonDt.substr(6)));
-    return zero(dt.getHours()) + ":" + zero(dt.getMinutes());
+function getTime(o) {
+    return zero(o.Hours) + ":" + zero(o.Minutes);
 }
 
 var emptyCellHtml = function (isWeekOdd, subrow) {
@@ -41,7 +40,7 @@ window.lastPointer = defaultHash;
 
         table.hide();
         list.html('');
-        DlgHelper.ShowDialog("Обнавляю...", 5000);
+        DlgHelper.ShowDialogWait("Обнавляю...", 5000);
 
         var d = { id: groupId };
         var u = "/list/";
@@ -60,6 +59,9 @@ window.lastPointer = defaultHash;
             success: function (data) {
                 renderTable(data);
                 legendBind();
+            },
+            error: function(t) {
+                DlgHelper.ShowDialogError("У нас ошибка <strong>" + t.status + "</b>");
             }
         }));
 
@@ -223,7 +225,7 @@ window.lastPointer = defaultHash;
                 row += '<div class="row">';
                 if (lessons.length > 0) {
                     $.each(lessons, function (k, lesson) {
-                        row += '<div class="cell column2" val="' + lesson.Key.LessonId + '">' + getTime(lesson.Key.Time) + '</div>';
+                        row += '<div class="cell column2" val="' + lesson.Key.LessonId + '">' + getTime(lesson.Key) + '</div>';
 
                         var f = false;
 

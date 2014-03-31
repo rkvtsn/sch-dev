@@ -114,6 +114,10 @@ a#sch-edit-btn {
     width: 50%;
 }
 
+.lesson.empty .subrow1 + .ctrl-tile .ctrl.add {
+    width: 100%;
+}
+
 .lesson.empty .subrow2 + .ctrl-tile .ctrl.add {
     width: 100%;
 }
@@ -147,7 +151,9 @@ a#sch-edit-btn {
     background-color: #ccc;
     background-color: rgba(100, 100, 100, 0.5);
 }
-
+.empty {
+    height: 41px;
+}
 .empty .ctrl-tile {
     display: block;
     background: #ccc;

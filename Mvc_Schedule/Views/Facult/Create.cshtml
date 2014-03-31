@@ -26,7 +26,7 @@
     @using (Html.BeginForm("Create", "Facult", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
-        <div class="editor-label">Шаблон (формат *.xlsx, ms office 2007 и новее)</div>
+        <div class="editor-label">Шаблон (формат *.xlsx, ms office 2007 и новее <a href="@Url.Content("~/Content/sch-tpl.xlsx")">"пример шаблона"</a>)</div>
         <div class="editor-field">
             <input type="file" class="long" name="template" id="template" />
             @Html.ValidationMessageFor(model => model.Template)

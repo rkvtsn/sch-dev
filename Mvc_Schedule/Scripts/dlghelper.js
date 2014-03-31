@@ -52,7 +52,7 @@
         warningYBind: $("#warning_y").click(function() {
             DlgHelper.warning.hide();
             DlgHelper.warnBg.hide();
-            DlgHelper.ShowDialog("Удаляю.. ");
+            DlgHelper.ShowDialogWait("Удаляю.. ");
             DlgHelper.delAction(warning._delCaller);
             console.log('Deleting');
         }),
@@ -72,13 +72,16 @@
             data: d,
             success: function(data) {
                 successFn(data);
+            },
+            error: function(t) {
+                DlgHelper.ShowDialogError(t);
             }
         });
     },
 
     onUpdate: function(listDiv, ajaxUrl, ajaxType, eachFn, successFn, afterFn) {
         listDiv.html('');
-        DlgHelper.ShowDialog("Подготавливаю список...");
+        DlgHelper.ShowDialogWait("Подготавливаю список...");
         DlgHelper.AjaxAction(ajaxUrl, ajaxType, function(data) {
             if (data != null && data.length > 0) {
                 $.each(data, function(i, x) {
@@ -87,7 +90,7 @@
                 listDiv.show();
                 successFn();
             } else {
-                DlgHelper.ShowDialog("Данных нет");
+                DlgHelper.ShowDialogError("Данных нет");
             }
             afterFn();
         });
@@ -95,7 +98,7 @@
 
     onUpdateWithData: function(listDiv, ajaxUrl, ajaxType, d, eachFn, successFn, afterFn) {
         listDiv.html('');
-        DlgHelper.ShowDialog("Подготавливаю список...");
+        DlgHelper.ShowDialogWait("Подготавливаю список...");
         DlgHelper.AjaxAction(ajaxUrl, ajaxType, function(data) {
             if (data != null && data.length > 0) {
                 $.each(data, function(i, x) {
@@ -104,7 +107,7 @@
                 listDiv.show();
                 successFn();
             } else {
-                DlgHelper.ShowDialog("Данных нет");
+                DlgHelper.ShowDialogError("Данных нет");
             }
             afterFn();
         }, d);
@@ -201,12 +204,15 @@
     countdown: {},
     cooldown: 3000,
     ShowDialog_display: function (msg, t) {
-        if (t) { var x = this; this.countdown = setInterval(function () { x.HideDialog(); }, t); }
+
+        if (t > 0) { var x = this; this.countdown = setInterval(function () { x.HideDialog(); }, t); }
+
         this.dialog_p.html(msg);
         this._show(this.dialog);
     },
     ShowDialog: function (msg, t, icon) {
-        if (!t) t = this.cooldown;
+        if (t != -1)
+            if (!t) t = this.cooldown;
         this.HideForm();
         this.HideDialog();
         msg = (icon || '<i class="fa fa-comment-o fa-2x"></i> ') + msg;
@@ -219,7 +225,7 @@
         this.ShowDialog(msg, t || this.cooldown, '<i class="fa fa-check-circle-o fa-2x"></i> ');
     },
     ShowDialogWait: function(msg) {
-        this.ShowDialog(msg, 10000, '<i class="fa fa-refresh fa-spin fa-2x"></i> ');
+        this.ShowDialog(msg, -1, '<i class="fa fa-refresh fa-spin fa-2x"></i> ');
     },
     HideDialog: function () {
         clearTimeout(this.countdown);

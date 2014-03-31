@@ -9,7 +9,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.FacultInstance.FacultId)
-        <div class="editor-label">Сменить шаблон (формат *.xlsx, ms office 2007 и новее)</div>
+        <div class="editor-label">Сменить шаблон (формат *.xlsx, ms office 2007 и новее <a href="@Url.Content("~/Content/sch-tpl.xlsx")">"пример шаблона"</a>)</div>
         <div class="editor-field">
             <div class="@if (ViewBag.IsTemplateExist == true) { @("exist") } else { @("not-exist") }"></div>
             <input type="file" class="long" name="template" id="template" />

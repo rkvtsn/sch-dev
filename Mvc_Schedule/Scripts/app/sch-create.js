@@ -82,7 +82,7 @@
         x.editBtn.html(x.editClass.on);
     }
     function rowHtml(row, d) {
-        return $('<div class="cell column2" val="' + d.LessonId + '">' + getTime(d.Time) + '</div>' +
+        return $('<div class="cell column2" val="' + d.LessonId + '">' + getTime(d) + '</div>' +
                 emptyCellHtml(false) +
                 emptyCellHtml(true) +
                 '<div class="ending"></div>' +
@@ -130,7 +130,7 @@
         });
     }
 
-
+    
 
 
     function refresh() {
@@ -280,8 +280,7 @@
         }
 
     }
-
-
+    
     function checkByElement(str, jq) {
         var val = jq.val();
         if (str == "Lectors" || str == "Auditory") {
@@ -338,6 +337,7 @@
     function setValid(l) {
         l.removeClass("not-available");
     }
+
     function setInvalid(l) {
         l.addClass("not-available");
     }
@@ -352,7 +352,7 @@
                 if (!data || data.length == 0) return;
 
                 $.each(data, function (i, d) {
-                    if (!d && d.length == 0 && d.Busy.length == 0) return;
+                    if (!d || d.length == 0 || d.Busy.length == 0) return;
 
                     var lesson = $('.lesson[sch-id="' + d.Id + '"]');
 
